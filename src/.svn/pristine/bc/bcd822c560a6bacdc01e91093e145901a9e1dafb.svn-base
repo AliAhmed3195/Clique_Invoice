@@ -1,0 +1,248 @@
+(function() {
+    'use strict';
+
+    angular
+        .module('settings')
+        .controller('SettingsController', Controller)
+        .directive('mdChips', function () {
+          return {
+            restrict: 'E',
+            require: 'mdChips', // Extends the original mdChips directive
+            link: function (scope, element, attributes, mdChipsCtrl) {
+              mdChipsCtrl.onInputBlur = function () {
+                this.inputHasFocus = false;
+
+              // ADDED CODE
+                var chipBuffer = this.getChipBuffer();
+                if (chipBuffer != "") { // REQUIRED, OTHERWISE YOU'D GET A BLANK CHIP
+                    this.appendChip(chipBuffer);
+                    this.resetChipBuffer();
+                }
+              // - EOF - ADDED CODE
+              };
+            }
+          }
+        });
+
+    /* @ngInject */
+    
+    function Controller($window,$scope, $rootScope,  $timeout, $interval, $q, $http, $compile, Clique, InvoiceModel, SettingModel, $mdDialog, $mdToast, $element, $state,triTheming) {
+
+
+        
+        $scope.innerHeight=$window.innerHeight+0;
+
+        //remove invoice search
+        sessionStorage.removeItem("invoice_search");
+
+        var vm = this;  
+        vm.saveInvoiceContactSettings = saveInvoiceContactSettings;
+        $scope.setting;
+        vm.invoice_templates = [];
+        vm.fabDirections = ['up', 'down', 'left', 'right'];
+        vm.fabDirection = vm.fabDirections[2];
+        vm.fabAnimations = ['md-fling', 'md-scale'];
+        vm.fabAnimation = vm.fabAnimations[1];
+        vm.fabStatuses = [false, true];
+        vm.fabStatus = false;
+       
+
+
+        vm.readonly = false;
+
+       
+        $scope.socialOption = [
+            {value:'facebook',name:'Facebook',image:'assets/images/social/facebook.png'},
+            {value:'googlemap',name:'Google Maps',image:'assets/images/social/googlemap.png'},
+            {value:'yelp',name:'Yelp',image:'assets/images/social/yelp.png'},
+            {value:'thumbtack',name:'Thumbtack',image:'assets/images/social/thumbtack.png'},
+            {value:'trip_advisor',name:'Trip Advisor',image:'assets/images/social/trip_advisor.png'},
+            {value:'amazon',name:'Amazon',image:'assets/images/social/amazon.png'},
+            {value:'airbnb',name:'Airbnb',image:'assets/images/social/airbnb.png'},
+            {value:'kudzu',name:'Kudzu',image:'assets/images/social/kudzu.png'},
+            {value:'capterra',name:'Capterra',image:'assets/images/social/capterra.png'},
+            {value:'homeadvisor',name:'Home Advisor',image:'assets/images/social/homeadvisor.png'},
+            {value:'angieslist',name:"Angie's List",image:'assets/images/social/angies-list.png'},
+            {value:'bbb',name:'Better Business Bureau',image:'assets/images/social/bbb.png'}
+        ];
+
+
+        //getCompanyInfo(); 
+        getSettings();
+       
+       
+        vm.palettes = triTheming.palettes;
+        $scope.colourRGBA=function(value) {
+            var rgba = triTheming.rgba(value);
+            return {
+                'background-color': rgba
+            };
+        }
+        $scope.setTemplateTheme=function(ev,name,palette,template_id){
+            sessionStorage.setItem("template_color",name);
+            $scope.setTemplateDefault(ev,template_id);
+
+        }
+
+       
+        $scope.validateChip = function($chip, type) {
+            console.log("i am call");
+            if (!$chip) return;
+            // check if the current string length is greater than or equal to a character limit.
+            //console.log($chip+'-'+type);
+            if (type == "bcc") {
+                if (angular.isArray($scope.setting.InvoiceContacts.cc_email)) {
+
+                    if ($scope.setting.InvoiceContacts.cc_email.indexOf($chip) >= 0) {
+                        Clique.showToast('Email already defined', 'bottom right', 'error');
+                        $scope.setting.InvoiceContacts.bcc_email.pop();
+                    }
+                }
+            } else if (type == "cc") {
+                if (angular.isArray($scope.setting.InvoiceContacts.bcc_email)) {
+
+                    if ($scope.setting.InvoiceContacts.bcc_email.indexOf($chip) >= 0) {
+                        Clique.showToast('Email already defined', 'bottom right', 'error');
+                        $scope.setting.InvoiceContacts.cc_email.pop();
+                    }
+                }
+            }
+
+            var reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+            if (!reg.test($chip)) {
+
+                if (type == "bcc") {
+
+                    $scope.setting.InvoiceContacts.bcc_email.pop();
+                }
+                if (type == "cc") {
+                    $scope.setting.InvoiceContacts.cc_email.pop();
+                }
+            }
+        }
+
+
+        function getSettings() {
+            $scope.promise = SettingModel.GetSettings();
+            $scope.promise.then(function(response) {
+                if (response.statuscode == 0) {
+                    $scope.setting=response.data; 
+                    console.log($scope.setting);
+                    sessionStorage.setItem("template_color",$scope.setting.InvoiceTemplateColor);    
+                    getInvoiceTemplates();
+                } else {
+                }
+            });
+        }
+
+        $scope.promise = SettingModel.GetAccount();
+        $scope.promise.then(function(response) {
+            if (response.statuscode == 0) {
+                $timeout(function() {
+                    $scope.account = response.data.items;
+                });
+            }
+        });       
+       
+        function saveInvoiceContactSettings() {
+            var params={
+                Setting:{
+                    InvoiceContacts:$scope.setting.InvoiceContacts,
+                    Feedback:$scope.setting.Feedback,
+                    ShowConfirmationDialog:$scope.setting.ShowConfirmationDialog,
+                    DepositAccountId:parseInt($scope.setting.DepositAccountId)
+                }
+            };
+
+            
+            $scope.promise = SettingModel.SaveInvoiceContactSettings(params);
+            $scope.promise.then(function(response) {
+                if (response.statuscode == 0) {
+                    Clique.showToast(response.statusmessage, 'bottom right', 'success');
+                } else {
+                    Clique.showToast(response.statusmessage, 'bottom right', 'error');
+                }
+            });
+        }
+
+
+        /*Invoice Templates*/
+
+        $scope.showTemplatePreview = function(ev, templateUrl) {
+            $rootScope.selectedTemplate = templateUrl;
+            $mdDialog.show({
+                    controller: PreviewTemplateController,
+                    templateUrl: 'app/modules/settings/invoice_preview.tmpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: ev,
+                    clickOutsideToClose: true
+                })
+                .then(function(answer) {
+                    $scope.status = 'You said the information was "' + answer + '".';
+                }, function() {
+                    $scope.status = 'You cancelled the dialog.';
+                });
+
+
+        };
+
+        function getInvoiceTemplates() {
+
+            $scope.promise = SettingModel.GetInvoiceTemplates();
+            $scope.promise.then(function(response) {
+                if (response.statuscode == 0) {
+                    vm.invoiceTemplates = response.data;
+                    console.log(vm.invoiceTemplates);
+                } else {
+                }
+            });
+        }
+
+        $scope.setTemplateDefault = function(ev, templateId) {
+
+            var template_color="cyan";
+            if(sessionStorage.getItem("template_color")!=null){
+                template_color=sessionStorage.getItem("template_color");
+            }
+            $scope.setting.InvoiceTemplateId=templateId;
+            $scope.setting.InvoiceTemplateColor=template_color;
+             var params={
+                Setting:{
+                    InvoiceTemplateId:templateId,
+                    InvoiceTemplateColor:template_color
+                }
+            };
+            $scope.promise = SettingModel.SaveInvoiceContactSettings(params);
+            $scope.promise.then(function(response) {
+                if (response.statuscode == 0) {
+                    Clique.showToast(response.statusmessage, 'bottom right', 'success');
+                    //getSettings();
+                    getInvoiceTemplates();
+                } else {
+                    Clique.showToast(response.statusmessage, 'bottom right', 'error');
+                }
+            });
+
+        };
+
+        var fileList;
+        ////////////////
+
+    }
+
+    function PreviewTemplateController($scope, $rootScope, $mdDialog) {
+
+        $scope.invoiceTemplateUrl = $rootScope.selectedTemplate;
+        $scope.hide = function() {
+            $mdDialog.hide();
+        };
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+        $scope.answer = function(answer) {
+            $mdDialog.hide(answer);
+        };
+    }
+})();
+
+

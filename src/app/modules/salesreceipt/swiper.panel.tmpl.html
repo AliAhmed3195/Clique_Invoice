@@ -1,0 +1,23 @@
+<div role="dialog" aria-label="Eat me!" layout="column" layout-align="center center">
+  
+  <div class="demo-dialog-content">
+      <h3 class="md-padding">{{swipeText}}</h3>
+        <div layout="row" layout-align="end end"> 
+            <div flex="100" style="text-align:center !important;">
+              <md-input-container class="md-block" md-no-float style="border:1px solid #ccc; position:absolute; top:-500px; width:100%; height:50px;">
+                  <input type="text" id="swipeInfo" name="swipeInfo" ng-model="swipeInfo" class="md-padding" placeholder="Swipe Data" md-autofocus ng-keyup="handle_swipe();">
+              </md-input-container>
+                  <img src="assets/images/icons/swiper-static.png" width="200" ng-show="showStatic">
+                  <img src="assets/images/icons/swiper-animated.gif" width="200" ng-show="showAnimation">
+            </div>
+            
+        </div>
+        <div layout="row" layout-align="center center"> 
+          <div flex="100" align="center">
+              <span class="md-caption">press Ecs to manually enter card no .</span>
+          </div>
+        </div>
+
+  </div>
+  
+</div>

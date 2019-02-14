@@ -1,0 +1,12 @@
+.png-icon{
+    margin: 5px auto auto;
+    padding: 0;
+    display: inline-block;
+    background-repeat: no-repeat no-repeat;
+    pointer-events: none;
+}
+
+.anchor {
+  border: 2px dashed DarkOrchid;
+  padding: 10px 10px 200px 10px;
+}

@@ -1,0 +1,256 @@
+<style class="ng-scope">
+    md-card.default {
+        background: url('assets/images/elements/ribbon.png') no-repeat top right;
+    }
+</style>
+<md-content>
+    <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="General">
+        <md-content class="md-padding">
+          <form name="invoicecontact" ng-submit="vm.saveInvoiceContactSettings()">
+            <md-content class="md-padding" >
+                <span class="md-caption">BCC Email: </span>
+               
+                <md-chips ng-model="setting.InvoiceContacts.bcc_email" readonly="false" md-removable="true" md-enable-chip-edit="false" md-max-chips="4" name="bcc_email" md-add-on-blur="true" md-on-add="validateChip($chip,'bcc')" ng-blur="validateChip($chip,'bcc')"  placeholder="Add upto 3 CC emails" secondary-placeholder="+Email"  >
+                </md-chips>
+
+
+                <div class="errors" ng-messages="invoicecontact.bcc_email.$error">
+                    <div ng-message="md-max-chips">maximum 3 email address allowed</div>
+                </div>
+
+                <span class="md-caption">CC Email: </span>
+                <md-chips ng-model="setting.InvoiceContacts.cc_email" readonly="false" md-removable="true" md-enable-chip-edit="false" md-max-chips="4" name="cc_email" md-on-add="validateChip($chip,'cc')" placeholder="Add upto 3 CC emails" secondary-placeholder="+Email" md-add-on-blur="true">
+                </md-chips>
+                <div class="errors" ng-messages="invoicecontact.cc_email.$error">
+                    <div ng-message="md-max-chips">maximum 3 email address allowed</div>
+                </div>
+
+                <h2 class="md-title">&nbsp;</h2>
+                <md-input-container class="md-block">
+                    <label for="sender_name">Sender Name</label>
+                    <input id="sender_name" label="sender_name" name="sender_name" type="text" ng-model="setting.InvoiceContacts.sender_name" required/>
+                    <div ng-messages="invoicecontact.sender_name.$error" md-auto-hide="false" ng-show="invoicecontact.sender_name.$touched">
+                        <div ng-message="required">
+                            Please enter your sender name.
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label for="sender_email">Sender Email Address</label>
+                    <input id="sender_email" label="sender_email" name="sender_email" type="email" ng-model="setting.InvoiceContacts.sender_email" required/>
+                    <div ng-messages="invoicecontact.sender_email.$error" md-auto-hide="false" ng-show="invoicecontact.sender_email.$touched">
+                        <div ng-message="required">
+                            Please enter your sender email address.
+                        </div>
+                        <div ng-message="email">
+                            Please enter a valid email address.
+                        </div>
+                    </div>
+                </md-input-container>
+
+                <div layout="column" layout-align="center start">
+                    <div flex="66">
+                        <md-checkbox ng-model="setting.ShowConfirmationDialog" aria-label="Multiple Email Address">
+                            Show confirmation before sending invoice
+                        </md-checkbox>
+                    </div>
+                </div>
+               
+                
+                 <div layout="column" layout-align="center start">
+                    &nbsp;
+                </div>
+               
+                <div class="md-padding" style="border:0px dotted; padding:2px;">
+                    <!--<h3>Feedback</h3>-->
+                    <div layout="row" layout-align="start start">
+                        <div flex="100">
+                            <md-checkbox ng-model="setting.Feedback.isenable" aria-label="Feedback">
+                                Enable Feedback on customer portal
+                            </md-checkbox>
+                        </div>
+                    </div>
+                    <div layout="row" layout-align="start start" class="2md-padding" style="margin-left:40px;">
+                            <md-input-container >
+                              <label>Type</label>
+                               <md-select ng-model="setting.Feedback.type" placeholder="Type" class="md-no-underline">
+                                <md-option ng-repeat="option in socialOption" id="{{option.value}}" value="{{option.value}}"><img src="{{option.image}}" width="32" style="vertical-align:middle"/> &nbsp;{{option.name}}</md-option>
+                               </md-select>
+                            </md-input-container>  
+                            <md-input-container flex >
+                                <label>Url</label>
+                                <input 
+                                name="url" 
+                                ng-pattern="/^https?://.+$/"
+                                type="text" 
+                                ng-model="setting.Feedback.url"
+                                ng-maxlength="200" 
+                                >
+                                <div ng-messages="invoicecontact.url.$error " md-auto-hide="false">
+                                    <p ng-message when="pattern">Invalid web address </p>
+                                    <p ng-message when="maxlength">Webaddress should not be greater then 200 characters</p>
+                                </div>
+                          
+                            </md-input-container>
+                        
+                    </div>
+                </div>
+                 <div layout="column" layout-align="center start">
+                    &nbsp;
+                </div>
+                
+                <div layout="column" layout-align="center start"        
+                permission 
+                permission-only="'settings-depositToAccount'" 
+                                                >
+                    <h3>Deposit To Account</h3>
+                    <!--{{setting.account_id}}-->
+                    <md-input-container class="md-block">
+                      <!--<label>DepositTo Account</label>-->
+                      <md-select 
+                      name="Account"
+                      ng-model="setting.DepositAccountId" 
+                      style="min-width: 200px;"
+                      placeholder="Please select Deposit To Account"
+                      >
+                      
+                      <md-option ng-value="account_name.Id" ng-repeat="account_name in account">{{ account_name.Name}}&nbsp;&nbsp;&nbsp;{{ account_name.AccountType}}</md-option>
+                      </md-select>
+                    </md-input-container>
+                    
+                </div>
+                <div layout="column" layout-align="center start">
+                    <div flex>
+                        <md-button type="submit" ng-disabled="invoicecontact.$invalid" class="md-primary md-raised">Save</md-button>
+                    </div>
+                </div>
+                
+            </md-content>
+            
+            </form>
+        </md-content>
+      </md-tab>
+      <md-tab label="Templates" style="border:1px solid;">
+            <md-content class="md-padding" >
+             
+                        <div layout="row" layout-wrap layout-align="start center">
+                        <div 
+                        flex-xs="70" 
+                        flex-sm="33"
+                        flex-gt-sm="25" 
+                        flex="25" 
+                        flex-lg="25" 
+                        flex-md="25" 
+                         ng-repeat="invoiceTemplate in vm.invoiceTemplates">    
+                        <md-card  
+                        ng-class="{{invoiceTemplate.id==setting.InvoiceTemplateId ? 'default' : ''}}" 
+                        palette-background="white:500"
+                         >
+                        <md-card-header>
+                            <md-card-avatar>
+                                
+                                <img src="assets/images/logo.png" />
+                            </md-card-avatar>
+                            <md-card-header-text>
+                                <span class="md-title">{{invoiceTemplate.name}}</span>
+                                <span class="md-subhead">Service</span>
+                            </md-card-header-text>
+                        </md-card-header>
+                            <div style="border:0px solid; max-height:200px; overflow:hidden">
+                                <img ng-click="showTemplatePreview($event,invoiceTemplate.image_url)" ng-src="{{invoiceTemplate.image_url}}" style="cursor:pointer" class="2md-card-image" alt="{{invoiceTemplate.name}}" align="center">
+                            </div>
+                        <md-card-title>
+                            <md-card-title-text>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content>
+                        </md-card-content>
+                        <md-card-actions layout="row" layout-align="end center">
+                            <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" ng-show="invoiceTemplate.id==setting.InvoiceTemplateId">
+                            <md-fab-trigger>
+                                 
+                                <md-button aria-label="share this post" class="md-fab md-mini" id="-templateButton" palette-background="{{setting.InvoiceTemplateColor}}:500" >
+                                    <md-icon md-font-icon="fa fa-paint-brush" style="color:#fff;"></md-icon>
+                                </md-button>
+                            </md-fab-trigger>
+                            <md-fab-actions style="position:absolute;bottom:50px;right:-71px;border:0px solid;width:214px;" >
+                                <md-button aria-label="Button" class="md-fab md-raised md-mini" ng-hide="true">
+                                  </md-button>
+                                <div class="md-whiteframe-z1">
+                                    <md-button aria-label="{{name}}" class="md-fab md-raised md-mini md-padding" ng-repeat="(name,palette) in vm.palettes" palette-background="{{name}}:500" ng-click="setTemplateTheme($event,name,palette,invoiceTemplate.id)" style="height:10px; margin:5px;">
+                                    </md-button>
+                                </div>
+                                </md-fab-actions>
+                            </md-fab-speed-dial>
+
+                            <md-button class="md-icon-button" aria-label="Set Default" ng-click="setTemplateDefault($event,invoiceTemplate.id)" ng-disabled="invoiceTemplate.id==setting.InvoiceTemplateId">
+                                <md-icon md-font-icon="fa fa-star" style="color: {{invoiceTemplate.id==setting.InvoiceTemplateId ? 'green' : 'gray'}};"></md-icon>
+                                <md-tooltip>Set Default Template</md-tooltip>
+                            </md-button>
+                        </md-card-actions>
+                    </md-card>
+                </div>
+            </div>
+             <!--<md-grid-list md-cols-xs="1" md-cols-sm="2" md-cols-md="2" md-cols-gt-md="4" md-gutter="16px" md-row-height="350px;">
+
+                <md-grid-tile ng-repeat="invoiceTemplate in vm.invoiceTemplates">
+                    <md-card  
+                        class="{{invoiceTemplate.id==setting.InvoiceTemplateId ? 'default' : ''}}" 
+                        palette-background="white:500" >
+                        <md-card-header>
+                            <md-card-avatar>
+                                
+                                <img src="assets/images/logo.png" />
+                            </md-card-avatar>
+                            <md-card-header-text>
+                                <span class="md-title">{{invoiceTemplate.name}}</span>
+                                <span class="md-subhead">Service</span>
+                            </md-card-header-text>
+                        </md-card-header>
+                            <div style="border:0px solid; max-height:200px; overflow:hidden">
+                                <img ng-click="showTemplatePreview($event,invoiceTemplate.image_url)" ng-src="{{invoiceTemplate.image_url}}" style="cursor:pointer" class="2md-card-image" alt="{{invoiceTemplate.name}}" align="center">
+                            </div>
+                        <md-card-title>
+                            <md-card-title-text>
+                            </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content>
+                        </md-card-content>
+                        <md-card-actions layout="row" layout-align="end center">
+                            <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" ng-show="invoiceTemplate.id==setting.InvoiceTemplateId">
+                            <md-fab-trigger>
+                                 
+                                <md-button aria-label="share this post" class="md-fab md-mini" id="-templateButton" palette-background="{{setting.InvoiceTemplateColor}}:500" >
+                                    <md-icon md-font-icon="fa fa-paint-brush" style="color:#fff;"></md-icon>
+                                </md-button>
+                            </md-fab-trigger>
+                            <md-fab-actions style="position:absolute;bottom:50px;right:-71px;border:0px solid;width:214px;" >
+                                <md-button aria-label="Button" class="md-fab md-raised md-mini" ng-hide="true">
+                                  </md-button>
+                                <div class="md-whiteframe-z1">
+                                    <md-button aria-label="{{name}}" class="md-fab md-raised md-mini md-padding" ng-repeat="(name,palette) in vm.palettes" palette-background="{{name}}:500" ng-click="setTemplateTheme($event,name,palette,invoiceTemplate.id)" style="height:10px; margin:5px;">
+                                    </md-button>
+                                </div>
+                                </md-fab-actions>
+                            </md-fab-speed-dial>
+
+                            <md-button class="md-icon-button" aria-label="Set Default" ng-click="setTemplateDefault($event,invoiceTemplate.id)" ng-disabled="invoiceTemplate.id==setting.InvoiceTemplateId">
+                                <md-icon md-font-icon="fa fa-star" style="color: {{invoiceTemplate.id==setting.InvoiceTemplateId ? 'green' : 'gray'}};"></md-icon>
+                                <md-tooltip>Set Default Template</md-tooltip>
+                            </md-button>
+                        </md-card-actions>
+                    </md-card>
+
+                </md-grid-tile>
+            </md-grid-list>-->
+        </md-content>        
+      </md-tab>
+    </md-tabs>
+  </md-content>
+
+
+
+                
+
+

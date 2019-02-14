@@ -1,0 +1,19 @@
+<md-dialog aria-label="Statment">
+  <form>
+    <md-dialog-content style="max-width:800px;max-height:810px; ">
+       <div id="statement_template">
+          <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" palette-background="grey:200" ng-hide="showProgress">
+      <md-button class="md-primary" palette-background="triCyan:500" ng-click="print();" style="border:1px dashed #ccc" permission="" permission-only="'statement-print'">
+      <md-icon md-font-icon="zmdi zmdi-print" style="color:white"></md-icon>
+       Print
+      </md-button>
+      <md-button class="md-primary" ng-click="download();"  palette-background="triCyan:500" style="border:1px dashed #ccc" ng-disabled="downloadProgress" permission="" permission-only="'statement-download'">
+      <md-icon md-font-icon="{{downloadProgress==true ? 'zmdi zmdi-refresh zmdi-hc-spin' : 'zmdi zmdi-download'}}" style="color:white"></md-icon>
+        Download
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

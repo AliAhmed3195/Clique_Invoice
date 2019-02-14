@@ -1,0 +1,101 @@
+ <style>
+ #print_receipt {
+    font-family: 'Arial'
+    font-size: 16px;
+    background: #fff;
+    border-collapse: collapse;
+    text-align: left;
+    margin: 20px;
+}
+#print_receipt th {
+    font-weight: normal;
+    color: #000;
+    padding: 10px 8px;
+    text-align:center;
+}
+#print_receipt td {
+    
+    font-size: 16px;
+    color: #000;
+    padding: 6px 8px;
+}
+@media print {
+   body, table td, p{
+        font-family: 'RobotoDraft,Roboto,'Helvetica Neue',sans-serif';
+        font-size:100%;
+   }
+
+}
+ </style>
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+
+
+ 
+  <table id="print_receipt" width="320px">
+    <tr>
+        <td colspan="2" align="center"><img src="{{companyInfo.company.logo}}" height="80"></td>
+    </tr> 
+    <tr>
+        <td colspan="2">
+            <p align="center">
+                <strong>{{companyInfo.company.name}}</strong><BR>
+                {{companyInfo.company.address1}}<BR>
+                {{companyInfo.company.state}}, {{companyInfo.company.city}}, {{companyInfo.company.zipcode}}<BR>
+                Phone: {{companyInfo.company.phone}}    
+            </p>
+        </td>
+    </tr> 
+    <tr>
+        <td align="left" width="50%">Trans. Type:</td>
+        <td width="50%">{{transactionResponse.trans_type | transType}}</td>
+    </tr>
+    <tr>
+        <td align="left">Trans. Date:</td>
+        <td>{{transactionResponse.trans_date | date:CliqueConstant.dateFormat}}</td>
+    </tr>
+    <tr>
+        <td align="left">Trans. Amount:</td>
+        <td>{{transactionResponse.trans_amount | currency}}</td>
+    </tr>
+
+    <tr >
+        <td align="left">Inv/Sale #:</td>
+        <td>{{transactionResponse.invoice_no}}</td>
+    </tr> 
+    <tr >
+        <td align="left">Trans. Status:</td>
+        <td>{{transactionResponse.status}}</td>
+    </tr> 
+    <tr ng-show="transactionResponse.trans_type=='sale'">
+        <td align="left">Card #:</td>
+        <td>xxxxxxxxxxxx{{transactionResponse.last4digit}}</td>
+    </tr> 
+    <tr ng-show="transactionResponse.trans_type=='sale'">
+        <td align="left">Card Type:</td>
+        <td>{{transactionResponse.cardtype}}</td>
+    </tr>
+    <tr ng-show="transactionResponse.trans_type=='sale'">
+        <td align="left">Card Holder:</td>
+        <td>{{transactionResponse.cardholder_name}}</td>
+    </tr> 
+    <tr >
+        <td align="left">Ref ID:</td>
+        <td>{{transactionResponse.ref_id}}</td>
+    </tr> 
+    <tr >
+        <td align="left">Auth Response:</td>
+        <td>{{transactionResponse.response_text}}</td>
+    </tr> 
+     <tr>
+        <td colspan="2">
+            <p align="center">
+               Thank You<br>
+               ***********************************************<br>
+               Powered By<br>
+               Clique Center<br>
+               (www.clique.center)
+            </p>
+        </td>
+    </tr> 
+    </table>
+ 

@@ -1,0 +1,224 @@
+<md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isTransactionLoaded"></md-progress-linear>
+<md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+<div>
+    <md-sidenav class="md-sidenav-left md-whiteframe-z4 md-sidenav-transaction" md-component-id="filter" style="width:300px !important;">
+        <md-toolbar class="md-theme-light" >
+            <h1 class="md-toolbar-tools">Search</h1>
+        </md-toolbar>
+        <form flex="" name="vm.filter.form">
+            <md-content class="md-padding">
+                <div class="margin-bottom-20" layout="row" layout-align="space-around center">
+                    <label>From</label>
+                    <md-datepicker ng-model="from" md-placeholder=""></md-datepicker>
+                </div>
+                <div class="margin-bottom-20" layout="row" layout-align="space-around center">
+                    <label>To &nbsp;</label>
+                    <md-datepicker ng-model="to" md-placeholder=""></md-datepicker>
+                </div>
+                <md-input-container class="md-block"></md-input-container>
+                <md-input-container class="md-block">
+                    <label>Status</label>
+                    <md-select placeholder="Status" ng-model="vm.query.status">
+                        <md-option value="approved">Approved</md-option>
+                        <md-option value="declined">Declined</md-option>
+                    </md-select>
+                </md-input-container>
+                <md-input-container class="md-block"></md-input-container>
+                <md-input-container class="md-block">
+                    <label>Customer</label>
+                    <input md-maxlength="30" required md-no-asterisk name="customer name" ng-model="vm.query.customer">
+
+                </md-input-container>
+                <md-button class="md-primary md-raised width-100" ng-click="vm.getTransaction(); vm.openSidebar('filter')">
+                    Search
+                    <md-icon md-font-icon="zmdi zmdi-search"></md-icon>
+                </md-button>
+                <md-button class="md-primary md-raised width-100" ng-click="resetForm()">
+                    Clear
+                    <md-icon md-font-icon="zmdi zmdi-delete"></md-icon>
+                </md-button>
+                </md-input-container>
+
+            </md-content>
+        </form>
+    </md-sidenav>
+    <div layout="row" flex  layout-align="start start" style="padding:10px 0px 0px 10px !important;" >
+            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.openSidebar('filter')" ng-hide="vm.isTransactionLoaded" >
+                  <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
+                  <md-tooltip>Search Transaction</md-tooltip>
+            </md-button>
+    </div>
+      <div layout="row" flex layout-align="center center" ng-show="triPOSLaneInfo._hasErrors">
+            <div  ng-class="{fade:doFade}" class="error">
+                <strong>Error:</strong> 
+                {{triPOSLaneInfo.errorMessage}}
+                <br>
+                <span class="md-caption">you are not able do void or refund transaction, please check triPOS services or device ipaddress</span>
+            </div>
+        </div>
+     <div layout="row" layout-xs="column" layout-margin ng-hide="vm.isTransactionLoaded" id="transaction">
+        
+      
+        <tri-widget flex title="" content-layout="column" content-layout-align="center">
+            <md-table-container>
+                <table md-table class="md-data-table" md-progress="vm.promise">
+                    <!--md-on-reorder="vm.tblData"-->
+                    <thead md-head md-order="vm.query.order"  md-on-reorder="getDesserts">
+                        <tr md-row>
+                            <th></th>
+                            <th md-column md-order-by="ref_id" decend-first>TRANS. ID</th>
+                            <th md-column md-order-by="trans_timestamp"  class="col5" style="width:90px;">DATE</th>
+                            <th md-column md-order-by="trans_amount" >AMOUNT</th>
+                            <th md-column md-order-by="remain_amount">REMAINING</th>
+                            <th md-column md-order-by="trans_type" class="col4">TRANS TYPE</th>
+                            <th md-column md-order-by="status" class="col3">STATUS</th>
+                            <th md-column md-order-by="customer_name" class="col2">CUSTOMER</th>
+                            <th md-column md-order-by="process_type" class="col1">TYPE</th>
+                            <th md-column md-order-by="invoice_no" class="col1">NO #.</th>
+                            <th md-column align="center">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody md-body ng-repeat="item in vm.tblData | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit"> 
+                        
+                            <tr md-row >
+                                <td md-cell >
+                                     <md-button ng-show="item.subtrans.length > 0" ng-click="close = !close" class="md-primary md-small md-mini" aria-label="Show Sub Transaction" >
+                                    <md-icon   md-font-icon="{{close==true ? 'fa fa-minus' : 'fa fa-plus'}}"></md-icon>
+                                    </md-button>
+                                </td>
+                                <td md-cell >
+                                    {{::item.ref_id}}
+                                </td>
+                                <td md-cell class="col5">{{::item.trans_timestamp * 1000 | date: 'medium'}}</td>
+                                <td md-cell>{{::item.trans_amount | currency}}</td>
+                                <td md-cell>{{::item.remain_amount | currency}}</td>
+                                <td md-cell class="col4">{{::item.trans_type | transType}}</td>
+                                <td md-cell class="col3">
+                                    <md-chips class="status" ng-hide="item.status==''"><md-chip class="status {{::item.status}}">{{::item.status}}</md-chip></md-chips>
+                                    <span class="status" ng-class="'status-' + item.status">
+                                        
+                                    </span>
+                                </td>
+                                <td md-cell class="col2">{{::item.customer_name}}</td>
+                                <td md-cell class="col1 capitalize">{{item.process_type | processType}}</td>
+                                <td md-cell class="col1">{{item.invoice_no  | parseInt}}</td>
+                                <td md-cell>
+                                    <div layout="row" layout-align="center center">
+                                        <div palette-background="grey:300">
+                                              
+                                              <md-button ng-click="emailReceipt(item,item.trans_type)" style="margin:0px !important;height:25px; color:rgba(0, 0, 0, 0.54) !important;font-size:12px;  min-width:18px; "  
+                                              permission 
+                                              permission-only="'transaction-emailreceipt'">
+                                                <md-icon md-font-icon="fa fa-envelope-o" md-menu-align-target style="font-size:12px; margin-bottom:2px;"></md-icon >
+                                                Receipt
+                                              </md-button>
+                                        </div>
+                                        <div style="border:0px solid;" palette-background="grey:300">
+                                            <md-menu md-offset="0 60">
+                                                <md-button 
+                                                ng-click="$mdOpenMenu()" 
+                                                class="" 
+                                                style="margin:0px !important; min-width:13px; height:25px; color:rgba(0, 0, 0, 0.54) !important;">
+                                                       <md-icon md-font-icon="fa fa-caret-down"></md-icon>
+                                                </md-button>
+                                                <md-menu-content width="3">
+                                                    <md-menu-item 
+                                                       permission 
+                                                       permission-only="'transaction-print'" 
+                                                       >
+                                                    <md-button 
+                                                       class="" 
+                                                       ng-click="printReceipt(item)"
+                                                       >
+                                                        <md-icon md-font-icon="fa fa-print"  md-menu-align-target></md-icon>
+                                                        Print
+                                                      </md-button>
+                                                     
+                                                    </md-menu-item>
+                                                    <md-menu-divider></md-menu-divider>
+                                                    <md-menu-item 
+                                                       permission 
+                                                       permission-only="'transaction-void'" 
+                                                       
+                                                     >
+                                                      <md-button ng-disabled="vm.disabledVoidOption(item)" ng-click="callVoid(item,item.trans_type)">
+                                                        <md-icon md-font-icon="fa fa-ban" md-menu-align-target></md-icon>
+                                                        Void
+                                                      </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-divider ></md-menu-divider>
+                                                    <md-menu-item 
+                                                       permission 
+                                                       permission-only="'transaction-refund'" 
+                                                       
+                                                    
+                                                      >
+                                                      <md-button ng-disabled="item.remain_amount <=0" ng-click="callRefund(item,item.trans_type)" >
+                                                        <md-icon md-font-icon="fa fa-reply-all"></md-icon>
+                                                        Refund
+                                                      </md-button>
+                                                    </md-menu-item>
+                                                  </md-menu-content>
+                                              </md-menu>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr md-row ng-show="close"> 
+                                <td md-cell>&nbsp;</td>
+                                <td md-cell colspan="8" class="md-padding" style="padding:10px;">
+                                    <table md-table class="subtrans" cellpadding="2" cellspacing="2">
+                                        <thead md-head >
+                                            <tr md-row>
+                                                <th>&nbsp;TRANSID</th>
+                                                <th>DATE</th>
+                                                <th>AMOUNT</th>
+                                                <th>TRANS TYPE</th>
+                                                <th style="text-align:left !important">STATUS</th>
+                                                <th style="text-align:left !important">ACTION</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody md-body style="text-align:center;">
+                                            <tr md-row  ng-repeat="subtrans in item.subtrans">
+                                                <td md-cell>{{::subtrans.ref_id}}</td>
+                                                <td md-cell>{{::subtrans.trans_timestamp * 1000 | date:'medium'}}</td>
+                                                <td md-cell>{{::subtrans.trans_amount | currency}}</td>
+                                                <td md-cell>{{::subtrans.trans_type | transType}}</td>
+                                                <td md-cell >
+                                                    
+                                                    <md-chips class="status" ng-hide="subtrans.status==''"><md-chip class="status {{subtrans.status}}">{{subtrans.status}}</md-chip></md-chips>
+                                                    <span class="status" ng-class="'status-' + subtrans.status">
+                                                    </span>
+                                                </td>
+                                                <td md-cell>
+                                                     
+                                                     <md-button class="md-mini md-fab md-small-trans" ng-click="    printReceipt(subtrans,item.trans_type)"
+                                                       permission 
+                                                       permission-only="'transaction-print'" 
+                                                    
+                                                     >
+                                                        <md-icon md-font-icon="fa fa-print" style="color:#2ec6a6"></md-icon>
+                                                    </md-button>
+                                                        <md-button class="md-mini md-fab md-small-trans" ng-click="emailReceipt(subtrans,item.trans_type)"
+                                                         permission 
+                                                         permission-only="'transaction-emailreceipt'" 
+                                                        
+                                                        >
+                                                         <md-icon md-font-icon="fa fa-envelope-o" style="color:#2ec6a6"></md-icon>
+                                                      </md-button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                             
+                    </tbody>
+                    <tr md-row ng-show="vm.tblData.length==0"><td md-cell colspan="10" style="text-align:center !important;text-transform:none;">There is no data to display</td></tr>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.query.limit" md-page="vm.query.page"  md-total="{{vm.tblData.length}}" md-page-select></md-table-pagination>
+        </tri-widget>
+    </div>
+</div>

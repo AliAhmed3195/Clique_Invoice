@@ -1,0 +1,457 @@
+<form name="checkoutForm" novalidate>
+ <md-progress-linear class="md-primary" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+<div flex layout="row" class="md-padding-">
+    <md-content flex="100" flex-gt-xs="50" flex-gt-lg="40" >
+        <md-list class="inbox-list" style="min-height:590px; !important; margin-top:1px; border:0px solid;">
+            <div >
+
+                <md-subheader class="" palette-background="grey:300">
+                
+                  <div layout="row">
+                    <div flex="90"><h3>Total {{totalAmount | currency}}</h3></div>
+                    <div flex="10">
+                    </div>
+                  </div>
+                </md-subheader>
+                <md-list-item class="inbox-list__email inbox-list__email--animated md-3-line md-long-text" ng-repeat="invoice in selectedInvoiceData" palette-background="{{(($index+1)%2)==0 ? 'grey:100' : ''}}">
+                     <span 
+                     class="md-avatar invoice-circle" 
+                     ng-init="initRand(0,18)" 
+                     palette-background="{{getRandomSpan()}}:200"
+                     >{{$index+1}}</span>
+                     <div class="md-list-item-text" layout="column">
+                        <div layout="row" layout-align="center center">
+                            <div flex="70">
+                                
+                                <h3><span class="md-caption" am-time-ago="email.date"></span>Invoice #{{invoice.DocNumber}}.</h3>
+                                <h4>Invoice Date: {{invoice.TxnDate | date:'MM/dd/yyyy'}}</h4>
+                                <p>Balance Due: {{invoice.Balance | currency}}</p>
+                            </div>
+                            <div flex="30" align="right" ng-init="invoice.ChargeAmount=invoice.Balance">
+
+                                <input 
+                                     type="text" 
+                                     name="ChargeAmount{{$index}}"
+                                     ng-model="invoice.ChargeAmount" 
+                                     class="md-padding" 
+                                     number-formatter
+                                     ng-keyup="calculateTotalAmount();"
+                                     ng-pattern="/^[0-9.,]+$/" 
+                                     step="0.01" 
+                                     style="width:55px;height:15px;"
+                                     ng-max="invoice.Balance"
+
+                                      required>
+                                    
+                                     <div ng-messages="true" role="alert" class="custom-validation" ng-show="invoice.ChargeAmount > invoice.Balance">
+                                          <div >
+                                              <span >Amount exceeds</span>
+                                          </div>
+                                    </div>
+                                     <div ng-messages="checkoutForm['ChargeAmount'+$index].$error" role="alert" class="custom-validation">
+                                          <div ng-message="required">
+                                              <span>Amount is required</span>
+                                          </div>
+                                          <div ng-message="pattern">
+                                              <span>Invalid Amount</span>
+                                          </div>
+                                      </div>
+                                    <!--</md-input-container>-->
+                            </div>
+                        </div>
+                    </div>
+                    <md-divider ng-if="!$last"></md-divider>
+                </md-list-item>
+                
+            </div>
+        </md-list>
+    </md-content>
+    <div class="animate-wrapper" layout="column" layout-align="start center" flex >
+           
+        <div flex id="ui-admin-email" ui-view layout="column" layout-align="start start" class="overflow-auto full-width" style="border:0px solid #ccc">
+            <div flex class="inbox-email-selected" layout="column" layout-align="start" style="min-width:100%;border:0px solid;">
+                 
+                  <md-content class="mpaymentModed-padding- full-width ccfields" style="margin-top:0px;" >
+                    <md-card>
+                        <md-card-header ng-show="true">
+                            <md-card-avatar>
+                                <img class="2md-user-avatar" style="margin-top:5px;" src="{{paymentDescription[paymentMode].icon}}"/>
+                            </md-card-avatar>
+                            <md-card-header-text>
+
+                                <span class="md-headline" style="margin-top:8px;">{{paymentDescription[paymentMode].title}}</span>
+                                  <md-fab-speed-dial md-direction="{{vm.fabDirection}}" md-open="vm.fabStatus" ng-class="vm.fabAnimation" style="position:absolute;top:20px;right:20px;">
+                                    <md-fab-trigger >
+                                        <md-button aria-label="share this post" class="md-fab md-raised md-mini md-primary">
+                                            
+                                            <md-icon md-font-icon="zmdi zmdi-more-vert" ></md-icon>
+                                            <md-tooltip>Choose payment method</md-tooltip>
+                                            
+                                        </md-button>
+                                    </md-fab-trigger>
+                                    <md-fab-actions>
+                                       <md-button aria-label="Ach" class="md-fab md-raised md-mini md-primary" ng-click="changePaymentMode('ach')" ng-if="activePaymentMethods.ach">
+                                            <md-icon md-font-icon="zmdi zmdi-file-text"></md-icon>
+                                            <md-tooltip>eCheck (ACH)</md-tooltip>
+                                        </md-button>
+                                        <md-button aria-label="Cash" class="md-fab md-raised md-mini md-primary" ng-click="changePaymentMode('cash')" ng-if="activePaymentMethods.cash">
+                                            <md-icon md-font-icon="zmdi zmdi-money-box"></md-icon>
+                                            <md-tooltip>Cash</md-tooltip>
+                                        </md-button>
+                                        <md-button aria-label="CreditCard" class="md-fab md-raised md-mini md-primary md-hue-2" ng-if="activePaymentMethods.creditcard" ng-click="changePaymentMode('creditcard')">
+                                            <md-icon md-font-icon="zmdi zmdi-card"></md-icon>
+                                            <md-tooltip>Credit Card</md-tooltip>
+                                        </md-button>
+                                         <md-button aria-label="Bolt P2PE" class="md-fab md-raised md-mini md-primary md-hue-2" ng-click="changePaymentMode('bolt')" ng-if="activePaymentMethods.bolt">
+                                            <md-icon md-font-icon="fa fa-dot-circle-o"></md-icon>
+                                            <md-tooltip>Bolt P2PE</md-tooltip>
+                                        </md-button>
+                                        <md-button aria-label="triPOS" class="md-fab md-raised md-mini md-primary md-hue-2" ng-click="changePaymentMode('tripos_ipp350')" ng-if="activePaymentMethods.tripos_ipp350">
+                                            <md-icon md-font-icon="zmdi zmdi-keyboard zmdi-hc-fw zmdi-hc-rotate-270"></md-icon>
+                                            <md-tooltip>triPOS iPP350</md-tooltip>
+                                        </md-button>
+                                    </md-fab-actions>
+                                  </md-fab-speed-dial>
+                            </md-card-header-text>
+                            
+                        </md-card-header>
+                        <md-divider></md-divider>
+
+                        <!-- Cash-->
+                        <md-card-content ng-show="paymentMode=='cash'">
+                              <div layout="column" layout-gt-xs="row">
+                                <div flex="50">
+                                    <md-button type="submit" 
+                                    class="md-raised md-primary green-A700" 
+                                    aria-label="PROCESS" 
+                                    ng-click="submit('cash');" 
+                                    ng-disabled="isAmountInvalid || disabledChargeButton"
+                                    style="background:#2FC65A;width:90%">CHARGE {{totalAmount | currency}}</md-button>
+                                </div>
+                                <div flex="50" align="right">
+                                   <md-button type="submit" 
+                                    class="md-warn" 
+                                    aria-label="PROCESS" 
+                                    ng-click="cancel();" 
+                                    style="color:grey;width:90%">DON'T CHARGE</md-button>
+                                </div>
+                              </div>
+                        </md-card-content>
+
+                        <!-- Ach-->
+                        <md-card-content ng-show="paymentMode=='ach'">
+                              
+                              <div layout="row" layout-padding layout-gt-xs="row">
+                                <div flex="100">
+                                    <md-input-container class="md-block" md-no-float>
+                                        <input type="text" id="bankaba" name="bankaba" ng-model="payform.bankaba" class="md-padding" placeholder="Rounting #" ng-required="requiredAccountNo">
+                                        
+                                        <div ng-messages="checkoutForm.bankaba.$error" role="alert" multiple>
+                                            <div ng-message="required" ng-show="IsSubmit">
+                                                <span>Rounting Number is required</span>
+                                            </div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" md-no-float>
+                                        <input type="text" id="account" name="account" ng-model="payform.account" class="md-padding" placeholder="Account #" ng-required="requiredBankaba">
+                                        
+                                        <div ng-messages="checkoutForm.account.$error" role="alert" multiple>
+                                            <div ng-message="required" ng-show="IsSubmit">
+                                                <span>Account Number is required</span>
+                                            </div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container class="md-block" md-no-float>
+                                        <input type="text" id="name" name="name" ng-model="payform.name" class="md-padding" placeholder="Name on Account">
+                                        
+                                        <div ng-messages="checkoutForm.name.$error" role="alert" multiple>
+                                            <div ng-message="required" ng-show="IsSubmit">
+                                                <span>Name on Account is required</span>
+                                            </div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                              </div>
+                              <div layout="column" layout-gt-xs="row">
+                                <div flex="50">
+                                    <md-button type="submit" 
+                                    class="md-raised md-primary" 
+                                    aria-label="PROCESS" 
+                                    ng-click="submit('ach');" 
+                                    ng-disabled="checkoutForm.$invalid || isAmountInvalid || disabledChargeButton"
+                                    style="background:#2FC65A;width:90%">CHARGE {{totalAmount | currency}}</md-button>
+                                </div>
+                                <div flex="50" align="right">
+                                   <md-button type="submit" 
+                                    class="md-warn" 
+                                    aria-label="PROCESS" 
+                                    ng-click="cancel();" 
+                                    style="color:grey;width:90%">DON'T CHARGE</md-button>
+                                </div>
+                              </div>
+                        </md-card-content>
+
+                        <!-- CreditCard-->
+
+                        <md-card-content ng-show="paymentMode=='creditcard'">
+                           
+                            <!--cc fields start-->
+                            <div class="md-padding-" style="padding:6px 10px 0px 10px;">
+                              <md-input-container class="md-block" md-no-float ng-show="ccprofiles.length > 0">
+                                <!--<label>Card Profile</label>-->
+                                <md-select ng-model="ccprofile" ng-change="UpdateCCFields(ccprofile)" placeholder="Card Profile">
+                                    <md-optgroup label="Card Profile">
+                                        <md-option ng-value="">None</md-option>
+                                        <md-option ng-value="profile" ng-repeat="(key,profile) in ccprofiles">xxxx-xxxx-xxxx-{{profile.last_digits}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                              </md-input-container>
+                              <md-input-container class="md-block" md-no-float>
+                                  <input type="text" id="FirstName" name="cardholder" ng-model="payform.cardholder" class="md-padding" placeholder="CardHolder Name" ng-required="requiredCardHolderName" ng-disabled="usedCardProfile">
+                                  
+                                  <div ng-messages="checkoutForm.cardholder.$error" role="alert" multiple>
+                                      <div ng-message="required" ng-show="IsSubmit">
+                                          <span>CardHolder Name is required</span>
+                                      </div>
+                                  </div>
+                              </md-input-container>
+                              <md-input-container class="md-block" md-no-float >
+                                  <input type="text" id="CardNumber" name="cardnumber" ng-model="payform.cardnumber" data-ng-pattern="ccPattern" placeholder="CreditCard Number" data-ng-minlength="14" maxlength="16" ng-required="requiredCreditCardNumber" data-credit-card-type ng-disabled="usedCardProfile">
+                                  
+                                  <div ng-messages="checkoutForm.cardnumber.$error" role="alert" multiple>
+                                      <div ng-message="required" ng-show="IsSubmit">
+                                          <span>CreditCard Number is required</span>
+                                      </div>
+                                      <div ng-message="minlength">
+                                          <span>Credit card must be 14-16 digits</span>
+                                      </div>
+
+                                      <div ng-message="pattern">
+                                          <span>Credit card must consist of only numbers</span>
+                                      </div>
+                                  </div>
+                                  <div>
+                                      <img ng-show="true" ng-repeat="card in cardlogos" align="right" ng-src="assets/images/cardicons/{{card.src}}" style="opacity:{{ccinfo.type==card.id ? 1 : 0.4}}; margin-right:2px;width:38px">
+                                  </div>
+                              </md-input-container>
+                                
+                              <div layout="column" layout-gt-xs="row">
+                                  <md-input-container flex="100" flex-gt-xs="33" md-no-float ng-hide="usedCardProfile">
+                                      <label>Exp Month</label>
+                                      <md-select id="months" name="months" ng-model="payform.months" ng-required="requiredMonthField" >
+                                          <md-option ng-repeat="(key, month) in ['01','02','03','04','05','06','07','08','09','10','11','12']" value="{{month}}">
+                                              {{month}}
+                                          </md-option>
+                                      </md-select>
+                                      <div ng-messages="checkoutForm.months.$error" role="alert">
+                                          <div ng-message="required" ng-show="IsSubmit">
+                                              <span>CreditCard exp month is required.</span>
+                                          </div>
+                                      </div>
+                                       
+                                  </md-input-container>
+                                  <md-input-container flex="100" flex-gt-xs="33" ng-show="usedCardProfile">
+                                      <label>Exp Month</label>
+                                       <input type="text" id="CVV" name="cc2" ng-model="payform.months" placeholder="XXXX" ng-disabled="true">
+                                  </md-input-container>
+
+                                  <md-input-container flex="100" flex-gt-xs="33" md-no-float ng-hide="usedCardProfile">
+                                      <label>Exp Year</label>
+                                      <md-select id="years" name="years" ng-model="payform.years" ng-required="requiredYearField">
+                                          <md-option ng-repeat="year in [] | range:currentYear:currentYear+13" value="{{year}}">
+                                              {{year}}
+                                          </md-option>
+                                      </md-select>
+                                      <div ng-messages="checkoutForm.years.$error" role="alert">
+                                          <div ng-message="required" ng-show="IsSubmit">
+                                              <span>CreditCard exp year is required.</span>
+                                          </div>
+                                      </div>
+                                  </md-input-container>
+                                   <md-input-container flex="100" flex-gt-xs="33" ng-show="usedCardProfile">
+                                       <label>Exp Year</label>
+                                       <input type="text" id="CVV" name="cc2" ng-model="payform.years" placeholder="XXXX" ng-disabled="true">
+                                  </md-input-container>
+                                  <md-input-container class="md-block" md-no-float flex-gt-xs="33" ng-hide="usedCardProfile">
+                                      <input type="text" id="CVV" name="cc2" ng-model="payform.cc2" placeholder="CVC2/CVV2/CID" md-maxlength="4">
+                                      <div ng-messages="checkoutForm.cc2.$error" role="alert" multipl>
+                                          <div ng-message="required" ng-show="IsSubmit">
+                                              <span>CCV2 field is required.</span>
+                                          </div>
+                                          <div ng-message="md-maxlength">
+                                              <span>CCV2 can't be longer than 4 characters.</span>
+                                          </div>
+                                      </div>
+                                  </md-input-container>
+                                  <md-input-container flex="100" flex-gt-xs="33" ng-show="usedCardProfile">
+                                       <label>CVC2/CVV2/CID</label>
+                                       <input type="text" id="CVV" name="cc2" ng-model="payform.cc2" placeholder="XXXX" ng-disabled="true">
+                                  </md-input-container>
+                              </div>
+                              <span class="md-body-1">Additional Information</span>
+                              <div layout="column" layout-gt-xs="row" style="border-top:0px solid #ddd">
+                                  <md-input-container flex="100" flex-gt-xs="75" md-no-float>
+                                      <input type="text" name="streetaddress" ng-model="payform.streetaddress" class="md-padding" placeholder="Street Address" ng-disabled="usedCardProfile">
+                                  </md-input-container>
+                                  <md-input-container flex="100" flex-gt-xs="25" md-no-float>
+                                      <input type="text" name="zipcode" ng-model="payform.zipcode" class="md-padding" placeholder="ZIP Code" ng-disabled="usedCardProfile">
+                                  </md-input-container>
+                              </div>
+                              <div layout="column" layout-gt-xs="row" layout-align="center center">
+                                  <div flex="50">
+                                  <md-checkbox aria-label="Create Profile" ng-model="payform.card_profile" ng-hide="usedCardProfile">
+                                      Save card for future use
+                                  </md-checkbox>
+                                </div>
+                                <div flex="50" align="right">
+                                  <md-button ng-click="showSwipe()" class="md-primary">
+                                  <md-icon md-font-icon="fa fa-credit-card-alt" style="font-size:12px;"></md-icon>&nbsp;
+                                   Swipe
+                                  </md-button>
+                                </div>
+                              </div>
+                              <div layout="column" layout-gt-xs="row">
+                                <div flex="50">
+                                    
+                                    <md-button type="submit" 
+                                    class="md-raised md-primary" 
+                                    aria-label="PROCESS" 
+                                    ng-click="submit('creditcard');" 
+                                    ng-disabled="checkoutForm.$invalid || isAmountInvalid || disabledChargeButton"
+                                    style="background:#2FC65A;width:90%">CHARGE {{totalAmount | currency}}</md-button>
+                                </div>
+                                <div flex="50" align="right">
+                                   <md-button type="submit" 
+                                    class="md-warn" 
+                                    aria-label="PROCESS" 
+                                    ng-click="cancel();" 
+                                    style="color:grey;width:90%">DON'T CHARGE</md-button>
+                                </div>
+                            </div>
+                            </div>
+                            <!-- cc fields end-->
+                        </md-card-content>
+
+                        <!-- Bolt-->
+
+                        <md-card-content ng-show="paymentMode=='bolt'">
+                        
+                              <div layout="column" layout-align="center center" style="min-height:400px !important; height:400px !important;">
+                                  <div flex align="center" class="margin-top-40">
+                                    <img src="assets/images/bolt.png" width="160">
+                                  </div>
+                                  
+                                  <div flex align="center" ng-if="boltConfig.hsn!=''" layout-padding>
+                                      <span class="md-subtitle" style="color:green">Terminal : {{boltConfig.hsn}}</span>
+                                  </div>
+                                  <div flex align="center" ng-if="boltConfig.hsn==''">
+                                      <span class="md-subtitle" style="color:#ff0000;">No Terminal found on your account!</span>
+                                      <br>
+                                      <span class="md-caption" style="color:#ff0000;">please ask your administrator to assign you terminal id from Settings App</span>
+                                  </div>
+
+                                  <div flex align="center">
+                                    <md-button type="submit" 
+                                              class="md-raised md-primary" 
+                                              aria-label="PROCESS" 
+                                              ng-click="processBolt('');" 
+                                              ng-disabled="disabledChargeButton"
+                                              style="background:#408F2B;width:100% !important"
+                                              ng-if="boltConfig.hsn!=''"
+                                              >CHARGE {{totalAmount | currency}}</md-button>
+                                  </div>
+                                  
+                                  <div flex align="center" class="info" ng-if="boltProcessStatus!=''" layout-padding>
+                                      <span class="md-subtitle">{{boltProcessStatus}}</span>
+                                  </div>
+                                  <div flex>
+
+                                  </div>
+                              </div>
+                        </md-card-content>
+
+                        <md-card-content ng-show="paymentMode=='tripos_ipp350'">
+                              <div layout="column" layout-align="center center" style="min-height:400px !important; height:auto !important;">
+
+                                  <div flex align="center" layout-padding>
+                                    <img src="assets/images/tripos.jpg" width="160">
+                                    <div ng-show="tripos_searchlane_progress">
+                                      <md-progress-linear class="md-primary" md-mode="indeterminate" ></md-progress-linear>
+                                      <center class="md-caption">Getting Configuration</center>
+                                    </div>
+                                  </div>
+                                  
+                                   <!-- Sale Error -->
+                                  <div flex align="center" layout-padding ng-show="triPOSSaleInfo._hasErrors">
+                                      <span class="md-subtitle" style="color:#ff0000;">
+                                       Error
+                                      </span>
+                                      <br>
+                                      <span class="md-caption" style="color:#ff0000;">
+                                        {{triPOSSaleInfo.errorMessage}}
+                                      </span>
+                                  </div>
+                                  
+                                  <div flex align="center" layout-padding ng-hide="triPOSLaneInfo._hasErrors" ng-if="showtriPOSLaneInfo">
+                                      <span class="md-subtitle" style="color:green">{{triPOSLaneInfo.ipLanes[0].description}}</span>
+                                      <div ng-if="triPOSLaneInfo.ipLanes.length > 0">
+                                      <table class="md-table" >
+                                        <tr>
+                                            <td>Lane ID</td>
+                                            <td>Terminal ID</td>
+                                            <td>Driver</td>
+                                            <td>Terminal Type</td>
+                                        </tr>
+                                        <tr >
+                                            <td align="center">{{triPOSLaneInfo.ipLanes[0].laneId}}</td>
+                                            <td>{{triPOSLaneInfo.ipLanes[0].terminalId}}</td>
+                                            <td>{{triPOSLaneInfo.ipLanes[0].driver}}</td>
+                                            <td>{{triPOSLaneInfo.ipLanes[0].terminalType}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" ><span style="color:green" >Device IPAddress:</span> {{triPOSLaneInfo.ipLanes[0].ip.address}}&nbsp;:&nbsp;{{triPOSLaneInfo.ipLanes[0].ip.port}}</td>
+                                        </tr>
+                                      </table>
+                                      <md-button type="submit" 
+                                              class="md-raised md-primary" 
+                                              aria-label="PROCESS" 
+                                              ng-click="processTriPOSiPP350('');" 
+                                              ng-disabled="disabledChargeButton"
+                                              style="background:#408F2B;width:100% !important"
+                                              
+                                              >CHARGE {{totalAmount | currency}}</md-button>
+
+                                      </div>
+
+                                      <span ng-if="triPOSLaneInfo.ipLanes.length==0" class="md-subtitle" style="color:#ff0000;">No ipLanes define in config file</span>
+
+                                  </div>
+
+                                  <!-- Lane Error -->
+                                  <div flex align="center" layout-padding ng-show="triPOSLaneInfo._hasErrors">
+                                      <span class="md-subtitle" style="color:#ff0000;">
+                                       Error
+                                      </span>
+                                      <br>
+                                      <span class="md-caption" style="color:#ff0000;">
+                                        {{triPOSLaneInfo.errorMessage}}
+                                      </span>
+                                  </div>
+                                  
+                                 
+                                
+                                  <div flex>
+
+                                  </div>
+                              </div>
+                        </md-card-content>
+
+
+                    </md-card>
+                  </md-content>
+                 
+            </div>
+        </div>
+    </div>
+</div>
+</form>

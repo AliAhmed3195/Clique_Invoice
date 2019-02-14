@@ -1,0 +1,107 @@
+<div  ng-show="vm.isStatementLoaded" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">		
+	<md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isStatementLoaded"></md-progress-linear>
+</div>
+
+<div ng-show="!vm.isStatementLoaded">
+<md-sidenav class="md-sidenav-left md-whiteframe-z4" md-component-id="filter" style="min-width:280px !important;">
+    <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools">Search</h1>
+    </md-toolbar>
+    <form name="DateFilter" style="padding:0px;" class="dateFilter">
+	
+	<md-content class="md-padding">
+            <div class="margin-bottom-20" layout="row" layout-align="space-around center">
+                <label>From</label>
+                <md-datepicker ng-model="from" md-placeholder=""></md-datepicker>
+            </div>
+            <div class="margin-bottom-20" layout="row" layout-align="space-around center">
+                <label>To &nbsp;</label>
+                <md-datepicker ng-model="to" md-placeholder=""></md-datepicker>
+            </div>
+           
+           
+
+            <md-button class="md-primary md-raised width-100" ng-click="vm.FilterStatement(); vm.openSidebar('filter')" ng-disabled="DateFilter.$invalid">
+                Search
+                <md-icon md-font-icon="zmdi zmdi-search"></md-icon>
+
+            </md-button>
+            <md-button class="md-primary md-raised width-100" ng-click="resetForm()">
+                Clear
+                <md-icon md-font-icon="zmdi zmdi-delete"></md-icon>
+            </md-button>
+        </md-content>
+</form>
+</md-sidenav>
+
+<div layout="row" flex  layout-align="start start" class="" style="padding:10px 0px 0px 10px !important;">
+             <div flex="80">
+            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.openSidebar('filter')">
+                  <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
+                  <md-tooltip>Search Statement</md-tooltip>
+            </md-button>
+			<md-button aria-label="send" class="md-primary md-raised md-small" ng-click="vm.showSendConfirmationDialog();" ng-show="CustomerSelection.length > 0" permission-only="'statement-send'">
+                  <md-icon md-font-icon="fa fa-paper-plane" style="font-size:14px;"></md-icon>
+                  <md-tooltip>Send Statement</md-tooltip>
+            </md-button>
+            </div>
+			
+			<!--<div flex="20" style="font-size:18px; font-weight:bold;">Total Amount: {{totalCheckedAmount | currency }}</div>-->
+        </div>
+		
+
+
+<div layout="row" layout-xs="column" layout-margin  id="transaction" ng-show="ShowGrid">
+<tri-widget flex title="" content-layout="column" content-layout-align="center">
+  	<md-table-container>
+          <table md-table md-row-select multiple ng-model="CustomerSelection" md-progress="vm.promise">
+            <thead md-head md-order="vm.query.order" md-on-reorder="logOrder">
+              <tr md-row>
+                <th md-column md-order-by="name"><span>CUSTOMER</span></th>
+                <th md-column><span>EMAIL</span></th>
+                <th md-column><span>BALANCE</span></th>
+                <th md-column><span>ACTION</span></th>
+              </tr>
+            </thead>
+            <tbody md-body>
+              <tr md-row md-select="customer.Id" md-select-id="customer.Id" md-on-select="vm.MultipleSelection()" md-auto-select="vm.query.autoSelect" ng-disabled="dessert.calories.value > 400" ng-repeat="(key, customer) in vm.customerInvoices | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                <td md-cell>{{customer.Name}}</td>
+				<td md-cell>
+					 <md-input-container class="md-block">
+						<label>Email Address</label>
+						<input 
+						name="BillEmail" 
+						type="email" 
+						ng-model="customer.Email"
+						style="width:200px;"
+						>
+						 <div ng-messages="createnew.BillEmail.$error" md-auto-hide="false" >
+							<div ng-message when="email">
+								<span translate>Please enter a valid email address</span>
+							</div>
+						</div>
+					</md-input-container>
+				</td>
+				<td md-cell class="title"><h4>{{customer.OpenBalance | currency}}</h4></td>
+				<td md-cell class="col3">
+				   <!--<md-button class="md-primary md-hue-2 " style="border:1px dashed #ccc" ng-click="vm.showStatement(customer);" permission="" permission-only="'statement-view'">
+					  <md-icon 
+						md-font-icon="zmdi zmdi-view-toc" 
+						md-menu-align-target 
+						style="font-size:12px; margin-bottom:2px;"
+						>
+					  </md-icon >&nbsp;View Statement
+				  </md-button>-->
+				  
+				  <md-button class="md-primary md-fab md-mini" ng-class="[vm.buttonClass, vm.buttonHue]" aria-label="fab button" ng-click="vm.openStatementDetail(customer);" permission="" permission-only="'statement-view'">
+							<md-icon md-font-icon="zmdi zmdi-mail-send"></md-icon>
+				   </md-button>
+				</td>
+              </tr>
+            </tbody>
+          </table>
+        </md-table-container>
+    <md-table-pagination md-limit="vm.query.limit" md-limit-options="limitOptions" md-page="vm.query.page" md-total="{{vm.customerInvoices.length}}" md-page-select="options.pageSelect" md-boundary-links="options.boundaryLinks" md-on-paginate="logPagination"></md-table-pagination>	
+	  </tri-widget>			   
+</div>
+</div>

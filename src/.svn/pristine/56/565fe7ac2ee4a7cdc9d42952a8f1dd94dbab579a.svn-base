@@ -1,0 +1,32 @@
+(function () {
+    'use strict';
+
+    angular
+        .module('app.examples.dashboards')
+        .factory('DashboardModel', DashboardModel);
+
+    DashboardModel.$inject = ['$http','Clique','$httpParamSerializer'];
+    function DashboardModel($http,Clique,$httpParamSerializer) {
+        
+        var service = {};
+            service.GetInvoiceStatistics = GetInvoiceStatistics;
+        return service;
+
+        
+        function GetInvoiceStatistics(query) {
+            var qs = $httpParamSerializer(query);
+            return Clique.callService('get','/invoice/dashboard/?'+qs,'').then(handleSuccess, handleError);
+        }
+      
+      
+
+        // private functions
+        function handleSuccess(res) {
+            return res.data;
+        }
+        function handleError(error) {
+            return error;
+        }
+    }
+
+})();

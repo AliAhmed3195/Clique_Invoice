@@ -1,0 +1,18 @@
+.triangular-toolbar {
+    &.ng-enter {
+        transition: .5s;
+    }
+
+    &.ng-enter {
+      @include slideInDown();
+    }
+
+    &.ng-leave {
+      display: none;
+    }
+}
+.toolbar-icon{
+	font-size:28px !important; 
+	font-weight:normal !important;
+	color:rgb(0, 188, 212) !important;
+}

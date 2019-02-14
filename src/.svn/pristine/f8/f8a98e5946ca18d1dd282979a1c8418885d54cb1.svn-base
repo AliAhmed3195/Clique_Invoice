@@ -1,0 +1,125 @@
+
+
+<div  ng-show="showProgress" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
+    <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+</div>
+
+<div class="invoice_container">
+    <div flex layout="row" id="invoice_detail_layout">
+
+        <md-content flex="100" flex-gt-xs="100" flex-gt-lg="40" layout-padding>
+
+            <div flex layout="row" layout-align="end end" ng-show="fabMenu">
+
+                <md-button aria-label="Send Email" class="md-fab md-primary md-mini" ng-click="vm.subMenu('email', $event)" permission="" permission-only="'invoice-send'">
+                    <md-icon md-font-icon="fa fa-paper-plane-o"></md-icon>
+                    <md-tooltip>Send Invoice</md-tooltip>
+                </md-button>
+                <md-button aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_template', $event)" permission="" permission-only="'invoice-templates'">
+                    <md-icon md-font-icon="fa fa-file-text"></md-icon>
+                    <md-tooltip>Invoice Template</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_print', $event)" permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
+                    <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
+                    <md-tooltip>Invoice Print</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="Payment Method" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('payment_methods', $event)" permission="" permission-only="'invoice-paymentmethod'">
+                    <md-icon md-font-icon="fa fa-list-alt"></md-icon>
+                    <md-tooltip>Payment Method</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="Collect Payment" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('collect_payment', $event)" permission="" permission-only="'invoice-paymentmethod'">
+                    <md-icon md-font-icon="fa fa-credit-card"></md-icon>
+                    <md-tooltip>Collect Payment</md-tooltip>
+                </md-button>
+                
+                <md-button aria-label="Invoice Statistic" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_stats', $event)" permission="" permission-only="'invoice-statistics'">
+                    <md-icon md-font-icon="fa fa-bar-chart"></md-icon>
+                    <md-tooltip>Invoice Statistics</md-tooltip>
+                </md-button>
+
+                <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" permission="" permission-only="'invoice-color'">
+                    <md-fab-trigger>
+
+                        <md-button aria-label="share this post" class="md-fab md-mini md-primary" palette-background="{{vm.template_color}}:500" id="templateButton">
+                            <md-icon md-font-icon="fa fa-paint-brush"></md-icon>
+                        </md-button>
+                    </md-fab-trigger>
+                    <md-fab-actions style="position:absolute;top:50px;right:10px;border:0px solid;width:300px;">
+                        
+                        <md-button aria-label="Twitter" class="md-fab md-raised md-mini" palette-background="red:500" ng-click="setTemplateTheme('#F44336')" ng-hide="true">
+                        </md-button>
+
+                        <md-button aria-label="Twitter" class="md-fab md-raised md-mini" ng-repeat="(name,palette) in vm.palettes" palette-background="{{name}}:500" ng-click="setTemplateTheme(name,palette)">
+                        </md-button>
+                    </md-fab-actions>
+                </md-fab-speed-dial>
+            </div>
+
+           <div ng-show="isInvoicePaid"  style="position:absolute; top:130px; right:100px;z-index:9999;opacity:0.4" align="center">
+                <img src="assets/images/elements/paid.png" width="500" ng-show="displayPaidStamp">
+            </div>
+            <md-card class="page" layout-padding id="invoice_template" style="min-height:540px;overflow:auto;">
+                <div flex layout="row" layout-align="center center">
+                    <div layout="row" layout-sm="column" layout-align="space-around">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+
+                    </div>
+
+                </div>
+            </md-card>
+        </md-content>
+    </div>
+    <md-sidenav 
+    class="md-sidenav-left md-whiteframe-z4 stat" 
+    md-component-id="statistics" 
+    style="min-width:490px !important;"
+    >
+
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">Statistics</h1>
+            <md-progress-linear class="md-primary" md-mode="indeterminate" ng-show="vm.showInvoiceStatsProgress"></md-progress-linear>
+        </md-toolbar>
+        <md-content class="md-padding" ng-hide="vm.showInvoiceStatsProgress" >
+            <div layout="row">
+                <div flex class="md-whiteframe-z1" style="padding:5px !important;">
+                    <div ng-repeat="group in vm.statisticsGroups">
+                        <span class="md-title">Invoice Email Statistics</span><br>
+                        <span class="md-subhead">Total Invoice Request : {{totalRequest}}</span>
+                        <md-list-item ng-init="stat" ng-repeat="stat in group.stats" layout="column" layout-align="space-around start">
+                            <md-tooltip md-direction="left">
+                                {{::stat.value}} / {{totalRequest}}
+                            </md-tooltip>
+                            <md-progress-linear class="request" md-mode="determinate" ng-value="::stat.value" md-buffer-value="60"></md-progress-linear>
+                            <p translate style="font-size:80%">{{stat.title}}</p>
+                        </md-list-item>
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div layout="row">&nbsp;</div>
+            <div layout="row">
+                <div flex class="md-whiteframe-z1" style="padding:5px !important; ">
+                    <span class="md-title">Invoice Event Comparison</span>
+                    <span class="md-subhead">&nbsp;</span>
+                     <div style="width:60% !important; margin:0 auto;" align="center">
+                        <canvas class="chart-doughnut" chart-data="vm.pieData" chart-labels="vm.pieLabels" chart-legend="true" chart-options="vm.pieOptions"></canvas>
+                    </div>
+                </div>
+
+            </div>
+            <div layout="row">&nbsp;</div>
+
+            <div layout="row">
+                <div flex-gt-sm="100" flex="100" class="md-whiteframe-z1" style="padding:5px !important;">
+                    <tri-table class="table" columns="vm.InvoiceStatsColumns" contents="vm.InvoiceStatsData" page-size="5"></tri-table>
+                </div>
+            </div>
+</div>
+</md-content>
+</md-sidenav>
+</div>

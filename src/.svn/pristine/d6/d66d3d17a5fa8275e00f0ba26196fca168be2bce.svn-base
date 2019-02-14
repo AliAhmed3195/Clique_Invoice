@@ -1,0 +1,11 @@
+<style>
+@media print {
+  .page-break { 
+    display: block; 
+    page-break-after:always;
+    overflow:hidden;
+  }
+}
+
+</style>
+<div ng-bind-html="content"></div>

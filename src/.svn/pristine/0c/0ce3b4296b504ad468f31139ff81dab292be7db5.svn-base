@@ -1,0 +1,43 @@
+<md-dialog aria-label="Send Invoice"  id="sendinvoice">
+  <md-dialog-content class="md-padding2" >
+      <h2 class="md-padding2" style="padding:16px 0px 0px 16px;">Send Invoice</h2>
+      <div class="md-dialog-content" style="min-width:400px !important; padding:0px;" >
+        <md-content>
+            <md-list>
+              <md-list-item class="md-3-line" ng-repeat="invoice in selectedInvoiceData" style="border-bottom:1px solid #ccc;">
+                  <div class="md-list-item-text" >
+                      <div id="anchor{{invoice.Id}}" class="anchor-">&nbsp;</div>
+                      <h2 style="margin-top:0px;">Invoice# {{invoice.DocNumber}}</h2>
+                      <h3>{{invoice.CustomerRef.name}}</h3>
+                      <h2>{{invoice.TotalAmt | currency}}</h2>
+                      <p>
+                        <md-chips class="status" ng-show="sentInvoice.indexOf(invoice.Id)!=-1">
+                          <md-chip class="status {{(invoiceMessages | parseErrorMessage:invoice.Id).type}}">{{(invoiceMessages | parseErrorMessage:invoice.Id).message}}</md-chip>
+                        </md-chips>
+                        
+                        <md-chips class="status" ng-show="sentInvoice.indexOf(invoice.Id)!=-1">
+                          <md-chip class="status click" ng-show="(invoiceMessages | parseErrorMessage:invoice.Id).type=='processed'" style="display:block;">
+                          Invoice<b style="text-transform:lowercase !important"> has been sent successfully to  {{invoice.BillEmail.Address}}</b></md-chip>
+                        </md-chips>
+
+                      </p>
+                  </div>
+              </md-list-item>
+            </md-list>
+          
+        </md-content>
+      </div>
+    </md-dialog-content>
+     <md-dialog-actions layout="row" ng-hide="hideDialogActions" class="invoice_action" ng-init="isDisabledSentButton=false;" style="height:100px !important;">
+        <md-progress-linear md-mode="determinate" value="{{progressValue}}" ng-show="showProgress"></md-progress-linear>
+      <md-button  ng-click="send();isDisabledSentButton=true" ng-disabled="isDisabledSentButton" class="md-primary md-raised" >
+          <md-icon md-font-icon="fa fa-paper-plane"></md-icon></md-icon>
+         <span ng-if="isDisabledSentButton==false">
+          Send 
+           </span>
+        <span ng-if="isDisabledSentButton==true">
+          Sending.. 
+         </span>
+      </md-button>
+    </md-dialog-actions>
+</md-dialog>

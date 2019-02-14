@@ -1,0 +1,124 @@
+<style>
+@media print {
+  .md-dialog-container{
+    top: 0px;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    min-height: 100%;
+    top: 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    box-shadow: none;
+    border: none;
+
+
+  }
+
+  md-dialog-actions {
+    display: none;
+  }
+  
+}
+</style>
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+            
+<md-dialog aria-label="Send Invoice" id="paymentform">
+<form name="checkoutForm" novalidate>
+    <md-dialog-content style="min-width:350px !important; max-width:350px !important; overflow:hidden;">
+      <div class="md-dialog-content print_receipt" >
+        
+        <table id="print_receipt" width="350px">
+            <tr>
+                <td colspan="2" align="center"><img src="{{companyInfo.company.logo}}" height="80"></td>
+            </tr> 
+            <tr>
+                <td colspan="2">
+                    <p align="center">
+                        <strong>{{companyInfo.company.name}}</strong><BR>
+                        {{companyInfo.company.address1}}<BR>
+                        {{companyInfo.company.state}}, {{companyInfo.company.city}}, {{companyInfo.company.zipcode}}<BR>
+                        Phone: {{companyInfo.company.phone}}    
+                    </p>
+                </td>
+            </tr> 
+            <tr>
+                <td align="left" width="50%">Trans. Type:</td>
+                <td width="50%">{{transactionResponse.trans_type | transType}}</td>
+            </tr>
+            <tr>
+                <td align="left">Trans. Date:</td>
+                <td>{{transactionResponse.trans_timestamp * 1000 | date:'medium'}}</td>
+            </tr>
+            <tr>
+                <td align="left">Trans. Amount:</td>
+                <td>{{transactionResponse.trans_amount | currency}}</td>
+            </tr>
+
+            <tr >
+                <td align="left">Inv/Sale #:</td>
+                <td>{{transactionResponse.invoice_no}}</td>
+            </tr> 
+            <tr >
+                <td align="left">Trans. Status:</td>
+                <td>{{transactionResponse.status  | uppercase}}</td>
+            </tr> 
+            <tr ng-show="transactionResponse.trans_type=='sale'">
+                <td align="left">Card #:</td>
+                <td>xxxxxxxxxxxx{{transactionResponse.last4digit}}</td>
+            </tr> 
+            <tr ng-show="transactionResponse.trans_type=='sale'">
+                <td align="left">Card Type:</td>
+                <td>{{transactionResponse.cardtype}}</td>
+            </tr>
+            <tr ng-show="transactionResponse.trans_type=='sale'">
+                <td align="left">Card Holder:</td>
+                <td>{{transactionResponse.cardholder_name}}</td>
+            </tr> 
+     
+            <tr >
+                <td align="left">Ref ID:</td>
+                <td>{{transactionResponse.ref_id}}</td>
+            </tr> 
+            <tr >
+                <td align="left">Auth Response:</td>
+                <td>{{transactionResponse.response_text}}</td>
+            </tr> 
+
+             <tr>
+                <td colspan="2">
+                    <p align="center">
+                       Thank You<br>
+                       *****************************<br>
+                       Powered By<br>
+                       Clique Center<br>
+                       (www.clique.center)
+                    </p>
+                </td>
+            </tr> 
+            </table>
+
+       
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row"  class="invoice_action" ng-init="isDisabledSentButton=false;">
+      
+      <md-button  
+      ng-click="emailReceipt(transactionResponse)" 
+      class="md-primary md-raised" 
+      ng-hide="hideEmailReceiptButton"
+      >
+         <md-icon md-font-icon="fa fa-envelope-o" style="font-size:14px;"></md-icon>&nbsp;Email Receipt
+      </md-button>
+      <!--ng-show="isPaymentSuccess"-->
+      <md-button  
+      ng-click="print()" 
+      class="md-primary md-raised" 
+      
+      >
+         <md-icon md-font-icon="fa fa-print" style="font-size:14px;"></md-icon>&nbsp;Print
+      </md-button>
+    </md-dialog-actions>
+</form>
+</md-dialog>

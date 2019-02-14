@@ -1,0 +1,162 @@
+(function ()
+{
+    'use strict';
+
+    angular
+        .module('invoice')
+        .controller('SendBulkInvoiceController', Controller)
+        .run(['$anchorScroll', function($anchorScroll) {
+            $anchorScroll.yOffset = 50;   // always scroll by 50 extra pixels
+        }])
+        .filter('parseErrorMessage', function ($filter) {
+            return function (input,invoice_id) {
+                if(input.length > 0){
+                    var filteredInvoiceMessage=$filter('filter')(input, {'id':invoice_id})[0];
+                    if(filteredInvoiceMessage!=undefined){
+                        return filteredInvoiceMessage;
+                    }
+                    return '';
+              }
+            };
+        });
+
+    function Controller($scope, $rootScope,$mdDialog,SettingModel,InvoiceModel,$timeout,$location,$anchorScroll,$filter)
+    {
+       $scope.settings={};
+       $scope.sentInvoice=[];
+       $scope.showProgress=false;	
+       $scope.progressValue=0;
+       $scope.currecntInvoice;
+       $scope.invoiceMessages=[];
+       $scope.templateInfo;
+        getSettings();
+
+
+        $scope.gotoAnchor = function(x) {
+            var newHash = 'anchor' + x;
+            if ($location.hash() !== newHash) {
+              $location.hash('anchor' + x);
+            } else {
+              $anchorScroll();
+            }
+          };
+       
+        $scope.send = function() {
+
+        	 $scope.showProgress=true;			
+  		     	var invoiceTime=0;	//sec
+             	angular.forEach($scope.selectedInvoiceData, function(invoiceInfo, key){
+            		
+             		var to_email=[];
+                    if (invoiceInfo.BillEmail != null) {
+                        to_email.push(invoiceInfo.BillEmail.Address);
+                    }
+                    	var invoice = {
+    		                to: to_email,
+    		                cc: $scope.settings.InvoiceContacts.cc_email,
+    		                bcc: $scope.settings.InvoiceContacts.bcc_email,
+    		                sender_name: $scope.settings.InvoiceContacts.sender_name,
+    		                sender_email: $scope.settings.InvoiceContacts.sender_email,
+    		                invoice_id: invoiceInfo.Id,
+    		                invoice_template_id: $scope.settings.InvoiceTemplateId,
+    		                color: $scope.settings.InvoiceTemplateColor,
+    		                save_email_erp: false,
+                            payment_method_id:$scope.paymentInfo.id
+    		            };
+    		            $timeout(function() {	sendInvoice(invoice) } , invoiceTime);
+                    
+		            
+		            
+				invoiceTime+=999; //sec
+            });
+            
+        };
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+        $scope.showInvoiceProgress=function(invoice_id){
+            //console.log(invoice_id);
+            return true;
+        }
+
+
+        function sendInvoice(invoice){
+            if(invoice.to.length==0){
+
+                var message={id:invoice.invoice_id,type:'notsent',message:"Client Email address not found"};
+                $scope.invoiceMessages.push(message);
+                processInvoice(invoice);
+
+            }else{
+                $scope.currecntInvoice=invoice.invoice_id;
+            	$scope.promise = InvoiceModel.SendInvoice(invoice);
+    	        $scope.promise.then(function(response) {
+
+                    if (response.statuscode == 0) {
+                        
+                        var message={id:invoice.invoice_id,type:'processed',message:'Processed'};
+                        $scope.invoiceMessages.push(message);    
+                    }else{
+                        
+                        var message={id:invoice.invoice_id,type:'notsent',message:response.statusmessage};
+                        $scope.invoiceMessages.push(message);    
+
+                    }
+                        processInvoice(invoice);
+                    
+    	        });
+            }
+        }
+        /*$scope.promise = SettingModel.GetInvoiceTemplates();
+        $scope.promise.then(function(response) {
+            if (response.statuscode == 0) {
+                angular.forEach(response.data, function(templateInfo, key){
+                    if(parseInt(templateInfo.is_default)===1){
+                        $scope.templateInfo=templateInfo;
+                        console.log($scope.templateInfo);
+                    }
+                });
+            }
+         });*/
+
+        function getSettings() {
+            $scope.promise = SettingModel.GetSettings();
+            $scope.promise.then(function(response) {
+                if (response.statuscode == 0) {
+                    $scope.settings = response.data;
+
+
+                } 
+            });
+        }
+        function processInvoice(invoice){
+            $scope.sentInvoice.push(invoice.invoice_id);
+                if($scope.sentInvoice.length==$scope.selectedInvoiceData.length){
+                    $scope.showProgress=false;
+                    $scope.currecntInvoice=0;
+                    $timeout(function(){
+                         $scope.refreshInvoiceGrid();
+                         $mdDialog.hide();   
+                    },3000)
+                }
+
+                updateProgress();
+                
+                $timeout(function(){
+                  $scope.gotoAnchor(invoice.invoice_id);
+                },500);
+        }
+        function callAtTimeout() {
+    		console.log("Timeout occurred"+ new Date());
+		}
+		function updateProgress(){
+            var progressSegment=100/$scope.selectedInvoiceData.length;
+			$scope.progressValue=parseInt($scope.sentInvoice.length*progressSegment);
+		}
+
+  		
+        
+
+       
+    }
+})();

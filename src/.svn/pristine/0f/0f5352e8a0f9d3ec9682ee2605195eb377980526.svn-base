@@ -1,0 +1,365 @@
+
+.badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #777;
+    border-radius: 0px;
+    text-transform:uppercase
+}
+
+.badge.delivered {
+  background-color:#1572B7
+}
+.badge.processed {
+  background-color:#2DBDE6
+}
+.badge.open {
+  background-color:#8864A4
+}
+.badge.click, .badge.approved {
+  background-color:#2EC6A6
+}
+
+.badge.bounce {
+  background-color:#FABA2C;
+  color:#000 !important;
+}
+.badge.spam_report {
+  background-color:#FA7044
+}
+.badge.dropped {
+  background-color:#FABA2C
+}
+.badge.notsent, .badge.declined  {
+  background-color:#F64747
+}
+
+
+.stats, 
+.stats.md-locked-open, 
+.stats.md-closed.md-locked-open-add-active {
+} 
+md-card md-card-title {
+  padding:4px !important;
+}
+md-card .md-headline{
+  font-size:95% !important;
+  font-weight:bold;
+}
+md-card md-card-content{
+  padding:0px !important;
+}
+md-card md-list-item{
+  margin-top:0px !important;
+  height:0px !important;
+}
+md-list-item::before, md-list-item .md-list-item-inner::before{
+  min-height:25px !important;
+}
+md-list-item p span{
+  background:#ff0000 !important;
+  padding:5px;
+  border-radius:3px;
+  font-size:100px;
+}
+.request{
+  /*background-color:#ff0000 !important;*/
+  border-color:#ccc !important;
+
+}
+
+md-select{
+  width: 100% !important;
+}
+md-button.width-100{
+  width: 100% !important;
+}
+
+.fabSpeedDialdemoMoreOptions .md-fab-top-right {
+  top: 16px; }
+
+@media (max-device-width: 600px) {
+  .fabSpeedDialdemoMoreOptions .md-fab-top-right {
+    top: 9px;
+    right: 9px; } }
+
+.fabSpeedDialdemoMoreOptions .md-fab.demo-fab.trigger-fab:hover, .fabSpeedDialdemoMoreOptions .md-fab.demo-fab.trigger-fab.md-focused, .fabSpeedDialdemoMoreOptions .md-fab.demo-fab.action-fab:hover, .fabSpeedDialdemoMoreOptions .md-fab.demo-fab.action-fab.md-focused {
+  background-color: #333; }
+
+.fabSpeedDialdemoMoreOptions .md-fab.demo-fab.action-fab {
+  background-color: #aaa; }
+
+.fabSpeedDialdemoMoreOptions md-content div[flex="50"] {
+  padding: 15px; }
+
+.fabSpeedDialdemoMoreOptions md-fab-speed-dial {
+  margin-top: 89px; }
+  .fabSpeedDialdemoMoreOptions md-fab-speed-dial md-fab-trigger {
+    transition: all 0.3s ease-in-out;
+    transform: scale(1); }
+  .fabSpeedDialdemoMoreOptions md-fab-speed-dial.md-scale.ng-hide-add.ng-hide-add-active, .fabSpeedDialdemoMoreOptions md-fab-speed-dial.md-fling.ng-hide-add.ng-hide-add-active {
+    display: flex !important; }
+  .fabSpeedDialdemoMoreOptions md-fab-speed-dial.md-scale.ng-hide md-fab-trigger, .fabSpeedDialdemoMoreOptions md-fab-speed-dial.md-fling.ng-hide md-fab-trigger {
+    transform: scale(0); }
+
+.fabSpeedDialdemoMoreOptions .intro {
+  padding-left: 5px; }
+
+  .email-dialog {
+  min-width: 800px;
+  min-height:200px;
+  max-width: 800px;
+}
+
+.email-dialog-ccs {
+  transition: all .5s;
+}
+
+.email-dialog-ccs.ng-hide {
+  display: block !important;
+  max-height: 0;
+  opacity: 0;
+}
+
+.email-subject {
+  margin-bottom: 0px;
+}
+
+.email-content.focussed > .ta-scroll-window.form-control {
+  box-shadow: none;
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+.email-content .ta-editor {
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+// - Editor toolbar
+.email-dialog-editor-toolbar {
+  button {
+    font-size: 18px;
+    min-width: 4rem;
+    i {
+      transition: all .2s;
+      opacity: 0.5;
+    }
+    &.active, &:hover {
+      i {
+        opacity: 1;
+      }
+    }
+  }
+}
+#e-commerce-products {
+
+    .center {
+
+        .header {
+            height: 136px !important;
+            min-height: 136px !important;
+            max-height: 136px !important;
+            padding: 24px 0;
+
+            .h1 {
+
+                md-icon {
+                    margin-right: 12px;
+                }
+            }
+
+            .product-count {
+                margin: 6px 0 0 36px;
+            }
+
+            .search {
+                position: relative;
+                padding-left: 24px;
+                max-width: 480px;
+
+                .search-icon {
+                    margin: 0 -24px 0 0;
+                }
+
+                .search-input {
+                    margin: 0 0 0 32px;
+                    background: none;
+                    font-size: 16px;
+                    line-height: 40px;
+                    height: 40px;
+                    color: #FFFFFF;
+                    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+                    transition: border-color 300ms ease;
+
+                    &:focus {
+                        border-color: rgba(255, 255, 255, 1);
+                    }
+
+                    &::-webkit-input-placeholder {
+                        color: rgba(255, 255, 255, 0.5);
+                    }
+                }
+            }
+        }
+
+        .content-card {
+
+            .toolbar {
+                padding: 8px;
+            }
+
+            .content {
+                padding: 0;
+
+                .dataTables_wrapper {
+
+                    .dataTables_scrollHead {
+                        min-height: 64px;
+
+                        table {
+
+                            th {
+                                padding-top: 20px;
+                                padding-bottom: 20px;
+                            }
+                        }
+                    }
+
+                    .dataTables_scrollBody {
+
+                        .product-image {
+                            width: 52px;
+                            height: 52px;
+                            border: 1px solid rgba(0, 0, 0, 0.12);
+                        }
+
+                        .quantity-indicator {
+                            display: inline-block;
+                            vertical-align: middle;
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 4px;
+                            margin-right: 8px;
+
+                            & + div {
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
+                        }
+
+                        .edit-button {
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.bottomSheetdemoBasicUsage {
+  padding-left:0px !important;
+  padding-right:0px !important;
+}
+.bottomSheetdemoBasicUsage .md-grid-text{
+    text-align:center !important;
+    border:0px solid !important;
+    font-weight:bold;
+}
+.bottomSheetdemoBasicUsage .md-grid-item-content img{
+    min-width:140px;
+    min-height:auto;
+
+}
+.bottomSheetdemoBasicUsage .md-grid-item-content img:hover {
+   border:0px solid #fff;
+}
+#horizontal-container {
+  height: 260px;
+  width: 100%;
+  max-width: 99%; 
+}
+.repeated-item {
+  border-right: 0px solid #ddd;
+  box-sizing: border-box;
+  display: inline-block;
+  height: 260px;
+  padding-top: 15px;
+  text-align: center;
+  width: 160px; 
+}
+.repeated-item img:hover {
+   border:0px solid #fff;
+}
+md-chip-content{
+  font-size:12px;
+}
+md-chip{
+ font-size:14px; 
+}
+
+md-chips.status .md-chips{
+ border:0px solid;
+ box-shadow: none;
+}
+
+md-chip.status{
+ font-size:11px;
+ color:#fff !important;
+ text-transform: capitalize;
+ line-height:20px !important; 
+ height:20px !important;
+ font-weight:500;
+ margin:1px;
+}
+
+md-chip.status.delivered {
+  background-color:#1572B7
+}
+md-chip.status.processed {
+  background-color:#2DBDE6
+}
+md-chip.status.open {
+  background-color:#8864A4
+}
+md-chip.status.click {
+  background-color:#2EC6A6
+}
+
+md-chip.status.bounce {
+  background-color:#FABA2C;
+  color:#000 !important;
+}
+md-chip.status.spam_report {
+  background-color:#FA7044
+}
+md-chip.status.dropped {
+  background-color:#FABA2C
+}
+md-chip.status.notsent {
+  background-color:#F64747
+}
+
+md-chip.status.approved, md-chip.status.Approved {
+  background-color:#2EC6A6
+}
+md-chip.status.declined, md-chip.status.Declined {
+  background-color:#FA7044
+}
+
+
+md-icon {
+  min-width:auto !important;
+}
+
+.statuslist md-subheader md-subheader-inner{
+    padding: 4px !important;
+    background: #fff !important;
+}

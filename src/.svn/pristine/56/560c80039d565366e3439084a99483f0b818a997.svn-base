@@ -1,0 +1,27 @@
+
+<md-bottom-sheet class="bottomSheetdemoBasicUsage md-grid" layout="column">
+<md-toolbar class="toolbar-default margin-bottom-30 margin-top-0" palette-background="green:A700" style="margin-top:-1px !important; ">
+
+    <div class="md-toolbar-tools ">
+        <h2>
+          <span style="color:#fff !important;">Choose Invoice Template</span>
+        </h2>
+        <span flex></span>
+         <md-button palette-background="red:500" class="md-scale md-fab md-mini" style="margin-top:-50px;" ng-click="closeBottomSheet()" aria-label="Close">
+            <md-icon  md-font-icon="zmdi zmdi-close" style="color:#fff !important;"></md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
+  <div ng-cloak style="height:260px;">
+    <md-list flex layout="row" layout-align="start center">
+     <md-virtual-repeat-container id="horizontal-container" md-orient-horizontal>
+      <div md-virtual-repeat="item in invoice_templates"
+          class="repeated-item" flex>
+          <img ng-src="{{item.image_url}}" ng-click="listItemClick(item)" ng-class="{'md-whiteframe-9dp default_invoice_template': item.id == invoice_template_id}" class="normal_invoice_template"  width="140" alt="{{item.name}}" style="cursor:pointer;z-index:-1; ">
+          <div class="md-grid-text " style="text-align:center"> {{ item.name }} </div>
+      </div>
+    </md-virtual-repeat-container>
+    </md-list>
+  </div>
+</md-bottom-sheet>
+

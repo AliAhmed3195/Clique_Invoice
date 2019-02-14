@@ -1,0 +1,807 @@
+<!--<tri-loader ng-show="true"></tri-loader>-->
+
+<div  ng-show="showApiProgress" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
+    <md-progress-linear md-mode="determinate" value="{{apiProgressValue}}"></md-progress-linear>
+</div>
+
+<form name="createnew"  ng-submit="createnew.$valid && createInvoice();">
+<md-progress-linear class="md-primary" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+<md-content flex layout-padding class="invoice createinvoice" ng-show="showInvoiceContent">
+   
+    <div class="md-whiteframe-8dp-">
+        <div id="recurring" ng-init="disableRecurring()">
+        </div>
+            <div class="recurring md-padding" ng-show="showRecurringOptions">
+            <!--Type-->
+            <div layout="row">
+                <div flex="50"><h4 class="md-title">Recurring Invoice</h4></div>
+                <div flex="50" align="right">
+                     <md-button 
+                        class="md-mini md-fab md-rasied md-primary md-hue-2" 
+                        ng-click="disableRecurring();"  
+                        aria-label="Not Mark">
+                        <md-icon md-font-icon="fa fa fa-times"></md-icon>
+                    </md-button>
+
+                </div>
+            </div>
+            
+           
+            <div layout="row" layout-xs="column" layout-align="start start" >
+                <div flex="40">
+                    
+                    <md-input-container class="md-block">
+                    <label>Template Name</label>
+                    <input 
+                    name="recurring_name" 
+                    type="text"
+                    ng-model="Recurring.Name"
+                    ng-required="showRecurringOptions"
+                    >
+                     <div ng-messages="createnew.recurring_name.$error" >
+                        <div ng-message="required">You <b>must</b> have a template name.</div>
+                    </div>
+                    </md-input-container>
+                    
+                </div> 
+                
+                <!--<div flex="15">
+                    <md-input-container class="md-block">
+                        <label>Type</label>
+                        <md-select 
+                        name="recurring_type"
+                        placeholder="Type" 
+                        ng-model="Recurring.Type" 
+                        >
+                        <md-option ng-value="type" ng-repeat="(key,type) in ['Scheduled','Reminder']">{{type}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>    
+                <div flex="20">
+                    <md-input-container ng-show="Recurring.Type=='Scheduled'" class="md-block">
+                        <label>Create</label>
+                        <input 
+                        name="create_days" 
+                        ng-model="Recurring.Days"
+                        type="number"
+                        min="0"
+                        max="100"
+                        
+                        >
+                        <div class="hint">days in advance.</div>
+                         <div ng-messages="createnew.create_days.$error" >
+                            <div ng-message="max">Maximum <b>100</b> days</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container ng-show="Recurring.Type=='Reminder'" class="md-block">
+                        <label>Remind</label>
+                        <input 
+
+                        name="reminder_days" 
+                        ng-model="Recurring.Days"
+                        type="number"
+                        min="0"
+                         >
+                        <div class="hint"> days before the transaction date.</div>
+                    </md-input-container>
+                </div>-->
+
+            </div>
+            <!--Type-->
+           
+
+            <!--Recurring Paramter-->
+            <!--ng-click="restValue()" -->
+            <div layout="row">
+                <md-input-container flex="50">
+                    <label>Interval</label>
+                    <md-select 
+                    name="recurring_interval"
+                    placeholder="Interval" 
+                    ng-model="Recurring.Interval.Mode" 
+                    
+                    >
+                    <md-option 
+                    ng-value="interval.value" 
+                    ng-repeat="interval in intervals">{{interval.name}}
+                    </md-option>
+
+                    </md-select>
+                </md-input-container>
+
+                <!-- Daily Drop Down Vales-->
+                <!--<md-input-container flex="5" ng-show="Recurring.Interval.Mode=='D'">
+                    <label>Every</label>
+                    <input 
+                    name="every_days" 
+                    type="number"
+                    ng-model="Recurring.Interval.Every"
+                    min="0"
+                    >
+                    <div class="hint">day(s).</div>
+                </md-input-container>-->
+               
+
+                <!-- WEEKLY Drop Down Vales-->
+                <!--<md-input-container flex="5" ng-show="Recurring.Interval.Mode=='W'">
+                    <label>Every</label>
+                    <input 
+                    name="every_week" 
+                    type="number"
+                    ng-model="Recurring.Interval.Every"
+                    min="0"
+                     >
+                    <div class="hint">week(s).</div>
+                </md-input-container>-->
+
+                <!--<md-input-container flex="15" ng-show="Recurring.Interval.Mode=='W'">
+                    <label>Week(s) on</label>
+                    <md-select 
+                    
+                    placeholder="Week(s) on" 
+                    ng-model="Recurring.Interval.On" 
+                    
+                    >
+                        <md-option 
+                        ng-value="week.value" 
+                        ng-repeat="week in weeks"
+                        >{{week.name}}</md-option>
+                    </md-select>
+                </md-input-container>-->
+          
+                <!-- Month Drop Down Vales-->
+               
+                <!--<md-input-container flex="10" ng-show="Recurring.Interval.Mode=='M'">
+                    <label>On</label>
+                    <md-select 
+                    placeholder="On" 
+                    ng-model="Recurring.Interval.On" 
+                   
+                    >
+                        <md-option ng-value="monthoption.value" ng-repeat="monthoption in monthoptions">{{monthoption.name}}</md-option>
+                    </md-select>
+                </md-input-container>-->
+
+
+                <!--<md-input-container 
+                    flex="10" 
+                    ng-show="
+                    Recurring.Interval.Mode=='M' &&
+                    Recurring.Interval.On!='day'
+                    ">
+                    <md-select 
+                    ng-model="Recurring.Interval.Of" 
+                    >
+                        <md-option ng-value="week.value" ng-repeat="week in weeks">{{week.name}}</md-option>
+                    </md-select>
+                </md-input-container>-->
+
+
+                <!--<md-input-container 
+                    flex="10" 
+                    ng-show="
+                    Recurring.Interval.Mode=='M' &&
+                    Recurring.Interval.On=='day'
+                    "
+                    >
+
+                    <md-select 
+                    ng-model="Recurring.Interval.Of" 
+                    >
+                        <md-option ng-value="month" ng-repeat="month in months">{{month | ordinal}}</md-option>
+                    </md-select>
+                </md-input-container>-->
+
+                <!--<md-input-container flex="5" ng-show="Recurring.Interval.Mode=='M'">
+                    <label>Every</label>
+                    <input 
+                    name="every_week" 
+                    ng-model="Recurring.Interval.Every"
+                    type="number"
+                    min="0"
+
+                    >
+                    <div class="hint">month(s)</div>
+                </md-input-container>-->
+
+
+                <!-- Yearly Drop Down Vales-->
+                <md-input-container flex="10" ng-show="Recurring.Interval.Mode=='Y'">
+                    <label>Every</label>
+                    <md-select 
+                    placeholder="Every" 
+                    ng-model="Recurring.Interval.Every" 
+                    md-on-open="loadingProgress()" 
+                    
+                    >
+                        <md-option 
+                        ng-value="monthdropdownlist.value" 
+                        ng-repeat="monthdropdownlist in monthdropdownlists">{{monthdropdownlist.name}}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container flex="10" ng-show="Recurring.Interval.Mode=='Y'">
+                    <md-select 
+                    ng-model="Recurring.Interval.On" >
+                        <md-option 
+                        ng-value="month" ng-repeat="month in months">{{month}}th</md-option>
+                    </md-select>
+                </md-input-container>
+
+          
+
+                 <!-- Recurring  End Parameter-->
+                <md-input-container flex="20" >
+                    <label>Start Date</label>
+                    <md-datepicker 
+                    name="startDate"
+                    ng-model="Recurring.StartDate" 
+                    md-placeholder=""
+                    ng-required="showRecurringOptions"
+                    >
+                    </md-datepicker>
+                     <div ng-messages="createnew.startDate.$error" >
+                        <div ng-message="required">You <b>must</b> have a start date.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container flex="10" >
+                    <label>End</label>
+                    <md-select 
+                        placeholder="End" 
+                        ng-model="Recurring.End" 
+                        >
+                        <md-option 
+                        ng-value="dailyend.value" 
+                        ng-repeat="dailyend in dailyends"
+                        >{{dailyend.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+
+
+
+                <md-input-container flex="20" ng-show="Recurring.End=='by'">
+                    <label>End Date</label>
+                    <md-datepicker 
+                    name="endDate"
+                    ng-model="Recurring.EndDate" 
+                    md-placeholder=""
+                    ng-required="requiredRecurringEndDate"
+                    >
+                   
+                </md-datepicker>
+                 <div ng-messages="createnew.endDate.$error" >
+                        <div ng-message="required">You <b>must</b> have a end date.</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container flex="10" ng-show="Recurring.End=='after'">
+                    <label>occurrences</label>
+                    <input 
+                    type="number"
+                    name="occurrences" 
+                    ng-model="Recurring.Occurrence"
+                    min="1"
+                    max="100"
+                    ng-required="requiredRecurringOccurences"
+                    >
+                    <div class="hint"></div>
+                     <div ng-messages="createnew.occurrences.$error" >
+                        <div ng-message="required">You <b>must</b> have a recurring occurrences.</div>
+                    </div>
+                    <div ng-messages="createnew.occurrences.$error" >
+                        <div ng-message="min">Minimum <b>100</b> occurrences</div>
+                        <div ng-message="max">Maximum <b>100</b> occurrences</div>
+                    </div>
+                </md-input-container>
+          
+            </div>
+            <!--Recurring Paramter-->
+
+            <!--Payment Setup-->
+            
+            <div layout="row" layout-xs="column" layout-align="start start" ng-show="vm.selectedCustomer.DisplayName!=null">
+                <div flex="30">
+                     <div id="payment_error" ></div>
+                    
+                     <!---palette-background="light-green:700"-->   
+                     <md-button class="md-raised"  ng-click="setupPayment()" aria-label="Customer Payment">
+                       <md-progress-linear class="md-primary" md-mode="indeterminate" style="height:1px;" ng-show="showProfileGetProgress"></md-progress-linear>    
+
+                        <img align="right" src="assets/images/cardicons/visa.png" flex="10">
+                        <img align="right" src="assets/images/cardicons/mastercard.png" flex="10">
+                        <img align="right" src="assets/images/cardicons/discover.png" flex="10">
+                        <img align="right" src="assets/images/cardicons/amex.png" flex="10">
+                        &nbsp; 
+                        <span class="md-subtitle" ng-if="CCProfileResponse.profile_id==null">Setup Customer Payment
+
+                        </span>
+                        <span class="md-subtitle" ng-if="CCProfileResponse.profile_id > 0">
+                            <i class="fa fa-check-circle" aria-hidden="true" style="color:#2ABBD7;"></i>&nbsp;Edit Profile</span>
+
+                    </md-button>
+                    <div class="md-padding md-whiteframe-1dp" ng-show="isCCProfileCreated==true">
+                        <h4 class="md-subtitle">Customer Profile Info</h4>
+                        <p class="md-caption">
+                            <b>{{CCProfileResponse.card_type}}</b>, xxxx-xxxx-xxxx-{{CCProfileResponse.last_digits}}<br>
+                            {{CCProfileResponse.create_date}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div layout="row" layout-xs="column" layout-align="start start" class="md-padding">
+            <div flex>
+                  <md-autocomplete
+                      md-input-name="searchCustomerField"
+                      md-selected-item="vm.selectedCustomer"
+                      md-search-text="vm.searchCustomer"
+                      md-selected-item-change="vm.selectedCustomerChange(item)"
+                      md-items="item in vm.customerSearch(vm.searchCustomer)"
+                      md-item-text="item.DisplayName"
+                      
+                      md-no-cache="true"
+                      md-min-length="0"
+                      required
+                      md-require-match
+                      placeholder="Customer"
+                      md-floating-label="Select a customer"
+                      >
+                      
+                     <md-item-template>
+                        <span md-highlight-text="vm.searchCustomer" md-highlight-flags="^i">{{item.DisplayName}}</span>
+                    </md-item-template>
+                     <md-not-found  >
+                        <a ng-click="addNewCustomer(vm.searchCustomer)" class="md-primary md-raised md-subtitle addnew_link" permission permission-only="'customer-addnew'">
+                            <md-icon md-font-icon="fa fa-plus" class="md-primary" style="font-size:14px;"></md-icon>&nbsp; Add {{vm.searchCustomer}}</a>
+                    </md-not-found>
+                     <div ng-messages="createnew.searchCustomerField.$error" >
+                        <div ng-message="required">You <b>must</b> have a customer.</div>
+                        <div ng-message="md-require-match">Please select an existing customer.</div>
+                        <div ng-message="minlength">Your entry is not long enough.</div>
+                        <div ng-message="maxlength">Your entry is too long.</div>
+                    </div>
+                  </md-autocomplete>   
+                <!--Customer Search-->
+
+            </div>
+            <div flex>
+                <md-input-container class="md-block">
+                    <label>Email Address</label>
+                    <input 
+                    name="BillEmail" 
+                    type="email" 
+                    ng-model="invoice.BillEmail.Address"
+                    >
+                     <div ng-messages="createnew.BillEmail.$error" md-auto-hide="false" >
+                        <div ng-message when="email">
+                            <span translate>Please enter a valid email address</span>
+                        </div>
+                    </div>
+                </md-input-container>
+
+                <!--Customer Search-->
+            </div>
+             <div flex>
+                &nbsp;
+             </div>
+            <div flex>
+                <md-input-container ng-show="preferences.SalesFormsPrefs.CustomTxnNumbers">
+                    <label>Invoice no.</label>
+                    <input 
+                    name="DocNumber" 
+                    type="text" 
+                    ng-model="invoice.DocNumber"
+                    ng-maxlength="1000"
+                    ng-required="preferences.SalesFormsPrefs.CustomTxnNumbers"
+                    >
+                    <div ng-messages="createnew.DocNumber.$error" ng-if="createnew.DocNumber.$touched" md-auto-hide="false">
+                        <div ng-message="required">You <b>must</b> have a Invoice number.</div>
+                        <p ng-message when="maxlength">Invoice number should not be greater than 1000 characters</p>
+                    </div>
+                </md-input-container>
+            </div>
+        </div>
+        <!--Row 1-->
+        <div layout="row" layout-xs="column" layout-align="center center">
+            <div flex class="md-padding" style="padding-bottom:0px !important;">
+               <div class="address" ng-show="vm.customerInfo.billing.line1!=''">
+                    <h4 class="md-subtitle">Billing Address</h4>
+                    <p class="md-caption">
+                        <b>{{vm.customerInfo.company_name | customInfo:''}}</b><br> 
+                        {{vm.customerInfo.billing.line1 | customInfo:','}}<br> 
+                        {{vm.customerInfo.billing.city | customInfo:','}} 
+                        {{vm.customerInfo.billing.countryCode | customInfo:','}} 
+                        {{vm.customerInfo.billing.country | customInfo:','}}
+                        {{vm.customerInfo.billing.postal_code | customInfo:''}} 
+                    </p>
+                </div>
+            </div>
+            <div flex >
+                <md-input-container>
+                    <label>Terms</label>
+                    <md-select placeholder="Term" ng-model="invoice.SalesTermRef.value" md-on-open="loadingProgress()" style="width:100px;" ng-change="setTerm();">
+                        <md-option ng-value="term.Id" ng-repeat="term in invoiceTerm">{{term.Name}}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div flex >
+
+                <md-input-container ng-hide="showRecurringOptions">
+                <label>Invoice Date</label>
+                <md-datepicker 
+                ng-model="invoice.TxnDate" 
+                md-placeholder="Invoice Date"   
+                aria-label="Invoice Date"  
+                ng-change="setTerm();"
+
+                ></md-datepicker>
+                </md-input-container>
+            </div>   
+            <div flex >
+                <md-input-container ng-hide="showRecurringOptions">
+                <label>Due Date</label>
+                <md-datepicker 
+                ng-model="invoice.DueDate" 
+                md-placeholder="Due Date"  
+                aria-label="DueDate"
+
+                ></md-datepicker>    
+                </md-input-container>
+            </div>   
+        </div>
+        
+        <div layout="row" layout-xs="column" layout-align="center start">
+
+            <div flex="100" class="md-padding">
+
+                <tri-widget flex title="" content-layout="column" content-layout-align="center">
+                    
+                    <md-table-container id="addnew-invoice-listing">
+                        <table md-table class="md-data-table">
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column width="10%" style="text-align:center !important;">S #.</th>
+                                    <th md-column width="25%">PRODUCT/SERVICES</th>
+                                    <th md-column class="col5" width="25%">DESCRIPTION</th>
+                                    <th md-column class="col4" width="10%">RATE/PRICE</th>
+                                    <th md-column class="" width="10%">QTY</th>
+                                    <th md-column class="" width="10%">AMOUNT</th>
+                                    <th md-column class="" width="10%">TAX</th>
+                                    <th md-column width="10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody md-body ng-model="invoice.items" ng-init="current=1">
+                                <tr 
+                                md-row 
+                                ui-sortable="sortableOptions" 
+                                ng-repeat="(key,item) in invoice.Line"
+                                ng-if="item.DetailType=='SalesItemLineDetail'"
+                                
+                                >
+                                    <td md-cell ng-init="current=getId()"  align="center" style="text-align:center !important;">
+                                        {{$index+1}}
+                                        <!--{{vm.sno}}-->
+                                        <!--
+                                        <i class="fa fa-bars fa-1x tDrag">&nbsp;</i>
+                                           -->
+                                    </td>
+                                    <td md-cell>
+                                        <md-autocomplete 
+                                        
+                                        md-input-name="searchProductField{{$index}}"
+                                        md-selected-item="vm.selectedProduct[$index]" 
+                                        md-search-text="vm.searchProduct[$index]" 
+                                        md-items="item in vm.itemSearch(vm.searchProduct[$index])" 
+                                        md-selected-item-change="vm.selectedItemChange(item,key)" 
+                                        md-item-text="item.Name"
+                                        md-no-cache="true"
+                                        md-min-length="0"
+                                        required
+                                        md-require-match
+                                        placeholder="Customer"
+                                        md-floating-label="Select a product/service"
+                                        >
+                                            <md-item-template>
+                                                <span md-highlight-text="vm.searchProduct">{{item.Name}}</span>
+                                            </md-item-template>
+                                            <md-not-found>
+                                                <a ng-click="addNewItem(vm.searchProduct[key],key)" class="md-primary md-raised md-subtitle addnew_link" 
+                                                permission permission-only="'item-addnew'">
+                                                    <md-icon md-font-icon="fa fa-plus" class="md-primary" style="font-size:14px;"></md-icon>&nbsp; Add {{vm.searchProduct[key]}}</a>
+                                            </md-not-found>
+
+                                            <div ng-messages="true" >
+                                            <div ng-message="required">You <b>must</b> have a item selected.</div>
+                                            <div ng-message="md-require-match">Please select an existing Item.</div>
+                                            <div ng-message="minlength">Your entry is not long enough.</div>
+                                            <div ng-message="maxlength">Your entry is too long.</div>
+                                          </div>
+                                        </md-autocomplete>
+
+
+                                    </td>
+                                    <td md-cell class="col5">
+                                        
+                                        <md-input-container  class="md-block">
+                                            <input 
+                                            name="Description{{$index}}" 
+                                            type="text" 
+                                            placeholder="Description" 
+                                            ng-model="item.Description" 
+                                            ng-maxlength="1000"
+                                            >
+                                            <div ng-messages="createnew['Description'+$index].$error">
+                                            <p ng-message when="maxlength">Description cannot be greater than 1000 characters</p>
+                                        </div>
+                                        </md-input-container>
+                                    </td>
+                                    <td md-cell class="text-right col4">
+                                        <md-input-container>
+                                            <input 
+                                            name="UnitPrice{{$index}}" 
+                                            type="text" 
+                                            placeholder="RATE/PRICE" 
+                                            ng-model="item.SalesItemLineDetail.UnitPrice" 
+                                            ng-change="calculateTotal();"
+                                            number-formatter
+                                            ng-pattern="/^[0-9.,]+$/" 
+                                            min="1"
+                                            step="any"
+                                            >
+                                            <div ng-messages="createnew['UnitPrice'+$index].$error" md-auto-hide="false">
+                                            <p ng-message when="number">Provide a valid rate / price</p>
+                                            <p ng-message when="min">Should be greater than 0</p>
+                                            <p ng-message when="pattern">Invalid input</p>
+                                        </div>
+                                        </md-input-container>
+
+                                    </td>
+                                    <td md-cell class="text-right">
+                                        <md-input-container>
+                                            <input 
+                                            name="QTY{{$index}}"
+                                            type="number" 
+                                            placeholder="QTY" 
+                                            ng-model="item.SalesItemLineDetail.Qty" 
+                                            ng-change="calculateTotal();"
+                                            min="1"
+                                            >
+                                            <div ng-messages="createnew['QTY'+$index].$error" md-auto-hide="false">
+                                                
+                                                <p ng-message when="min">Should be greater than 0</p>
+                                            </div>
+                                        </md-input-container>
+
+
+                                    </td>
+                                    <td md-cell class="text-right">
+                                        <md-input-container>
+                                            {{item.Amount=item.SalesItemLineDetail.UnitPrice*item.SalesItemLineDetail.Qty | currency}}
+                                        </md-input-container>
+                                    </td>
+                                    <td 
+                                    
+                                    md-cell 
+                                    class="text-right" 
+                                    ng-mouseenter="showTaxable=true;showCheck=false" 
+                                    ng-mouseleave="showTaxable=false;showCheck=true"
+                                    
+                                    >
+
+                                        <md-checkbox 
+                                        
+                                        ng-model="item.SalesItemLineDetail.TaxCodeRef.value" 
+                                        
+                                        ng-true-value="'TAX'" 
+                                        ng-false-value="'NON'"
+                                        ng-change="calculateTotal();"
+                                        >
+                                        </md-checkbox>
+                                       
+                                        <!-- ng-show="showTaxable" <i class="fa fa-check" 
+                                        aria-hidden="true" 
+                                        ng-show="item.SalesItemLineDetail.TaxCodeRef.value=='TAX' && showCheck"
+                                        ></i>-->
+                                    </td>
+                                    <td md-cell>
+
+                                        <md-button class="md-mini md-fab md-small" ng-click="removeItem(item,$index)" aria-label="Remove Item">
+
+                                            <md-icon md-font-icon="fa fa-trash-o"></md-icon>
+                                        </md-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody md-body>
+                                <!-- SUB TOTAL -->
+                                <tr 
+                                md-row 
+                                ng-repeat="(key,item) in invoice.Line"
+                                ng-if="item.DetailType=='SubTotalLineDetail' && item.Amount > 0"
+                                >
+                                    <td md-cell colspan="5" style="text-align:right !important">
+                                        
+                                        <h4 class="md-body-2">Subtotal</h4>
+                                    </td>
+                                    <td md-cell>
+                                        <h4 class="md-body-2">{{item.Amount | currency}}</h4>
+                                    </td>
+                                    <td md-cell colspan="2"></td>
+                                </tr>
+                                <!-- TAX -->
+                                <tr md-row ng-show="preferences.TaxPrefs.UsingSalesTax && invoice.TotalAmt > 0">
+                                    <td md-cell colspan="4"></td>
+                                    <td md-cell style="text-align:right !important">
+
+                                        <md-select 
+                                        placeholder="Select a sales tax rate" 
+                                        ng-model="invoice.TxnTaxDetail.TaxLine[0].TaxLineDetail.TaxRateRef.value" 
+                                        
+                                        md-on-open="loadingProgress()" 
+                                        ng-change="calculateTotal()" 
+                                        align="right"
+
+                                        >
+                                        <md-option ng-value="tax.Id" ng-repeat="tax in taxRateDetail">{{tax.Name}} ({{tax.RateValue | number : 2}} %)</md-option>
+                                        </md-select>
+
+                                    </td>
+                                    <td md-cell>
+                                        <h4 class="md-body-2">{{invoice.TxnTaxDetail.TotalTax | currency}}</h4>
+                                    </td>
+                                    <td md-cell></td>
+                                </tr>
+                                <!-- DISCOUNT -->
+                                <tr 
+                                md-row 
+                                ng-repeat="(key,item) in invoice.Line"
+                                ng-if="item.DetailType=='DiscountLineDetail'"
+                                ng-show="preferences.SalesFormsPrefs.AllowDiscount && invoice.TotalAmt > 0"
+                                >
+                               
+                                    <td md-cell colspan="4" style="text-align:right !important"></td>
+                                    <td md-cell style="text-align:right !important">
+                                        <md-select 
+                                            placeholder="Discount" 
+                                            ng-model="item.DiscountLineDetail.PercentBased" 
+                                            style="width:100px;" 
+                                            ng-change="calculateTotal()"
+                                            >
+                                            <md-option 
+                                            ng-value="discountType.value"
+                                            ng-repeat="discountType in discountTypes"
+                                            >{{discountType.text}}</md-option>
+                                        </md-select>
+                                    </td>
+                                    <td md-cell>
+                                        
+                                        <md-input-container ng-if="item.DiscountLineDetail.PercentBased==true">
+                                            <input 
+
+                                            type="number" 
+                                            placeholder="Discount" 
+                                            ng-model="item.DiscountLineDetail.DiscountPercent" 
+                                            ng-change="calculateTotal();"
+                                            min="0"
+                                            >
+                                        </md-input-container>
+                                         <md-input-container ng-if="item.DiscountLineDetail.PercentBased==false">
+                                            <input 
+                                            type="number" 
+                                            placeholder="Discount" 
+                                            ng-model="item.Amount" 
+                                            ng-change="calculateTotal();"
+                                            min="0"
+                                            >
+                                        </md-input-container>
+
+                                    </td>
+                                    <td md-cell>
+                                        <h4 class="md-body-2">{{item.Amount | currency}}</h4>
+                                    </td>
+                                    <td md-cell></td>
+                                </tr>
+                                <!-- TOTAL -->
+                                <tr md-row ng-show="invoice.TotalAmt > 0">
+                                    <td md-cell colspan="5" style="text-align:right !important">
+                                        <h4 class="md-body-2">Total</h4>
+                                    </td>
+                                    <td md-cell>
+                                        <h4 class="md-body-2">{{invoice.TotalAmt | currency}}</h4>
+                                    </td>
+                                    <td md-cell colspan="2"></td>
+                                </tr>
+                              
+                                <!-- Add Lines -->
+                                <tr md-row>
+                                    <td md-cell colspan="7" class="add-new-item">
+                                        <md-button class="md-primary md-raised md-add-new" ng-click="addItem()">
+                                            <md-icon md-font-icon="fa fa-plus" style="font-size:14px;"></md-icon>&nbsp;Add Lines
+                                        </md-button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-table-container>
+                </tri-widget>
+            </div>
+
+        </div>
+
+        <div layout="row">
+            <div flex="100" class="md-padding">
+                <md-input-container class="md-block">
+                    <label>Message displayed on invoice</label>
+                   
+                    <input 
+                    name="CustomerMemo"
+                    md-maxlength="150" 
+                    md-no-asterisk 
+                    name="description" 
+                    ng-model="invoice.CustomerMemo.value"
+                    >
+                    <div ng-messages="createnew.CustomerMemo.$error">
+                      <div ng-message="md-maxlength">The Message must be less than 60 characters long.</div>
+                    </div>
+
+                </md-input-container>
+            </div>
+        </div>
+        <div style="width:90%;border:0px solid; position:fixed;bottom:5px;">
+            <div layout="row" layout-xs="column" layout-align="end end" >
+                
+            </div>
+        </div>
+    </div>
+
+
+</md-content>
+<div style="border:1px solid #000; bottom:0px; width:95% !important; height:50px; position:fixed;" palette-background="blue-grey:500">
+ <div layout="row">
+        <div flex="33">
+             <md-button class="md-warn md-hue-2 md-raised md-add-new" ng-click="cancelInvoice()" >
+                <md-icon md-font-icon="fa fa-times " style="font-size:14px;"></md-icon>&nbsp;Cancel
+            </md-button>  
+        </div>
+        <div flex="33" align="center" ng-init="spin='';">
+                <md-button 
+                class="md-primary md-raised md-add-new" 
+                ng-click="enableRecurring();"
+                ng-mouseenter="spin='fa-spin fa-fw';"
+                ng-mouseleave="spin='';"
+                
+                permission permission-only="'recurring-addnew'"
+                >
+                    <md-icon md-font-icon="fa fa-refresh {{spin}}" style="font-size:14px;"></md-icon>&nbsp;Make Recurring
+                </md-button>
+        </div>
+        <div flex="33" align="right">
+
+                <!--
+                <md-button 
+                    class="md-primary md-raised md-add-new" 
+                    ng-click="createInvoice()" 
+                    ng-disabled=" 
+                    createnew.$invalid || 
+                    invoice.TotalAmt<=0
+                    " 
+                    >
+                    <md-icon md-font-icon="fa fa-plus" style="font-size:14px;"></md-icon>&nbsp;{{createInvoiceBtnTitle}}
+                </md-button>
+                -->
+
+                <md-button 
+                    class="md-add-new" 
+                    type="submit"
+                    ng-class="{ 'md-primary md-raised': createnew.$valid}"
+                    ng-disabled="disabledSubmitButton"
+                    
+                    >
+                    <md-icon md-font-icon="fa fa-plus" style="font-size:14px;"></md-icon>&nbsp;{{createInvoiceBtnTitle}}
+                </md-button>
+        </div>
+ </dvv>             
+</div>
+</form>

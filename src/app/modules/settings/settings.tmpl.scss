@@ -1,0 +1,29 @@
+
+md-tabs {
+   height:100% !important;
+}
+md-tabs:not(.md-no-tab-content):not(.md-dynamic-height){
+	
+}
+md-headline{
+	font-size:20% !important;
+}
+md-card.active {
+    color: rgba(0,0,0,0.87);
+    background-color: rgb(255,255,255);
+    border-radius: 2px;
+    font-size:100px !important;
+    background:'red' !important;
+}
+
+
+ md-card.default {
+        background: url('assets/images/elements/ribbon.png') no-repeat top right;
+}
+.default_invoice_template{
+	border:2px solid #2FC65A !important;
+}
+
+.normal_invoice_template{
+	border:0px solid #ccc;
+}

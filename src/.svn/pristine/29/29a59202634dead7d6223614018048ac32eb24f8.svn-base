@@ -1,0 +1,134 @@
+<md-dialog aria-label="Select Profile">
+    <md-dialog-content>
+    
+    <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="Profile">
+         <md-content class="md-padding" style="min-width:400px;">
+         
+            <md-list ng-cloak>
+                <md-list-item class="md-3-line" ng-repeat="(key,profile) in ccprofiles" ng-click="selectProfile(key)" >
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{profile.cardholder_name}}</h3>
+                        <h4>xxxx-xxxx-xxxx-{{profile.last_digits}}</h4>
+                        <p>{{profile.create_date}}</p>
+                        <div>
+                            <img ng-show="true" ng-repeat="card in cardlogos" align="right" ng-src="assets/images/cardicons/{{card.src}}" ng-init="card_type=profile.card_type | lowercase" style="opacity:{{card_type==card.id ? 1 : 0.4}}; margin-right:2px;width:38px" />
+                        </div>
+                    </div>
+                    <md-divider>
+                </md-list-item>
+                <md-list-item class="md-3-line" ng-show="ccprofiles.length==0">
+                    <div class="md-list-item-text" layout="column">
+                        <span >No CreditCard Profile found for this customer</span>
+                    </div>
+                </md-list-item>
+                
+            </md-list>
+        </md-content>
+        
+      </md-tab>  
+      <md-tab label="Add New">
+      <form name="checkoutForm" novalidate>
+        <md-content class="md-padding">
+         <div class="md-padding-">
+                <md-input-container class="md-block" md-no-float>
+                    <input type="text" id="FirstName" name="cardholder" ng-model="payform.cardholder" class="md-padding" placeholder="CardHolder Name" ng-required="requiredCardHolderName" ng-disabled="usedCardProfile">
+
+                    <div ng-messages="checkoutForm.cardholder.$error" role="alert" multiple>
+                        <div ng-message="required" ng-show="IsSubmit">
+                            <span>CardHolder Name is required</span>
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block" md-no-float>
+                    <input type="text" id="CardNumber" name="cardnumber" ng-model="payform.cardnumber" data-ng-pattern="ccPattern" placeholder="CreditCard Number" data-ng-minlength="14" maxlength="16" ng-required="requiredCreditCardNumber" data-credit-card-type>
+
+                    <div ng-messages="checkoutForm.cardnumber.$error" role="alert" multiple>
+                        <div ng-message="required">
+                            <span>CreditCard Number is required</span>
+                        </div>
+                        <div ng-message="minlength">
+                            <span>Credit card must be 14-16 digits</span>
+                        </div>
+
+                        <div ng-message="pattern">
+                            <span>Credit card must consist of only numbers</span>
+                        </div>
+                    </div>
+                    <div>
+                        <img ng-show="true" ng-repeat="card in cardlogos" align="right" ng-src="assets/images/cardicons/{{card.src}}" style="opacity:{{ccinfo.type==card.id ? 1 : 0.4}}; margin-right:2px;width:38px">
+                    </div>
+                </md-input-container>
+
+                <div layout="column" layout-gt-xs="row">
+                    <md-input-container flex="100" flex-gt-xs="33" md-no-float ng-hide="usedCardProfile">
+                        <label>Exp Month</label>
+                        <md-select id="months" name="months" ng-model="payform.months" ng-required="requiredMonthField">
+                            <md-option ng-repeat="(key, month) in ['01','02','03','04','05','06','07','08','09','10','11','12']" value="{{month}}">
+                                {{month}}
+                            </md-option>
+                        </md-select>
+                        <div ng-messages="checkoutForm.months.$error" role="alert">
+                            <div ng-message="required" ng-show="IsSubmit">
+                                <span>CreditCard exp month is required.</span>
+                            </div>
+                        </div>
+
+                    </md-input-container>
+                    <md-input-container flex="100" flex-gt-xs="33" md-no-float ng-hide="usedCardProfile">
+                        <label>Exp Year</label>
+                        <md-select id="years" name="years" ng-model="payform.years" ng-required="requiredYearField">
+                            <md-option ng-repeat="year in [] | range:currentYear:currentYear+13" value="{{year}}">
+                                {{year}}
+                            </md-option>
+                        </md-select>
+                        <div ng-messages="checkoutForm.years.$error" role="alert">
+                            <div ng-message="required" ng-show="IsSubmit">
+                                <span>CreditCard exp year is required.</span>
+                            </div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="md-block" md-no-float flex-gt-xs="33" ng-hide="usedCardProfile">
+                        <input type="text" id="CVV" name="cc2" ng-model="payform.cc2" placeholder="CVC2/CVV2/CID" md-maxlength="4">
+                        <div ng-messages="checkoutForm.cc2.$error" role="alert" multipl>
+                            <div ng-message="required" ng-show="IsSubmit">
+                                <span>CCV2 field is required.</span>
+                            </div>
+                            <div ng-message="md-maxlength">
+                                <span>CCV2 can't be longer than 4 characters.</span>
+                            </div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <span class="md-body-1">Additional Information</span>
+                <div layout="column" layout-gt-xs="row" style="border-top:0px solid #ddd">
+                    <md-input-container flex="100" flex-gt-xs="75" md-no-float>
+                        <input type="text" name="streetaddress" ng-model="payform.streetaddress" class="md-padding" placeholder="Street Address" ng-disabled="usedCardProfile">
+                    </md-input-container>
+                    <md-input-container flex="100" flex-gt-xs="25" md-no-float>
+                        <input type="text" name="zipcode" ng-model="payform.zipcode" class="md-padding" placeholder="ZIP Code" ng-disabled="usedCardProfile">
+                    </md-input-container>
+                </div>
+                <!--<div layout="column" layout-gt-xs="row" layout-align="center center">
+                    <div flex="50" align="right">
+                        <md-button ng-click="showSwipe()" class="md-primary">
+                            <md-icon md-font-icon="fa fa-credit-card-alt" style="font-size:12px;"></md-icon>&nbsp; Swipe
+                        </md-button>
+                    </div>
+                </div>-->
+                <div layout="column" layout-gt-xs="row">
+                    <div flex="50">
+
+                        <md-button type="submit" class="md-raised md-primary" aria-label="PROCESS" ng-click="submit('profile_add');" ng-disabled="checkoutForm.$invalid" style="background:#2FC65A;width:90%">Create Profile</md-button>
+                    </div>
+                    <div flex="50" align="right">
+                        <md-button type="submit" class="md-warn" aria-label="PROCESS" ng-click="cancel();" style="color:grey;width:90%">Cancel</md-button>
+                    </div>
+                </div>
+            </div>
+        </md-content>
+        </form>
+      </md-tab>
+    </md-tabs>
+    </md-dialog-content>
+</md-dialog>

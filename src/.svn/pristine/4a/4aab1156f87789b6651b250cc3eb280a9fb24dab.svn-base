@@ -1,0 +1,64 @@
+(function () {
+    'use strict';
+
+    angular
+    .module('recurring')
+    .factory('RecurringModel', RecurringModel);
+
+    RecurringModel.$inject = ['$http','Clique','$httpParamSerializer'];
+    function RecurringModel($http,Clique,$httpParamSerializer) {
+        var service = {};
+        service.SetInvoiceTemplate=SetInvoiceTemplate; 
+        service.GetAllRecurrings=GetAllRecurrings; 
+        service.GetRecurringById=GetRecurringById;
+        service.GetRecurringHistory=GetRecurringHistory; 
+        service.DeleteRecurring=DeleteRecurring; 
+        service.DoRecurringRetry=DoRecurringRetry;
+        service.RecurringStatus=RecurringStatus;        
+        
+        return service;
+
+        
+        function SetInvoiceTemplate(params) {
+            return Clique.callService('post','/invoice_templates/',params).then(handleSuccess, handleError);
+        }
+        function GetAllRecurrings(query) {
+            var qs = $httpParamSerializer(query);
+            return Clique.callService('get','/recurring','').then(handleSuccess, handleError);
+        }
+
+        function GetRecurringById(id) {
+            var qs = $httpParamSerializer(query);
+            return Clique.callService('get','/recurring/'+id,'').then(handleSuccess, handleError);
+        }
+        function GetRecurringHistory(id) {
+            //var qs = $httpParamSerializer(query);
+            return Clique.callService('get','/recurring/history/'+id,'').then(handleSuccess, handleError);
+            //return Clique.callService('get','/recurring/history/','').then(handleSuccess, handleError);
+        }
+        function DoRecurringRetry(params) {
+            //var qs = $httpParamSerializer(query);
+            //return Clique.callService('get','/recurring/history/'+id,'').then(handleSuccess, handleError);
+            return Clique.callService('post','/recurring/retry/',params).then(handleSuccess, handleError);
+        }
+        function DeleteRecurring(params) {
+            return Clique.callService('post','/recurring/delete/',params).then(handleSuccess, handleError);
+        }
+
+         function RecurringStatus(recurring_id,params) {
+            return Clique.callService('post','/recurring/status/'+recurring_id,params).then(handleSuccess, handleError);
+        }
+        // private functions
+
+        function handleSuccess(res) {
+            //console.log(res);
+            return res.data;
+        }
+
+        function handleError(error) {
+            //console.log(error);
+            return error;
+        }
+    }
+
+})();

@@ -1,0 +1,65 @@
+
+
+md-select{
+  width: 100% !important;
+}
+md-button.width-100{
+  width: 100% !important;
+}
+.md-small {
+    min-width: 1%;
+    min-height:1%;
+    font-size:90%;
+    line-height:2;
+}
+#transaction .md-small{
+  margin:0px;
+}
+#transaction .md-small-trans{
+ margin:0px;
+ box-shadow:none;
+ background:transparent; 
+}
+#refund_amount{
+    font-size: 200%;
+    height:50px;
+
+}
+#print_receipt {
+    background: #fff;
+    border-collapse: collapse;
+    text-align: left;
+    width:100% !important;
+
+}
+#print_receipt th {
+    font-weight: normal;
+    color: #000;
+    padding: 10px 8px;
+    text-align:center;
+}
+#print_receipt td {
+    color: #000;
+    font-size:90%;
+}
+#print_receipt td p{
+  font-size:13px;
+}
+.subtrans {
+  width:100% !important;
+  margin:10px;
+}
+.subtrans th{
+  text-align:left !important;
+  padding: 3px !important;;
+  margin: 0px !important;;
+}
+.subtrans td.md-cell{
+  text-align:left !important;
+  margin-left:0px !important;
+  padding: 3px !important;;
+}
+.capitalize {
+   text-transform: capitalize;
+}
+

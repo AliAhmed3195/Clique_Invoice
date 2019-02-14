@@ -1,0 +1,165 @@
+$sidenav-mobile-width: 260px;
+$sidenav-desktop-width: 300px;
+
+// import angular material scss
+@import "angular-material/angular-material.scss";
+
+body {
+  color: #212121;
+}
+
+// set template font family
+
+button, select, html, textarea, input {
+  font-family: Work Sans
+}
+
+
+.md-tab{
+	text-transform: capitalize !important;
+}
+
+.md-button{
+	text-transform: capitalize !important;
+}
+
+
+
+@media only screen and (max-width: 768px) {
+  
+  .col1  { display:none; visibility:hidden; }
+  .col2  { display:none; visibility:hidden; }
+}
+
+@media only screen and (max-width: 420px) {
+  
+  .col1  { display:none; visibility:hidden; }
+  .col2  { display:none; visibility:hidden; }
+  .col3  { display:none; visibility:hidden; }
+  .col4  { display:none; visibility:hidden; }
+  .col5  { display:none; visibility:hidden; }
+}
+
+@media only screen and (max-width: 320px) {
+  .col1  { display:none; visibility:hidden; }
+  .col2  { display:none; visibility:hidden; }
+  .col3  { display:none; visibility:hidden; }
+  .col4  { display:none; visibility:hidden; }
+  .col5  { display:none; visibility:hidden; }
+}
+table.md-table th.md-column md-checkbox{
+  margin-left:5px !important;
+}
+table.md-table {
+  td {
+    vertical-align: middle;
+    text-align:left !important;
+    padding:5px !important;
+    background:#fff !important;
+  }
+  th {
+    padding:0.2% !important;
+    background:#eee !important;
+    /*font-family: 'Arial' !important;*/
+  }
+  thead {
+    tr {
+      height: 0;
+    }
+  }
+}
+thead th{
+  /*color:#000 !important;*/
+}
+.scroller {
+    height: 790px;
+    min-height:590px;
+    overflow-y: hidden;
+    position: relative;
+}
+.ps-container>.ps-scrollbar-y-rail:active>.ps-scrollbar-y, .ps-container>.ps-scrollbar-y-rail:hover>.ps-scrollbar-y{
+ width:11px; 
+}
+
+.w-100{
+  width:100% !important;
+}
+.margin-none{
+  margin:0px !important;
+}
+md-dialog md-dialog-actions .md-button{
+ margin-right:4px !important; 
+}
+
+.border{
+  border:0px solid #ff0000 !important;
+}
+md-input-container.no-padding{
+  margin:0px !important;
+
+}
+md-input-container.no-padding input{
+  border:0px solid #ccc;
+  height:40px;
+  margin:0px;
+  padding:0px;
+  text-align:center;
+  
+}
+md-input-container.no-padding{
+  height:15px;
+}
+md-input-container.no-padding md-select{
+  border:0px solid #ccc;
+  height:40px;
+  margin:0px;
+  padding:0px;
+}
+md-progress-linear .md-container, md-progress-linear .md-container .md-bar
+{
+    height:3px !important;
+}
+
+.info, .success, .warning, .error, .validation {
+      border: 1px solid;
+      background-repeat: no-repeat;
+      background-position: 10px center;
+      padding:5px;
+}
+.info {
+  color: #00529B;
+  background-color: #BDE5F8;
+}
+.success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+.warning {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
+.error{
+  color: #D8000C;
+  background-color: #FFD9D9;
+}
+.validation{
+  color: #D63301;
+  background-color: #FFCCBA;
+}
+.md-sidenav-transaction{
+  widht:280px !important;
+  min-widht:280px !important;
+  max-widht:280px !important;
+}
+// import app scss
+@import "scss/material-backgrounds";
+
+// Add your CSS here
+
+/**
+ *  Do not remove this comments bellow. It's the markers used by gulp-inject to inject
+ *  all your sass files automatically
+ */
+
+// injector
+// endinjector

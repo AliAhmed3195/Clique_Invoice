@@ -1,0 +1,151 @@
+<style>
+    md-dialog-content::-webkit-scrollbar {
+        width: 8px;
+        background: rgba(0, 0, 0, 0.1);
+        -webkit-transition: all .2s;
+        transition: all .2s;
+    }
+
+    md-dialog-content::-webkit-scrollbar-thumb {
+        border-radius: 0px;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        -webkit-transition: all .2s;
+        transition: all .2s;
+    }
+	md-input-container.md-block {
+    	width: 86%;
+    }
+
+
+    #header
+    {
+
+        background: rgb(0, 188, 212);
+    }
+    md-checkbox.md-light-green-theme.md-checked .md-icon {
+    background-color: rgb(0, 188, 212) !important;
+}
+#create1{
+    background-color: rgb(0, 188, 212) !important;
+    color:pink !important;
+}
+.md-button.md-light-green-theme.md-raised[disabled], .md-button.md-light-green-theme.md-fab[disabled] {
+
+    background-color: rgb(0, 188, 212) !important;
+    color: #b5b5b5 !important;
+}
+.md-button.md-light-green-theme.md-primary.md-raised[disabled]:hover, .md-button.md-light-green-theme.md-primary.md-fab:hover {
+    cursor: not-allowed;
+    color:rgb(0, 188, 212);
+}
+
+    /* md-button #create
+    {
+        background-color: rgb(243, 26, 99) !important;
+    } */
+
+
+
+</style>
+<md-dialog class="order-dialog mobile-fullwidth-dialog" flex="45" flex-xs="100">
+    <md-toolbar>
+        <div class="md-toolbar-tools" id="header">
+            <h2 flex>
+                <span translate>Email Template</span>
+            </h2>
+
+
+            <!--<md-button class="md-icon-button" ng-click="vm.printClick()" aria-label="print">
+                <md-icon md-font-icon="zmdi zmdi-print"></md-icon>
+            </md-button>-->
+            <md-button class="md-icon-button" ng-click="cancel()" aria-label="cancel">
+                <md-icon md-font-icon="zmdi zmdi-close"></md-icon>
+            </md-button>
+        </div>
+
+    </md-toolbar>
+
+    <div>
+        <span flex ng-show="showProgress"><md-progress-linear md-mode="indeterminate" style="width:100%;" ></md-progress-linear></span>
+    </div>
+
+	<form name="TemplateForm" >
+    <md-dialog-content class="md-dialog-content">
+
+
+
+		<div>
+
+
+
+		<div layout="column" layout-align="center start">
+			<md-input-container class="md-block">
+						<label for="sender_name">Name</label>
+                        <input id="subject" label="name" name="name" type="text"
+                        ng-model="email_temp.name"
+                        style="width:100%;" required/>
+						<div ng-messages="email_temp.name.$error" md-auto-hide="false" ng-show="setting.InvoiceContacts.template_email.name.$touched">
+                        <div ng-message="required">
+                            Please enter your template name.
+                        </div>
+
+                    </div>
+			</md-input-container>
+		</div>
+
+
+		<div layout="column" layout-align="center start">
+			<md-input-container class="md-block">
+						<label for="sender_name">Subject</label>
+						<input id="subject" label="subject" name="subject" type="text" ng-model="email_temp.subject" style="width:100%;" required/>
+						<div ng-messages="email_temp.$error" md-auto-hide="false" ng-show="setting.InvoiceContacts.template_email.subject.$touched">
+                        <div ng-message="required">
+                            Please enter your  subject.
+                        </div>
+
+                    </div>
+			</md-input-container>
+		</div>
+		<div>
+			 <div layout="column" layout-align="center start">
+				<label for="email_body"> Body </label>
+				<br>
+				<trix-editor angular-trix ng-model="email_temp.body" style="min-width:525px;"></trix-editor>
+			 </div>
+			 <br />
+		  	<label>Supported tags</label>
+			<md-chips>
+				 <md-chip>[customer_name]</md-chip>
+				 <md-chip>[invoice_number]</md-chip>
+				 <md-chip>[amount]</md-chip>
+				 <md-chip>[full_name]</md-chip>
+				 <md-chip>[company_name]</md-chip>
+				 <md-chip>[company_phone]</md-chip>
+				 <md-chip>[company_weburl]</md-chip>
+				 <md-chip>[date]</md-chip>
+			</md-chips>
+		</div>
+        <!--<md-divider class="margin-bottom-40 margin-top-40"></md-divider>-->
+		<br />
+
+		</div>
+
+
+
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+
+        <!-- <span flex ng-show="showProgress"><md-progress-linear md-mode="indeterminate" style="width:90%;" ></md-progress-linear></span> -->
+
+        <md-button style="background-color:rgb(0, 188, 212)!important;color:white;" ng-click="SaveTemplateSetting()" ng-disabled="TemplateForm.$invalid" >Create</md-button>
+    </md-dialog-actions>
+</form>
+</md-dialog>
+<!-- style="background-color:rgb(243, 26, 99) !important;"
+
+
+ class="md-primary md-raised "
+-->

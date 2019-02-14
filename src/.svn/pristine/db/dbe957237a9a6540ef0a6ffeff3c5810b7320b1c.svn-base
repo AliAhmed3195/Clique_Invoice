@@ -1,0 +1,69 @@
+.md-small-icon{
+ margin:0px;
+ box-shadow:none;
+ background:transparent; 
+}
+.md-small-icon md-icon{
+	font-size:14px;
+}
+.addnewcustomer md-input-container label{
+	font-size:90% !important;
+}
+.addnewcustomer md-input-container{
+	margin:2px !important;
+}
+.addnew_link{
+	text-decoration:none !important;
+	font-weight:500;
+}
+.tDrag{
+ text-align:right !important;
+ margin:0px; 
+ padding:0px; 
+ width:50px !important;
+ border:0px solid #000;
+ cursor:move;
+ font-size: large !important;
+}
+#addnew-invoice-listing .md-small{
+	border:none;
+	background:none;
+	box-shadow:none;
+}
+#addnew-invoice-listing .md-add-new{
+    min-width: 1%;
+    min-height:1%;
+    font-size:100%;
+    line-height:2;
+}
+
+.createinvoice md-input-container label{
+	/*font-size:80% !important;*/
+    color:#000 !important;
+}
+.createinvoice md-input-container{
+	/*margin:2px !important;*/
+}
+
+.createinvoice md-input-container .md-text{
+	font-size:80% !important;
+}
+.createinvoice md-progress-linear.md-cyan-theme .md-container{
+    height:3px !important;
+}
+.hint {
+    left: 2px;
+    right: auto;
+    font-size: 12px;
+    line-height: 14px;
+    color: grey; 
+}
+.fa-spin-hover:hover {
+    animation: fa-spin 2s infinite linear;
+}
+.fa.fa-refresh:hover {  
+     transform: rotate(180deg);
+}
+.fa.fa-refresh {
+     transition: transform 0.5s ease 0s;
+}

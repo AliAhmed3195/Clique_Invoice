@@ -1,0 +1,32 @@
+<div class="md-toolbar-tools">
+    <md-button class="md-icon-button" ng-if="!vm.hideMenuButton()" ng-click="vm.openSideNav('left')" aria-label="side navigation">
+        <md-icon md-font-icon="zmdi zmdi-menu"></md-icon>
+    </md-button>
+
+    <h2 hide-xs flex>
+        <span ng-repeat="crumb in vm.breadcrumbs.crumbs">
+            <a href="javascript:history.go(-1)" ng-if="!$last" >{{crumb.name}}</a>
+            <span translate ng-if="$last">{{crumb.name}}</span>
+            <md-icon md-font-icon="zmdi zmdi-chevron-right" ng-if="!$last"></md-icon>
+        </span>
+    </h2>
+
+    <md-button class="md-icon-button toolbar-button" ng-click="vm.toggleFullScreen()" aria-label="toggle fullscreen">
+        <md-icon md-font-icon ng-class="vm.fullScreenIcon"></md-icon>
+    </md-button>
+    <md-menu>
+        <md-button aria-label="Open user menu" ng-click="$mdOpenMenu()" aria-label="side navigation" style="text-transform:capitalize !important;">
+                <md-icon md-font-icon="zmdi zmdi-account-circle"></md-icon>
+                {{vm.currentUser.displayName}}
+        </md-button>
+        <md-menu-content width="3">
+             <md-menu-item ng-repeat="menu in vm.topMenuList">
+                <md-button  ng-click="vm.TopMenu(menu)" aria-label="side navigation">
+                    <md-icon md-font-icon="{{menu.icon}}"></md-icon>
+                    <span translate="{{menu.name}}"></span>
+                </md-button>
+            </md-menu-item>
+               
+        </md-menu-content>
+    </md-menu>
+</div>

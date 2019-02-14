@@ -1,0 +1,8 @@
+<md-dialog aria-label="Invoice Template Preview"  ng-cloak style="max-height:450px; min-width:360px;">
+     <md-dialog-content >
+      <div class="md-dialog-content" style="padding:0px !important; margin:0px !important;overflow:hidden; height:450px;">
+          <img src="{{invoiceTemplateUrl}}" style="border:0px solid #000;">
+      </div>
+    </md-dialog-content>
+   
+</md-dialog>

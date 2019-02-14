@@ -1,0 +1,28 @@
+
+<md-dialog aria-label="Void Transaction">
+<md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+  <form name="VoidForm">
+    <md-dialog-content class="md-padding">
+      
+       <h2 ng-if="transData.trans_amount==transData.remain_amount">Are you sure you want to void this payment?</h2>
+        <div class="md-dialog-content">
+        <div ng-if="transData.trans_amount!=transData.remain_amount" align="center" class="md-padding title" style="color:red">
+                <span ><md-icon md-font-icon="fa fa-warning"></md-icon>This Transaction cannot be voided</span>
+        </div>
+      </div>
+    
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" ng-hide="hideDialogActions">
+      
+      <md-button ng-disabled="transData.trans_amount!=transData.remain_amount" ng-click="cancel('void')" class="md-primary">
+         Cancel
+      </md-button>
+      <span>&nbsp;</span>
+      <md-button ng-click="confirm('void')" class="md-primary">
+         Confirm
+      </md-button
+    </md-dialog-actions>
+  </form>
+</md-dialog>
+

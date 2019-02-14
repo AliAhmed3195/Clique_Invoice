@@ -1,0 +1,6 @@
+md-chip.status.active {
+  background-color:#2EC6A6
+}
+md-chip.status.inactive {
+  background-color:#FA7044
+}

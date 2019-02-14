@@ -1,0 +1,19 @@
+            
+<md-dialog aria-label="Invoice Link">
+    <md-dialog-content class="md-padding" style="max-width:400px;">
+        <h3>Copy Invoice link</h3>
+        
+        <p ng-repeat="(key,value) in textToCopy">
+            <a href="{{value}}"  target="_blank">{{stripText(value)}}</a>   
+            <br>
+        </p>
+    </md-dialog-content>
+    
+    <md-dialog-actions layout="row" class="invoice_action" >
+      
+      <md-button clipboard supported="supported" text="allLinks" on-copied="success()" on-error="fail(err)"  class="md-raised md-primary" aria-label="Copy" >Copy</md-button>
+
+    </md-dialog-actions>
+
+</md-dialog>
+

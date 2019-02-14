@@ -1,0 +1,36 @@
+
+<md-dialog aria-label="Refund Transaction" >
+<md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+  <form name="refundForm">
+    
+    <md-dialog-content class="md-padding">
+      
+      <h2>Refund Transaction</h2>
+      <div class="md-dialog-content">
+         <md-input-container class="md-block bigClass">
+          <label for="refund_amount">Enter Refund Amount </label>
+          <input id="refund_amount" label="refund_amount" name="refund_amount" type="number" ng-model="refund_amount " ng-min="0.01" max="{{transData.remain_amount}}" required/>
+          <div ng-messages="refundForm.refund_amount.$error" md-auto-hide="false" ng-show="refundForm.refund_amount.$touched">
+              <div ng-message="required">
+                  Please enter refund amount.
+              </div>
+              <div ng-message="min">
+                  Refund amount should be greater than 0
+              </div>
+              <div ng-message="max">
+                  Refund amount should not be greater than <span>{{transData.remain_amount | currency}}</span>
+              </div>
+
+              
+          </div>
+      </md-input-container>
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" ng-hide="hideDialogActions">
+      <md-button ng-disabled="refundForm.$invalid" ng-click="confirm('refund')" class="md-primary md-raised">
+         <!--<md-icon md-font-icon="fa fa-check"></md-icon></md-icon>-->Refund
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

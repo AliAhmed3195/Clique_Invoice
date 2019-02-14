@@ -1,0 +1,280 @@
+<md-dialog aria-label="Add New Customer">
+<md-progress-linear class="md-primary" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+<md-dialog-content class="addnewcustomer">
+      <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+      
+      <form class="md-padding" name="customerForm">
+        <h4 class="md-title">Customer Information</h4>
+        <div layout="row">
+            <div flex>
+                <md-input-container>
+                    <label>Customer Name</label>
+                    <input 
+                    type="text" 
+                    name="display_name"
+                    ng-model="customer.DisplayName" 
+                    md-autofocus
+                    ng-maxlength="100" 
+                    ng-pattern="/^[a-zA-Z\s]*$/" 
+                    required
+                    >
+                     <div ng-messages="customerForm.display_name.$error" md-auto-hide="false" >
+                        <p ng-message when="required">Please enter your first name</p>
+                        <p ng-message when="maxlength">Text should not be greater then 100 characters</p>
+                        <p ng-message when="pattern">Only alphabets are allowed</p>
+                    </div>
+                </md-input-container>
+                <md-input-container >
+                    <label>Email</label>
+                    <input 
+                    name="email" 
+                    type="email" 
+                    ng-model="customer.PrimaryEmailAddr.Address"
+                    >
+                     <div ng-messages="customerForm.email.$error" md-auto-hide="false" >
+                        <div ng-message when="required">
+                            <span translate>Please enter your email address</span>
+                        </div>
+                        <div ng-message when="email">
+                            <span translate>Please enter a valid email address</span>
+                        </div>
+                    </div>
+                </md-input-container>
+                  <md-input-container >
+                    <label>Company</label>
+                    <input 
+                    name="company_name"
+                    type="text" 
+                    ng-model="customer.CompanyName"
+                    ng-maxlength="100" 
+                    >
+                     <div ng-messages="customerForm.company_name.$error" md-auto-hide="false">
+                        <p ng-message when="maxlength">Text should not be greater then 100 characters</p>
+                    </div>
+                </md-input-container>
+                 <md-input-container>
+                    <label>PrimaryPhone</label>
+                    <input 
+                    name="PrimaryPhone" 
+                    ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/"
+                    type="text" 
+                    ng-model="customer.PrimaryPhone.FreeFormNumber"
+                    >
+                     <div ng-messages="customerForm.PrimaryPhone.$error" md-auto-hide="false">
+                        <p ng-message when="pattern">Invalid phone number</p>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Fax</label>
+                    <input 
+                    name="Fax" 
+                    ng-pattern="/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/"
+                    type="text" 
+                    ng-model="customer.Fax.FreeFormNumber"
+                    >
+                     <div ng-messages="customerForm.Fax.$error" md-auto-hide="false">
+                        <p ng-message when="pattern">Invalid fax number</p>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Website</label>
+                    <!--//ng-pattern="/^https?://.+$/"-->
+                    <input 
+                    name="WebAddr" 
+                    
+                    ng-pattern="/^(https?:\/\/)+[a-z0-9-]+(\.[a-z0-9-]+)+(\/[a-z0-9-]+)*\/?$/"
+                    type="text" 
+                    ng-model="customer.WebAddr.URI"
+                    ng-maxlength="100" 
+                    >
+                    <div ng-messages="customerForm.WebAddr.$error" md-auto-hide="false">
+                        <p ng-message when="pattern">Invalid web address </p>
+                        <p ng-message when="maxlength">Webaddress should not be greater then 100 characters</p>
+                    </div>
+              
+                </md-input-container>
+                  <md-input-container>
+                    <label>Note</label>
+                    <input 
+                    name="Notes" 
+                    type="text" 
+                    ng-model="customer.Notes"
+                    md-maxlength="100" 
+                    >
+                      <div ng-messages="customerForm.Notes.$error" md-auto-hide="false">
+                        <p ng-message when="md-maxlength">Maximum 100 characters allowed</p>
+                    </div>
+              
+                </md-input-container>
+            </div>
+        </div>
+       
+        <div layout="row" layout-wrap>
+            <div>
+                <h4 class="md-body-1">Billing Address</h4>
+                <md-input-container class="md-block-md">
+                    <label>Line1</label>
+                    <input 
+                    name="BillAddr_Line1"
+                    type="text" 
+                    ng-model="customer.BillAddr.Line1"
+                    md-maxlength="60" 
+                    >
+                    <div ng-messages="customerForm.BillAddr_Line1.$error" md-auto-hide="false">
+                        <p ng-message when="md-maxlength">Maximum 60 characters allowed</p>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block-md">
+                    <label>City/Town</label>
+                    <input 
+                    name="BillAddr_City"
+                    md-maxlength="20" 
+                    type="text" 
+                    ng-model="customer.BillAddr.City"
+                    ng-pattern="/^[a-zA-Z\s]*$/"
+                    >
+                     <div ng-messages="customerForm.BillAddr_City.$error" md-auto-hide="false">
+                        <p ng-message when="md-maxlength">Maximum 20 characters allowed</p>
+                        <div ng-message when="pattern">
+                            <span translate>Only alphabets are allowed</span>
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block-sm">
+                    <label>State</label>
+                    <input 
+                    name="BillAddr_CountrySubDivisionCode"
+                    type="text" 
+                    ng-model="customer.BillAddr.CountrySubDivisionCode"
+                    ng-pattern="/^[a-zA-Z]*$/" 
+                    ng-maxlength="10"
+                    >
+                    <div ng-messages="customerForm.BillAddr_CountrySubDivisionCode.$error" md-auto-hide="false">
+                        <p ng-message when="maxlength">Maximum 10 characters allowed</p>
+                        <div ng-message when="pattern">
+                            <span translate>Only alphabets are allowed</span>
+                        </div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block-sm">
+                    <label>PostalCode</label>
+                    <input 
+                    name="BillAddr_PostalCode" 
+                    type="text" 
+                    ng-model="customer.BillAddr.PostalCode" 
+                    ng-minlength="5" ng-maxlength="5" 
+                    ng-pattern="/^[0-9]*$/"
+                    >
+                     <div ng-messages="customerForm.BillAddr_PostalCode.$error" md-auto-hide="false">
+                        <p ng-message when="minlength">Minimum 5 numbers allowed</p>
+                        <p ng-message when="maxlength">Maximum 5 numbers allowed</p>
+                        <p ng-message when="pattern">Only numbers are allowed</p>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Country</label>
+                    <input 
+                    name="BillAddr_Country" 
+                    type="text" 
+                    ng-model="customer.BillAddr.Country"
+                    
+                    ng-maxlength="20"
+                    >
+                    <div ng-messages="customerForm.BillAddr_Country.$error" md-auto-hide="false">
+                        <p ng-message when="maxlength">Maximum 20 character allowed</p>
+                        <!--ng-pattern="/^[a-zA-Z]*$/" <p ng-message when="pattern">Only alphabets are allowed</p>-->
+                    </div>
+                </md-input-container>
+            </div>
+        </div>
+        <div layout="row" layout-wrap>
+            <div ng-init="sameAsBilling=true">
+            <h4 class="md-body-1">Shipping Address <md-checkbox ng-model="sameAsBilling" ng-change="setCustomerShipping();"></md-chekcbox> <span class="md-caption">Same as billing address</span></h4>
+                <div ng-hide="sameAsBilling">
+                         <md-input-container class="md-block-md">
+                            <label>Line1</label>
+                            <input 
+                            name="ShipAddr_Line1"
+                            type="text" 
+                            ng-model="customer.ShipAddr.Line1"
+                            md-maxlength="60" 
+                            >
+                            <div ng-messages="customerForm.ShipAddr_Line1.$error" md-auto-hide="false">
+                                <p ng-message when="md-maxlength">Maximum 60 characters allowed</p>
+                            </div>
+                        </md-input-container>
+                        <md-input-container class="md-block-md">
+                            <label>City/Town</label>
+                            <input 
+                            name="ShipAddr_City"
+                            md-maxlength="20" 
+                            type="text" 
+                            ng-model="customer.ShipAddr.City"
+                            ng-pattern="/^[a-zA-Z\s]*$/"
+                            >
+                             <div ng-messages="customerForm.ShipAddr_City.$error" md-auto-hide="false">
+                                <p ng-message when="md-maxlength">Maximum 20 characters allowed</p>
+                                <div ng-message when="pattern">
+                                    <span translate>Only alphabets are allowed</span>
+                                </div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container class="md-block-sm">
+                            <label>State</label>
+                            <input 
+                            name="ShipAddr_CountrySubDivisionCode"
+                            type="text" 
+                            ng-model="customer.ShipAddr.CountrySubDivisionCode"
+                            ng-pattern="/^[a-zA-Z]*$/" 
+                            ng-maxlength="10"
+                            >
+                            <div ng-messages="customerForm.ShipAddr_CountrySubDivisionCode.$error" md-auto-hide="false">
+                                <p ng-message when="maxlength">Maximum 10 characters allowed</p>
+                                <div ng-message when="pattern">
+                                    <span translate>Only alphabets are allowed</span>
+                                </div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container class="md-block-sm">
+                            <label>PostalCode</label>
+                            <input 
+                            name="ShipAddr_PostalCode" 
+                            type="text" 
+                            ng-model="customer.ShipAddr.PostalCode" 
+                            ng-minlength="5" ng-maxlength="5" 
+                            ng-pattern="/^[0-9]*$/"
+                            >
+                             <div ng-messages="customerForm.ShipAddr_PostalCode.$error" md-auto-hide="false">
+                                <p ng-message when="minlength">Minimum 5 numbers allowed</p>
+                                <p ng-message when="maxlength">Maximum 5 numbers allowed</p>
+                                <p ng-message when="pattern">Only numbers are allowed</p>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Country</label>
+                            <input 
+                            name="ShipAddr_Country" 
+                            type="text" 
+                            ng-model="customer.ShipAddr.Country"
+                            
+                            ng-maxlength="20"
+                            >
+                            <div ng-messages="customerForm.ShipAddr_Country.$error" md-auto-hide="false">
+                                <p ng-message when="maxlength">Maximum 20 character allowed</p>
+                                <!-- ng-pattern="/^[a-zA-Z]*$/"  <p ng-message when="pattern">Only alphabets are allowed</p>-->
+                            </div>
+                        </md-input-container>
+
+                </div>
+            </div>
+        </div>
+        <div layout="row" layout-align="end center" ng-hide="hideDialogActions">
+            <md-button 
+            class="md-primary md-raised" 
+            ng-click="addNewCustomer();"
+            ng-disabled="customerForm.$invalid"
+            >Save</md-button>
+        </div>
+        </form>
+</md-dialog-content>
+</md-dialog>

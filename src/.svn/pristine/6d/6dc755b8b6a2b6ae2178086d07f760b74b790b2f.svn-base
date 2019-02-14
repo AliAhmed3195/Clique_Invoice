@@ -1,0 +1,63 @@
+
+<md-dialog aria-label="Payment Methdods" >
+<md-toolbar class="toolbar-default" md-theme="default">
+      <div class="md-toolbar-tools">
+        <h2>Choose Payment Method</h2>
+        <span flex></span>
+         <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-font-icon="zmdi zmdi-close"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+  <md-dialog-content >
+      <div ng-cloak>
+
+        <div layout="column" layout-align="center center" layout-margin>
+            <div flex ng-repeat="item in payment_methods" ng-click="listItemClick(item)">
+               <img 
+                ng-src="{{item.logo}}"   
+                class="normal_invoice_template" 
+                width="140" alt="{{item.name}}" 
+                style="cursor:pointer;z-index:-1; opacity:0.1" 
+                ng-style="{ 'opacity' : item.id == payment_default_id ? '1.0' : '0.4'}"
+                align="center"
+                ng-show="!isObjectEmpty(item.configuration)"
+                >
+                <i 
+
+                class="zmdi zmdi-check-all zmdi-hc-2x" 
+                ng-if="item.id == payment_default_id" 
+                style="color:#2FC65A"
+
+                >
+                </i>
+                <i ng-if="item.id != payment_default_id">&nbsp;&nbsp;&nbsp;</i>
+            </div>
+        </div>
+      <!--<md-list flex layout="row" layout-align="center center" >
+       <md-virtual-repeat-container id="horizontal-container" md-orient-vertical style="border:1px solid;">
+        <div md-virtual-repeat="item in payment_methods"
+            
+            class="repeated-item " 
+            flex 
+            align="center"
+            style="height:100px; text-align:center" 
+            ng-click="listItemClick(item)"
+            ng-class="{'md-whiteframe-9dp default_invoice_template': item.id == payment_default_id}"
+            >
+            <img 
+            
+            ng-src="{{item.logo}}"   
+            class="normal_invoice_template" 
+            width="140" alt="{{item.name}}" 
+            style="cursor:pointer;z-index:-1; border:1px solid #ccc" 
+            align="center"
+            
+            >
+            
+        </div>
+      </md-virtual-repeat-container>
+      </md-list>-->
+    </div>
+  </md-dialog-content>
+</md-dialog>

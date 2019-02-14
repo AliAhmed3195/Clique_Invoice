@@ -1,0 +1,46 @@
+(function ()
+{
+    'use strict';
+
+    angular
+        .module('invoice')
+        .controller('LinkInvoiceController', Controller);
+        
+    function Controller($scope, $rootScope,$mdDialog,SettingModel,InvoiceModel,$timeout,$locale,Clique,printer,$sce)
+    {
+       var vm = this;
+       $scope.textToCopy=[];
+       $scope.allLinks="";
+        if($scope.invoiceSelection.length > 0){
+            var invoice_data={
+              ids:$scope.invoiceSelection
+            }
+             $scope.promise = InvoiceModel.GetInvoiceLink(invoice_data);
+             $scope.promise.then(function(response){
+                if(response.statuscode==0){
+                    
+                    $scope.textToCopy = response.data;    
+                    
+                    if($scope.textToCopy.length > 0){
+                        angular.forEach($scope.textToCopy, function(value, key){
+                            $scope.allLinks+=value;
+                            $scope.allLinks+='\n';
+                        });
+                    }
+                }
+            });
+         }
+
+        $scope.stripText = function(text) {
+          return text.substring(0,40)+'....';
+        } 
+        $scope.success=function(){
+            Clique.showToast(+$scope.textToCopy.length+" Invoice(s) links Copied to Clipboard","bottom right","success");
+            $mdDialog.hide();
+        }
+        $scope.fail=function(err){
+            Clique.showToast("Error unable to copy","bottom right","error");
+        }  
+       
+    }
+})();

@@ -1,0 +1,22 @@
+            
+<md-dialog aria-label="Legal Document">
+    <md-dialog-content style="min-width:850px !important;">
+      <div class="md-dialog-content" id="legal_document">
+        
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" ng-hide="hideDialogActions2" >
+      <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+      
+      <md-button  ng-click="print()" class="md-primary md-raised">
+         <md-icon md-font-icon="fa fa-print" style="font-size:14px;"></md-icon></md-icon>&nbsp;Print
+      </md-button>
+  
+      <md-button  ng-click="cancel()" class="md-primary md-raised">
+         <md-icon md-font-icon="fa fa-process"></md-icon></md-icon>&nbsp;Continue
+      </md-button>
+
+    </md-dialog-actions>
+
+</md-dialog>

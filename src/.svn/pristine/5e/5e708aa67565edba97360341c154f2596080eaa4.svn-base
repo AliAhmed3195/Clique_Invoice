@@ -1,0 +1,9 @@
+{
+  "short_name": "Clique",
+  "name": "Invoice Management System",
+  "start_url": "index.html",
+  "permissions": [
+    "https://requestb.in/15htqde1",
+    "http://localhost:3000/"
+  ]
+}

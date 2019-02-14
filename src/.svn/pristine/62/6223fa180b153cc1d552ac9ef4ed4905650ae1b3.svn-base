@@ -1,0 +1,57 @@
+<md-dialog class="mobile-fullwidth-dialog">
+<md-progress-linear class="md-primary" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+    <form name="emailForm" novalidate ng-submit="submit()">
+        <md-toolbar class="toolbar-default" md-theme="default">
+            
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>{{settings.title}}</span>
+                </h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()" aria-label="cancel">
+                    <md-icon md-font-icon="zmdi zmdi-close"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-divider></md-divider>
+
+        <md-dialog-content class="email-dialog md-padding">
+
+            <div layout="row">
+                <div layout="column" flex>
+                    <span class="md-caption">To: </span>
+                    <md-chips ng-model="settings.InvoiceContacts.to_email" readonly="false" md-removable="true" md-enable-chip-edit="true" name="to_email" md-on-add="validateChip($chip,'to')" md-on-remove="validateChip($chip,'to')" placeholder="{{'TO' | triTranslate}}" secondary-placeholder="">
+                    </md-chips>
+
+                    <div class="email-dialog-ccs ng-hide" layout="column" ng-show="showCCS">
+                        <span class="md-caption">CC: </span>
+                        <md-chips ng-model="settings.InvoiceContacts.cc_email" readonly="false" md-removable="true" md-enable-chip-edit="false" md-max-chips="3" name="bcc_email" md-on-add="validateChip($chip,'cc')" placeholder="{{'CC' | triTranslate}}" secondary-placeholder="">
+                        </md-chips>
+                        <span class="md-caption">BCC: </span>
+                        <md-chips ng-model="settings.InvoiceContacts.bcc_email" readonly="false" md-removable="true" md-enable-chip-edit="false" md-max-chips="3" name="bcc_email" md-on-add="validateChip($chip,'bcc')" placeholder="{{'BCC' | triTranslate}}" secondary-placeholder="">
+                        </md-chips>
+                    </div>
+                    <span class="md-caption">From: </span>
+                    <md-chips secondary-placeholder="{{'From' | triTranslate}}">
+                        <md-chip secondary-placeholder="{{'From' | triTranslate}}">{{settings.InvoiceContacts.sender_name}}
+                            <{{settings.InvoiceContacts.sender_email}}>
+                        </md-chip>
+
+                    </md-chips>
+                </div>
+                <md-button class="md-icon-button md-raised" ng-click="toggleCCS($event)" aria-label="toggle ccs">
+                    <md-icon md-font-icon ng-class="showCCSIcon"></md-icon>
+                </md-button>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <!--<md-checkbox ng-model="settings.InvoiceContacts.save_email_erp" ng-show="vm.showCustomerEmailSaveOption" aria-label="Save Customer Email">
+                Save Customer Email to Quickbook
+            </md-checkbox>-->
+            <span flex></span>
+
+            <md-button class="md-primary md-raised" type='submit' ng-disabled="disabledSubmitButton" aria-label="send" translate="Send" >Send</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,165 @@
+<style>
+@media print {
+  .md-dialog-container{
+    top: 0px;
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    min-height: 100%;
+    top: 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    box-shadow: none;
+    border: none;
+
+
+  }
+
+  md-dialog-actions {
+    display: none;
+  }
+  
+}
+</style>
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+ 
+            
+<md-dialog aria-label="Send Invoice" id="paymentform">
+<form name="checkoutForm" novalidate>
+    <md-dialog-content style="min-width:350px !important; max-width:350px !important; overflow:hidden;">
+      <div class="md-dialog-content print_receipt" 
+
+      ng-init="payment_type=transactionResponse.payment_data.paymentType"
+
+      >
+       
+        <table id="print_receipt" width="350px">
+            <tr>
+                <td colspan="2" align="center"><img src="{{companyInfo.company.logo}}" height="80"></td>
+            </tr> 
+            <tr>
+                <td colspan="2">
+                    <p align="center">
+                        <strong>{{companyInfo.company.name}}</strong><BR>
+                        {{companyInfo.company.address1}}<BR>
+                        {{companyInfo.company.state}}, {{companyInfo.company.city}}, {{companyInfo.company.zipcode}}<BR>
+                        Phone: {{companyInfo.company.phone}}    
+                    </p>
+                </td>
+            </tr> 
+            <tr>
+                <td colspan="2" align="center">
+                  
+                  {{(transactionResponse.trans_timestamp * 1000) | date:'medium' }}</td>
+            </tr>
+            <tr ng-show="transactionResponse.payment_data.paymentType!==undefined">
+                <td colspan="2" align="center">
+                  {{transactionResponse.payment_data.paymentType}} &nbsp; {{transactionResponse.cardtype}}
+                  <span ng-show="transactionResponse.payment_data.emv.applicationIdentifier"><br>{{transactionResponse.payment_data.emv.applicationIdentifier}}</span></td>
+            </tr>
+            <tr ng-show="transactionResponse.payment_data.MerchantId!==undefined">
+                <td align="left">Merchant ID:</td>
+                <td align="right">{{transactionResponse.payment_data.MerchantId}}</td>
+            </tr> 
+            <tr ng-show="transactionResponse.payment_data.TerminalId!==undefined">
+                <td align="left">Terminal ID:</td>
+                <td align="right">{{transactionResponse.payment_data.TerminalId}}</td>
+            </tr>
+            <tr ng-if="transactionResponse.payment_data.RawResponse.Transaction.ReferenceNumber!==undefined">
+                <td align="left">Reference #:</td>
+                <td align="right">{{transactionResponse.payment_data.RawResponse.Transaction.ReferenceNumber}}</td>
+            </tr>
+           <tr >
+                <td align="left">Inv/Sale #:</td>
+                <td align="right">{{transactionResponse.invoice_no}}</td>
+            </tr>  
+            <tr ng-if="transactionResponse.payment_data.RawResponse.Card.CardNumberMasked!==undefined">
+                <td align="left">Account:</td>
+                <td align="right">{{transactionResponse.payment_data.RawResponse.Card.CardNumberMasked}}</td>
+            </tr> 
+            <tr ng-if="transactionResponse.payment_data.RawResponse.Card.CardLogo!==undefined">
+                <td align="left">Logo:</td>
+                <td align="right">{{transactionResponse.payment_data.RawResponse.Card.CardLogo}}</td>
+            </tr> 
+            <tr ng-if="transactionResponse.payment_data.EntryMode!=undefined">
+                <td align="left">Entry:</td>
+                <td align="right">{{transactionResponse.payment_data.EntryMode}}</td>
+            </tr> 
+
+     
+            <tr >
+                <td align="left">Transaction ID:</td>
+                <td align="right">{{transactionResponse.ref_id}}</td>
+            </tr> 
+            <tr ng-show="transactionResponse.payment_data.ApprovalNumber!==undefined">
+                <td align="left">Approval Code:</td>
+                <td align="right">{{transactionResponse.payment_data.ApprovalNumber}}</td>
+            </tr> 
+            <tr ng-show="transactionResponse.payment_data.ResponseCode!==undefined">
+                <td align="left">Response Code:</td>
+                <td align="right">{{transactionResponse.payment_data.ResponseCode}}</td>
+            </tr> 
+            <tr>
+                <td colspan="2" align="center">{{transactionResponse.status  | uppercase}}</td>
+            </tr>
+            <tr ng-show="transactionResponse.payment_data.emv.cryptogram!==undefined">
+                <td colspan="2" align="center">{{transactionResponse.payment_data.emv.cryptogram}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center" ng-show="transactionResponse.StatusMessage!==undefined">{{transactionResponse.StatusMessage}}</td>
+            </tr>
+
+             <tr ng-if="payment_type=='Credit' || payment_type=='Debit' || payment_type=='Gift'">
+                <td align="left">Sale:</td>
+                <td align="right">{{transactionResponse.trans_amount | currency}}</td>
+            </tr> 
+            <tr>
+                <td colspan="2" align="center" ng-show="transactionResponse.payment_data.PinVerified==true">Pin Verified</td>
+            </tr>
+            <tr ng-show="transactionResponse.payment_data.emv.tags.length > 0">
+                <td colspan="2" align="left" style="font-size:12px;">
+                  <span ng-repeat="tag in transactionResponse.payment_data.emv.tags">
+                    {{tag.key}}:&nbsp;{{tag.value}}<br>
+                  </span>
+                </td>
+            </tr>
+
+            
+            
+             <tr>
+                <td colspan="2">
+                    <p align="center">
+                       Thank You<br>
+                       *****************************<br>
+                       Powered By<br>
+                       Clique Center<br>
+                       (www.clique.center)
+                    </p>
+                </td>
+            </tr> 
+            </table>
+
+       
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row"  class="invoice_action" ng-init="isDisabledSentButton=false;">
+      
+      <md-button  
+      ng-click="emailReceipt(transactionResponse,'triposipp350')" 
+      class="md-primary md-raised" 
+      ng-hide="hideEmailReceiptButton"
+      >
+         <md-icon md-font-icon="fa fa-envelope-o" style="font-size:14px;"></md-icon>&nbsp;Email Receipt
+      </md-button>
+      <!--ng-show="isPaymentSuccess"-->
+      <md-button  
+      ng-click="print()" 
+      class="md-primary md-raised" 
+      
+      >
+         <md-icon md-font-icon="fa fa-print" style="font-size:14px;"></md-icon>&nbsp;Print
+      </md-button>
+    </md-dialog-actions>
+</form>
+</md-dialog>
