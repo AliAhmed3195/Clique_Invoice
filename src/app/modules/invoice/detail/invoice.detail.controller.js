@@ -28,7 +28,7 @@
 
 
     /* @ngInject */
-    function Controller($scope, $timeout, $interval, $q, $http,$sce, $compile, Clique, InvoiceModel, SettingModel, $mdDialog, $mdToast, $element, $stateParams, triBreadcrumbsService, $state, $mdBottomSheet, $rootScope, $mdSidenav, $mdColorPalette, $mdColors, $mdColorUtil, triTheming, BulkPrintInvoices) {
+    function Controller($scope, $timeout, $interval, $q, $http, $sce, $compile, Clique, InvoiceModel, SettingModel, $mdDialog, $mdToast, $element, $stateParams, triBreadcrumbsService, $state, $mdBottomSheet, $rootScope, $mdSidenav, $mdColorPalette, $mdColors, $mdColorUtil, triTheming, BulkPrintInvoices) {
 
         $scope.pdf = []
         $scope.pdf.src = "www.pdf995.com/samples/pdf.pdf";
@@ -338,18 +338,20 @@
             //$rootScope.showInvoiceLoader=false;
 
 
-
-            $http.get(`http://192.168.1.111:8000/v1/dashboardtest/?invoice_id=${invoice_id}`, {
+            let url = Clique.getServiceUrl()
+			// console.log('TCL: url', url)
+            $http.get(url + "/dashboardtest/?invoice_id=" + invoice_id, {
                     responseType: 'arraybuffer'
                 })
+                // $scope.promise
                 .then(function (response) {
-                    console.log('TCL: response', response)
+					// console.log('TCL: response', response)
                     let file = new Blob([response.data], {
                         type: 'application/pdf'
                     });
                     let fileURL = URL.createObjectURL(file);
                     let content = $sce.trustAsResourceUrl(fileURL);
-                    let ele = `<iframe src="${content}" style="width:100%; height:500px;" frameborder="0"></iframe>`
+                    let ele = "<iframe src='" + content + "#zoom=160' class='iframe-class'></iframe>"
                     $("#invoice_template").html('');
                     $("#invoice_template").append(ele);
 
@@ -366,7 +368,7 @@
             // $scope.promise.then(function (response) {
 
             //     invoiceTemplate = response;
-            //     console.log('TCL: getInvoiceStatistics -> response', response)
+			// //     console.log('TCL: getInvoiceStatistics -> response', response)
             //     $("#invoice_template").html('');
             //     $("#invoice_template").append(response);
             //     $scope.showProgress = false;
