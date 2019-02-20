@@ -339,24 +339,25 @@
 
 
             let url = Clique.getServiceUrl()
-			// console.log('TCL: url', url)
+            // console.log('TCL: url', url)
             $http.get(url + "/dashboardtest/?invoice_id=" + invoice_id, {
                     responseType: 'arraybuffer'
                 })
                 // $scope.promise
                 .then(function (response) {
-					// console.log('TCL: response', response)
+                    // console.log('TCL: response', response)
                     let file = new Blob([response.data], {
                         type: 'application/pdf'
                     });
                     let fileURL = URL.createObjectURL(file);
                     let content = $sce.trustAsResourceUrl(fileURL);
-                    let ele = "<iframe src='" + content + "#zoom=160' class='iframe-class'></iframe>"
+                    let ele = "<iframe src='" + content + "#zoom=160' id='iframe-class'></iframe>"
                     $("#invoice_template").html('');
                     $("#invoice_template").append(ele);
 
+
                     $scope.showProgress = false;
-                    $scope.displayPaidStamp = true;
+                    // $scope.displayPaidStamp = true;
                     if ($scope.isInvoicePaid == false) {
                         $scope.fabMenu = true;
                     }
@@ -368,7 +369,7 @@
             // $scope.promise.then(function (response) {
 
             //     invoiceTemplate = response;
-			// //     console.log('TCL: getInvoiceStatistics -> response', response)
+            // //     console.log('TCL: getInvoiceStatistics -> response', response)
             //     $("#invoice_template").html('');
             //     $("#invoice_template").append(response);
             //     $scope.showProgress = false;
