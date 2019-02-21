@@ -24180,49 +24180,6 @@ chart-legend ul {
 .widget-caption {
   padding: 2px; }
 
-md-chip.status.active {
-  background-color: #2EC6A6; }
-
-md-chip.status.inactive {
-  background-color: #FA7044; }
-
-.rhistory_error {
-  background: none !important;
-  color: #F44336; }
-
-.hide_field {
-  position: absolute;
-  top: -100px;
-  height: 0px !important; }
-
-md-chip.status.active {
-  background-color: #2EC6A6; }
-
-md-chip.status.inactive {
-  background-color: #FA7044; }
-
-md-tabs {
-  height: 100% !important; }
-
-md-headline {
-  font-size: 20% !important; }
-
-md-card.active {
-  color: rgba(0, 0, 0, 0.87);
-  background-color: white;
-  border-radius: 2px;
-  font-size: 100px !important;
-  background: 'red' !important; }
-
-md-card.default {
-  background: url("assets/images/elements/ribbon.png") no-repeat top right; }
-
-.default_invoice_template {
-  border: 2px solid #2FC65A !important; }
-
-.normal_invoice_template {
-  border: 0px solid #ccc; }
-
 .badge {
   display: inline-block;
   min-width: 10px;
@@ -24509,6 +24466,49 @@ md-icon {
   padding: 4px !important;
   background: #fff !important; }
 
+md-chip.status.active {
+  background-color: #2EC6A6; }
+
+md-chip.status.inactive {
+  background-color: #FA7044; }
+
+.rhistory_error {
+  background: none !important;
+  color: #F44336; }
+
+.hide_field {
+  position: absolute;
+  top: -100px;
+  height: 0px !important; }
+
+md-chip.status.active {
+  background-color: #2EC6A6; }
+
+md-chip.status.inactive {
+  background-color: #FA7044; }
+
+md-tabs {
+  height: 100% !important; }
+
+md-headline {
+  font-size: 20% !important; }
+
+md-card.active {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: white;
+  border-radius: 2px;
+  font-size: 100px !important;
+  background: 'red' !important; }
+
+md-card.default {
+  background: url("assets/images/elements/ribbon.png") no-repeat top right; }
+
+.default_invoice_template {
+  border: 2px solid #2FC65A !important; }
+
+.normal_invoice_template {
+  border: 0px solid #ccc; }
+
 md-select {
   width: 100% !important; }
 
@@ -24568,114 +24568,6 @@ md-button.width-100 {
 
 .capitalize {
   text-transform: capitalize; }
-
-md-dialog#paymentform {
-  max-height: 95% !important; }
-
-.md-list-item-text {
-  min-height: 30px !important; }
-
-.md-list-item-text input {
-  width: 35px;
-  height: 5px;
-  text-align: right; }
-
-.inbox-list {
-  background: white; }
-
-.inbox-list__email.md-3-line.md-long-text {
-  margin-top: 0px;
-  margin-bottom: 0px; }
-
-.inbox-list__email h3 .md-caption {
-  float: right; }
-
-.inbox-list__email._md-button-wrap > .md-button:first-child ._md-list-item-inner {
-  width: auto; }
-
-.inbox-list__email--active {
-  background: rgba(0, 0, 0, 0.05); }
-  .inbox-list__email--active .md-avatar {
-    display: block;
-    animation: swing 1s; }
-
-.inbox-list__email--unread h3 {
-  font-weight: 700 !important; }
-
-.inbox-no-email-selected {
-  text-align: center;
-  opacity: 0.5; }
-  .inbox-no-email-selected h2 {
-    font-weight: lighter; }
-
-.inbox-list__email--animated.ng-move,
-.inbox-list__email--animated.ng-enter,
-.inbox-list__email--animated.ng-leave {
-  transition: all linear 0.8s;
-  width: 100%;
-  position: relative; }
-
-.inbox-list__email--animated.ng-leave.ng-leave-active,
-.inbox-list__email--animated.ng-move,
-.inbox-list__email--animated.ng-enter {
-  opacity: 0;
-  max-height: 0; }
-
-.inbox-list__email--animated.ng-leave,
-.inbox-list__email--animated.ng-move.ng-move-active,
-.inbox-list__email--animated.ng-enter.ng-enter-active {
-  opacity: 1;
-  max-height: 500px; }
-
-#ui-admin-email.ng-enter {
-  animation-name: slideInRight;
-  animation-iteration-count: 1;
-  animation-duration: 1s;
-  animation-delay: 0s;
-  animation-timing-function: ease;
-  animation-fill-mode: both;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden; }
-
-#ui-admin-email.ng-leave {
-  animation-name: slideOutRight;
-  animation-iteration-count: 1;
-  animation-duration: 1s;
-  animation-delay: 0s;
-  animation-timing-function: ease;
-  animation-fill-mode: both;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden; }
-
-.md-input-message-animation {
-  color: #ff0000;
-  font-size: 12px; }
-
-.invoice-circle {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  font-size: 18px;
-  line-height: 40px;
-  text-align: center; }
-
-.ccfields md-input-container {
-  margin: 12px 0px !important;
-  font-size: 14px; }
-
-.delined {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  /* bring your own prefixes */
-  transform: translate(-50%, -50%); }
-
-.swiperDialog md-progress-linear .md-container {
-  height: 3px !important; }
-
-.custom-validation {
-  color: #ff0000;
-  font-size: 12px; }
 
 .md-small-icon {
   margin: 0px;
@@ -24906,3 +24798,111 @@ md-dialog#paymentform {
   height: 50%;
   width: 100%;
   text-align: left; }
+
+md-dialog#paymentform {
+  max-height: 95% !important; }
+
+.md-list-item-text {
+  min-height: 30px !important; }
+
+.md-list-item-text input {
+  width: 35px;
+  height: 5px;
+  text-align: right; }
+
+.inbox-list {
+  background: white; }
+
+.inbox-list__email.md-3-line.md-long-text {
+  margin-top: 0px;
+  margin-bottom: 0px; }
+
+.inbox-list__email h3 .md-caption {
+  float: right; }
+
+.inbox-list__email._md-button-wrap > .md-button:first-child ._md-list-item-inner {
+  width: auto; }
+
+.inbox-list__email--active {
+  background: rgba(0, 0, 0, 0.05); }
+  .inbox-list__email--active .md-avatar {
+    display: block;
+    animation: swing 1s; }
+
+.inbox-list__email--unread h3 {
+  font-weight: 700 !important; }
+
+.inbox-no-email-selected {
+  text-align: center;
+  opacity: 0.5; }
+  .inbox-no-email-selected h2 {
+    font-weight: lighter; }
+
+.inbox-list__email--animated.ng-move,
+.inbox-list__email--animated.ng-enter,
+.inbox-list__email--animated.ng-leave {
+  transition: all linear 0.8s;
+  width: 100%;
+  position: relative; }
+
+.inbox-list__email--animated.ng-leave.ng-leave-active,
+.inbox-list__email--animated.ng-move,
+.inbox-list__email--animated.ng-enter {
+  opacity: 0;
+  max-height: 0; }
+
+.inbox-list__email--animated.ng-leave,
+.inbox-list__email--animated.ng-move.ng-move-active,
+.inbox-list__email--animated.ng-enter.ng-enter-active {
+  opacity: 1;
+  max-height: 500px; }
+
+#ui-admin-email.ng-enter {
+  animation-name: slideInRight;
+  animation-iteration-count: 1;
+  animation-duration: 1s;
+  animation-delay: 0s;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+#ui-admin-email.ng-leave {
+  animation-name: slideOutRight;
+  animation-iteration-count: 1;
+  animation-duration: 1s;
+  animation-delay: 0s;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+.md-input-message-animation {
+  color: #ff0000;
+  font-size: 12px; }
+
+.invoice-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 40px;
+  text-align: center; }
+
+.ccfields md-input-container {
+  margin: 12px 0px !important;
+  font-size: 14px; }
+
+.delined {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%); }
+
+.swiperDialog md-progress-linear .md-container {
+  height: 3px !important; }
+
+.custom-validation {
+  color: #ff0000;
+  font-size: 12px; }

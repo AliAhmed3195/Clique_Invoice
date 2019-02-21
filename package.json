@@ -66,6 +66,7 @@
     "node": ">=0.10.0"
   },
   "dependencies": {
+    "angular-pdfjs-viewer": "^2.0.1",
     "natives": "^1.1.6"
   }
 }

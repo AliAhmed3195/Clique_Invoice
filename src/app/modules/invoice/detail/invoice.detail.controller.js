@@ -331,29 +331,35 @@
                 vm.showInvoiceStatsProgress = false;
             });
         }
+        $scope.src = null
         $scope.$on('invoice-preview-event', function (event) {
 
             $scope.showProgress = true;
             $scope.fabMenu = false;
             //$rootScope.showInvoiceLoader=false;
 
-
+            $scope.src = null
             let url = Clique.getServiceUrl()
             // console.log('TCL: url', url)
-            $http.get(url + "/dashboardtest/?invoice_id=" + invoice_id, {
+            $http.get(url + "/dashboardtest/?invoice_id=" + 23, {
                     responseType: 'arraybuffer'
                 })
                 // $scope.promise
                 .then(function (response) {
                     // console.log('TCL: response', response)
-                    let file = new Blob([response.data], {
-                        type: 'application/pdf'
-                    });
-                    let fileURL = URL.createObjectURL(file);
-                    let content = $sce.trustAsResourceUrl(fileURL);
-                    let ele = "<iframe src='" + content + "#zoom=160' id='iframe-class'></iframe>"
-                    $("#invoice_template").html('');
-                    $("#invoice_template").append(ele);
+                    // let file = new Blob([response.data], {
+                    //     type: 'application/pdf'
+                    // });
+                    // let fileURL = URL.createObjectURL(file);
+                    // $scope.src = $sce.trustAsResourceUrl(fileURL);
+                    $scope.src = new Uint8Array(response.data);
+                    console.log('TCL: $scope.src', $scope.src)
+
+                    // let ele = "<pdfjs-viewer scale='scale' data='" + $scope.src + "'></pdfjs-viewer>"
+					// console.log('TCL: ele', ele)
+                    // let ele = "<iframe src='" + src + "#zoom=160' id='iframe-class'></iframe>"
+                    // $("#invoice_template").html('');
+                    // $("#invoice_template").append(ele);
 
 
                     $scope.showProgress = false;
