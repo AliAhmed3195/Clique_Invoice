@@ -5,7 +5,7 @@
 
 </style>
 
-<md-content>
+<md-content style="height:100%">
 
     <md-tabs md-border-bottom style="min-height:550px;">
         <md-tab label="General">
@@ -16,9 +16,10 @@
                         <md-card style="padding:25px">
                             <span class="md-caption">BCC Email: </span>
 
-                            <md-chips ng-model="setting.InvoiceContacts.bcc_email" readonly="false" md-removable="true" md-enable-chip-edit="false" md-max-chips="4"
-                                name="bcc_email" md-add-on-blur="true" md-on-add="validateChip($chip,'bcc')" ng-blur="validateChip($chip,'bcc')"
-                                placeholder="Add upto 3 CC emails" secondary-placeholder="+Email">
+                            <md-chips ng-model="setting.InvoiceContacts.bcc_email" readonly="false" md-removable="true"
+                                md-enable-chip-edit="false" md-max-chips="4" name="bcc_email" md-add-on-blur="true"
+                                md-on-add="validateChip($chip,'bcc')" ng-blur="validateChip($chip,'bcc')" placeholder="Add upto 3 CC emails"
+                                secondary-placeholder="+Email">
                             </md-chips>
 
 
@@ -27,9 +28,9 @@
                             </div>
 
                             <span class="md-caption">CC Email: </span>
-                            <md-chips ng-model="setting.InvoiceContacts.cc_email" readonly="false" md-removable="true" md-enable-chip-edit="false" md-max-chips="4"
-                                name="cc_email" md-on-add="validateChip($chip,'cc')" placeholder="Add upto 3 CC emails" secondary-placeholder="+Email"
-                                md-add-on-blur="true">
+                            <md-chips ng-model="setting.InvoiceContacts.cc_email" readonly="false" md-removable="true"
+                                md-enable-chip-edit="false" md-max-chips="4" name="cc_email" md-on-add="validateChip($chip,'cc')"
+                                placeholder="Add upto 3 CC emails" secondary-placeholder="+Email" md-add-on-blur="true">
                             </md-chips>
                             <div class="errors" ng-messages="invoicecontact.cc_email.$error">
                                 <div ng-message="md-max-chips">maximum 3 email address allowed</div>
@@ -39,7 +40,7 @@
                             <md-input-container class="md-block">
                                 <label for="sender_name">Sender Name</label>
                                 <input id="sender_name" label="sender_name" name="sender_name" type="text" ng-model="setting.InvoiceContacts.sender_name"
-                                    required/>
+                                    required />
                                 <div ng-messages="invoicecontact.sender_name.$error" md-auto-hide="false" ng-show="invoicecontact.sender_name.$touched">
                                     <div ng-message="required">
                                         Please enter your sender name.
@@ -49,7 +50,7 @@
                             <md-input-container class="md-block">
                                 <label for="sender_email">Sender Email Address</label>
                                 <input id="sender_email" label="sender_email" name="sender_email" type="email" ng-model="setting.InvoiceContacts.sender_email"
-                                    required/>
+                                    required />
                                 <div ng-messages="invoicecontact.sender_email.$error" md-auto-hide="false" ng-show="invoicecontact.sender_email.$touched">
                                     <div ng-message="required">
                                         Please enter your sender email address.
@@ -59,34 +60,27 @@
                                     </div>
                                 </div>
                             </md-input-container>
-<div layout="row">
-                            <md-input-container flex="30">
-                                <label>Template</label>
-                                <md-select ng-model="selectedtemplate" name="type" ng-click="updateEmailTemplateList()"
-                             >
-<md-option ng-selected="template.isSelected == true" ng-repeat="template in setting.InvoiceContacts.template_email track by $index"
-                                        ng-value="{{template}}">{{template.name}}</md-option>
-                                    <!-- <md-option ng-click="AddNewTemplate($event);" >Add New Template</md-option> -->
-                                </md-select>
-                            </md-input-container>
-                            <!-- <md-button style="background-color:rgb(0, 188, 212)!important;color:white;">Add New</md-button> -->
-                            <!-- <md-button ng-click="AddNewTemplate($event);" style="height: 0px;"  class="md-primary md-raised"><md-icon md-font-icon="add"></md-icon>
+                            <div layout="row">
+                                <md-input-container flex="30">
+                                    <label>Template</label>
+                                    <md-select ng-model="selectedtemplate" name="type" ng-click="updateEmailTemplateList()">
+                                        <md-option ng-selected="template.isSelected == true" ng-repeat="template in setting.InvoiceContacts.template_email track by $index"
+                                            ng-value="{{template}}">{{template.name}}</md-option>
+                                        <!-- <md-option ng-click="AddNewTemplate($event);" >Add New Template</md-option> -->
+                                    </md-select>
+                                </md-input-container>
+                                <!-- <md-button style="background-color:rgb(0, 188, 212)!important;color:white;">Add New</md-button> -->
+                                <!-- <md-button ng-click="AddNewTemplate($event);" style="height: 0px;"  class="md-primary md-raised"><md-icon md-font-icon="add"></md-icon>
 </md-button> -->
 
-<md-button aria-label="search" class="md-primary md-raised md-small md-fab" ng-click="AddNewTemplate($event);"
-style="
-height: 30px;
-    width: 30px;
-    padding-top: 3px;
-    padding-left: 5px;
-    margin-top: 20px;
-background-color:#ff4081;" >
-    <md-icon md-font-icon="fa fa-plus" style="font-size:12px;"></md-icon>>
-    <md-tooltip>Add New Template</md-tooltip>
-</md-button>
+                                <md-button aria-label="search" class="md-primary md-raised md-small md-fab" ng-click="AddNewTemplate($event);"
+                                    style="height: 30px; width: 30px; padding-top: 3px; padding-left: 5px; margin-top: 20px; background-color:#ff4081;">
+                                    <md-icon md-font-icon="fa fa-plus" style="font-size:12px;"></md-icon>>
+                                    <md-tooltip>Add New Template</md-tooltip>
+                                </md-button>
 
 
-                        </div>
+                            </div>
                             <md-input-container class="md-block">
                                 <label for="sender_name">Subject</label>
                                 <input id="subject" label="subject" name="subject" type="text" ng-model="selectedtemplate.subject" />
@@ -117,7 +111,8 @@ background-color:#ff4081;" >
                             </div>
                             <div layout="column" layout-align="center start">
                                 <div flex="66">
-                                    <md-checkbox ng-model="selectedtemplate.isSelected" ng-selected="selectedTemplate.isSelected == true" aria-label="Set As Default">
+                                    <md-checkbox ng-model="selectedtemplate.isSelected" ng-selected="selectedTemplate.isSelected == true"
+                                        aria-label="Set As Default">
                                         Set As Default
                                     </md-checkbox>
                                 </div>
@@ -170,15 +165,18 @@ background-color:#ff4081;" >
                                         <label>Type</label>
                                         <md-select ng-model="setting.Feedback.type" placeholder="Type" class="md-no-underline">
                                             <md-option ng-repeat="option in socialOption" id="{{option.value}}" value="{{option.value}}">
-                                                <img src="{{option.image}}" width="32" style="vertical-align:middle" /> &nbsp;{{option.name}}</md-option>
+                                                <img src="{{option.image}}" width="32" style="vertical-align:middle" />
+                                                &nbsp;{{option.name}}</md-option>
                                         </md-select>
                                     </md-input-container>
                                     <md-input-container flex>
                                         <label>Url</label>
-                                        <input name="url" ng-pattern="/^https?://.+$/" type="text" ng-model="setting.Feedback.url" ng-maxlength="200">
+                                        <input name="url" ng-pattern="/^https?://.+$/" type="text" ng-model="setting.Feedback.url"
+                                            ng-maxlength="200">
                                         <div ng-messages="invoicecontact.url.$error " md-auto-hide="false">
                                             <p ng-message when="pattern">Invalid web address </p>
-                                            <p ng-message when="maxlength">Webaddress should not be greater then 200 characters</p>
+                                            <p ng-message when="maxlength">Webaddress should not be greater then 200
+                                                characters</p>
                                         </div>
 
                                     </md-input-container>
@@ -194,9 +192,11 @@ background-color:#ff4081;" >
                                 <!--{{setting.account_id}}-->
                                 <md-input-container class="md-block">
                                     <!--<label>DepositTo Account</label>-->
-                                    <md-select name="Account" ng-model="setting.DepositAccountId" style="min-width: 200px;" placeholder="Please select Deposit To Account">
+                                    <md-select name="Account" ng-model="setting.DepositAccountId" style="min-width: 200px;"
+                                        placeholder="Please select Deposit To Account">
 
-                                        <md-option ng-value="account_name.Id" ng-repeat="account_name in account">{{ account_name.Name}}&nbsp;&nbsp;&nbsp;{{ account_name.AccountType}}</md-option>
+                                        <md-option ng-value="account_name.Id" ng-repeat="account_name in account">{{
+                                            account_name.Name}}&nbsp;&nbsp;&nbsp;{{ account_name.AccountType}}</md-option>
                                     </md-select>
                                 </md-input-container>
                             </div>
@@ -215,7 +215,8 @@ background-color:#ff4081;" >
 
                 <div layout="row" layout-wrap layout-align="start center">
                     <div flex-xs="70" flex-sm="33" flex-gt-sm="25" flex="25" flex-lg="25" flex-md="25" ng-repeat="invoiceTemplate in vm.invoiceTemplates">
-                        <md-card ng-class="{{invoiceTemplate.id==setting.InvoiceTemplateId ? 'default' : ''}}" palette-background="white:500">
+                        <md-card ng-class="{{invoiceTemplate.id==setting.InvoiceTemplateId ? 'default' : ''}}"
+                            palette-background="white:500">
                             <md-card-header>
                                 <md-card-avatar>
 
@@ -227,8 +228,8 @@ background-color:#ff4081;" >
                                 </md-card-header-text>
                             </md-card-header>
                             <div style="border:0px solid; max-height:200px; overflow:hidden">
-                                <img ng-click="showTemplatePreview($event,invoiceTemplate.image_url)" ng-src="{{invoiceTemplate.image_url}}" style="cursor:pointer"
-                                    class="2md-card-image" alt="{{invoiceTemplate.name}}" align="center">
+                                <img ng-click="showTemplatePreview($event,invoiceTemplate.image_url)" ng-src="{{invoiceTemplate.image_url}}"
+                                    style="cursor:pointer" class="2md-card-image" alt="{{invoiceTemplate.name}}" align="center">
                             </div>
                             <md-card-title>
                                 <md-card-title-text>
@@ -237,11 +238,12 @@ background-color:#ff4081;" >
                             <md-card-content>
                             </md-card-content>
                             <md-card-actions layout="row" layout-align="end center">
-                                <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" ng-show="invoiceTemplate.id==setting.InvoiceTemplateId">
+                                <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation"
+                                    ng-show="invoiceTemplate.id==setting.InvoiceTemplateId">
                                     <md-fab-trigger>
 
                                         <md-button aria-label="share this post" class="md-fab md-mini" id="templateButton"
-                                        palette-background="{{setting.InvoiceTemplateColor}}:500" ng-style="myClassObj">
+                                            palette-background="{{setting.InvoiceTemplateColor}}:500" ng-style="myClassObj">
                                             <md-icon md-font-icon="fa fa-paint-brush" style="color:#fff;"></md-icon>
                                         </md-button>
                                     </md-fab-trigger>
@@ -249,14 +251,17 @@ background-color:#ff4081;" >
                                         <md-button aria-label="Button" class="md-fab md-raised md-mini" ng-hide="true">
                                         </md-button>
                                         <div class="md-whiteframe-z1">
-                                            <md-button aria-label="{{name}}" class="md-fab md-raised md-mini md-padding" ng-repeat="(name,palette) in vm.palettes" palette-background="{{name}}:500"
-                                                ng-click="setTemplateTheme($event,name,palette,invoiceTemplate.id)" style="height:10px; margin:5px;">
+                                            <md-button aria-label="{{name}}" class="md-fab md-raised md-mini md-padding"
+                                                ng-repeat="(name,palette) in vm.palettes" palette-background="{{name}}:500"
+                                                ng-click="setTemplateTheme($event,name,palette,invoiceTemplate.id)"
+                                                style="height:10px; margin:5px;">
                                             </md-button>
                                         </div>
                                     </md-fab-actions>
                                 </md-fab-speed-dial>
 
-                                <md-button class="md-icon-button" aria-label="Set Default" ng-click="setTemplateDefault($event,invoiceTemplate.id)" ng-disabled="invoiceTemplate.id==setting.InvoiceTemplateId">
+                                <md-button class="md-icon-button" aria-label="Set Default" ng-click="setTemplateDefault($event,invoiceTemplate.id)"
+                                    ng-disabled="invoiceTemplate.id==setting.InvoiceTemplateId">
                                     <md-icon md-font-icon="fa fa-star" style="color: {{invoiceTemplate.id==setting.InvoiceTemplateId ? 'green' : 'gray'}};"></md-icon>
                                     <md-tooltip>Set Default Template</md-tooltip>
                                 </md-button>
