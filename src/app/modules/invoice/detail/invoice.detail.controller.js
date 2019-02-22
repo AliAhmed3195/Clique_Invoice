@@ -343,7 +343,7 @@
 			// console.log('TCL: url', url)
             // $http.get(url + "/dashboardtest/?invoice_id=" + 23, {
             if ($scope.IsDefaultTemplate == true) {
-                $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + 23, {
+                $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + invoice_id, {
                         responseType: 'arraybuffer'
                     })
                     .then(function (response) {
