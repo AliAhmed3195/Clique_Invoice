@@ -252,6 +252,7 @@
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.settings = response.data;
+					// console.log('TCL: $scope.settings', $scope.settings)
                     var customer_email = sessionStorage.getItem('customer_email');
                     $scope.settings.InvoiceContacts.to_email = [];
                     $scope.settings.InvoiceContacts.save_email_erp = false;
@@ -265,6 +266,7 @@
                     sessionStorage.setItem("invoice_template_id", $scope.settings.InvoiceTemplateId);
                     sessionStorage.setItem("template_color", $scope.settings.InvoiceTemplateColor);
                     vm.template_color = $scope.settings.InvoiceTemplateColor;
+                    $scope.IsDefaultTemplate = $scope.settings.IsDefaultTemplate;                    
                     $scope.$broadcast("invoice-preview-event");
                     $scope.setButtonColor($scope.settings.InvoiceTemplateColor);
 
@@ -333,58 +335,40 @@
         }
         $scope.src = null
         $scope.$on('invoice-preview-event', function (event) {
-
+			// console.log('TCL: $scope.IsDefaultTemplate', $scope.IsDefaultTemplate)
             $scope.showProgress = true;
             $scope.fabMenu = false;
-            //$rootScope.showInvoiceLoader=false;
-
             $scope.src = null
             let url = Clique.getServiceUrl()
-            // console.log('TCL: url', url)
-            $http.get(url + "/dashboardtest/?invoice_id=" + 23, {
-                    responseType: 'arraybuffer'
-                })
-                // $scope.promise
-                .then(function (response) {
-                    // console.log('TCL: response', response)
-                    // let file = new Blob([response.data], {
-                    //     type: 'application/pdf'
-                    // });
-                    // let fileURL = URL.createObjectURL(file);
-                    // $scope.src = $sce.trustAsResourceUrl(fileURL);
-                    $scope.src = new Uint8Array(response.data);
-                    console.log('TCL: $scope.src', $scope.src)
-
-                    // let ele = "<pdfjs-viewer scale='scale' data='" + $scope.src + "'></pdfjs-viewer>"
-					// console.log('TCL: ele', ele)
-                    // let ele = "<iframe src='" + src + "#zoom=160' id='iframe-class'></iframe>"
-                    // $("#invoice_template").html('');
-                    // $("#invoice_template").append(ele);
-
-
+			// console.log('TCL: url', url)
+            // $http.get(url + "/dashboardtest/?invoice_id=" + 23, {
+            if ($scope.IsDefaultTemplate == true) {
+                $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + 23, {
+                        responseType: 'arraybuffer'
+                    })
+                    .then(function (response) {
+						// console.log('TCL: response', response)
+                        $scope.src = new Uint8Array(response.data);
+						// console.log('TCL: $scope.src', $scope.src)
+                        $scope.showProgress = false;
+                        if ($scope.isInvoicePaid == false) {
+                            $scope.fabMenu = true;
+                        }
+                    });
+            } else {
+                $scope.promise = InvoiceModel.GetInvoicePreviewById(invoice_id);
+                $scope.promise.then(function (response) {
+                    invoiceTemplate = response;
+					// console.log('TCL: getInvoiceStatistics -> response', response)
+                    $("#invoice_template").html('');
+                    $("#invoice_template").append(response);
                     $scope.showProgress = false;
                     // $scope.displayPaidStamp = true;
                     if ($scope.isInvoicePaid == false) {
                         $scope.fabMenu = true;
                     }
-
                 });
-
-
-            // $scope.promise = InvoiceModel.GetInvoicePreviewById(invoice_id);
-            // $scope.promise.then(function (response) {
-
-            //     invoiceTemplate = response;
-            // //     console.log('TCL: getInvoiceStatistics -> response', response)
-            //     $("#invoice_template").html('');
-            //     $("#invoice_template").append(response);
-            //     $scope.showProgress = false;
-            //     $scope.displayPaidStamp = true;
-            //     if ($scope.isInvoicePaid == false) {
-            //         $scope.fabMenu = true;
-            //     }
-            // });
-
+            }
         });
 
 

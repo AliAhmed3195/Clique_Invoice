@@ -8,7 +8,7 @@
     }
 
     .pdfjs #viewerContainer {
-        overflow: hidden !important;
+        overflow: inherit;
 
     }
 
@@ -19,30 +19,35 @@
 
     .pdfjs .pdfViewer .page {
         border: none !important;
-
     }
 
     .pdfjs .textLayer {
-        box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
-        border: 1px rgba(0, 0, 0, 0.30) solid;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 10px 20px rgba(0, 0, 0, 0.24);
+        top: -25px !important;
+        bottom: -30px !important;
+        border: 1px rgba(0, 0, 0, 0.87) solid !important;
+    }
+
+    .pdfjs .textLayer:hover {
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
 
     .pdfjs #mainContainer {
-        margin-top: 50px;
-        margin-bottom: 50px;
+        margin-top: 10px;
+        margin-bottom: 100px;
     }
 
 </style>
 
 
-<!-- <div ng-show="showProgress" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
+<div ng-show="showProgress" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
     <md-progress-linear md-mode="indeterminate"></md-progress-linear>
 </div>
 
-<div class="invoice_container">
-    <div flex layout="row" id="invoice_detail_layout">
+<div class="invoice_container" ng-show='!IsDefaultTemplate'>
 
-        <md-content flex="100" flex-gt-xs="100" flex-gt-lg="40" layout-padding>
+    <div flex layout="row" id="invoice_detail_layout">
+        <md-content style="overflow: hidden; height: 100%;" flex="100" flex-gt-xs="100" flex-gt-lg="40" layout-padding>
 
             <div flex layout="row" layout-align="end end" ng-show="fabMenu">
 
@@ -107,14 +112,14 @@
                 align="center">
                 <img src="assets/images/elements/paid.png" width="500" ng-show="displayPaidStamp">
             </div>
-            <md-card class="page" layout-padding id="invoice_template" style="width: 100%; height: 100%;">
-            <div flex layout="row" layout-align="center center" id="invoice_template" style="width: 100%; height: 100%;">
-                <div layout="row" layout-sm="column" layout-align="space-around">
-                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            <md-card class="page" layout-padding id="invoice_template" style="width: 98%; height: 100%;">
+                <div flex layout="row" layout-align="center center" id="invoice_template" style="width: 100%; height: 100%;">
+                    <div layout="row" layout-sm="column" layout-align="space-around">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+
+                    </div>
 
                 </div>
-
-            </div>
             </md-card>
         </md-content>
     </div>
@@ -139,10 +144,7 @@
                             <p translate style="font-size:80%">{{stat.title}}</p>
                         </md-list-item>
                     </div>
-
-
                 </div>
-
             </div>
             <div layout="row">&nbsp;</div>
             <div layout="row">
@@ -163,12 +165,11 @@
                     <tri-table class="table" columns="vm.InvoiceStatsColumns" contents="vm.InvoiceStatsData" page-size="5"></tri-table>
                 </div>
             </div>
+        </md-content>
+    </md-sidenav>
 </div>
-</md-content>
-</md-sidenav>
-</div> -->
 
-<div class="pdf-container">
+<div class="pdf-container" ng-show='IsDefaultTemplate'>
     <div flex layout="row" layout-align="end end" ng-show="fabMenu">
 
         <md-button aria-label="Send Email" class="md-fab md-primary md-mini" ng-click="vm.subMenu('email', $event)"
@@ -176,11 +177,12 @@
             <md-icon md-font-icon="fa fa-paper-plane-o"></md-icon>
             <md-tooltip>Send Invoice</md-tooltip>
         </md-button>
-        <md-button aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_template', $event)"
+
+        <!-- <md-button ng-show='!IsDefaultTemplate' aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_template', $event)"
             permission="" permission-only="'invoice-templates'">
             <md-icon md-font-icon="fa fa-file-text"></md-icon>
             <md-tooltip>Invoice Template</md-tooltip>
-        </md-button>
+        </md-button> -->
 
         <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_print', $event)"
             permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
@@ -208,13 +210,14 @@
 
         <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" permission=""
             permission-only="'invoice-color'">
-            <md-fab-trigger>
+            <!-- <md-fab-trigger>
 
-                <md-button aria-label="share this post" class="md-fab md-mini md-primary" palette-background="{{vm.template_color}}:500"
+                <md-button ng-show='!IsDefaultTemplate' aria-label="share this post" class="md-fab md-mini md-primary" palette-background="{{vm.template_color}}:500"
                     id="templateButton">
                     <md-icon md-font-icon="fa fa-paint-brush"></md-icon>
                 </md-button>
-            </md-fab-trigger>
+        
+            </md-fab-trigger> -->
             <md-fab-actions style="position:absolute;top:50px;right:10px;border:0px solid;width:300px;">
 
                 <md-button aria-label="Twitter" class="md-fab md-raised md-mini" palette-background="red:500" ng-click="setTemplateTheme('#F44336')"
@@ -227,5 +230,7 @@
             </md-fab-actions>
         </md-fab-speed-dial>
     </div>
-    <pdfjs-viewer data='src'></pdfjs-viewer>
+    <div style="width:100%;height:100%">
+        <pdfjs-viewer data='src'></pdfjs-viewer>
+    </div>
 </div>
