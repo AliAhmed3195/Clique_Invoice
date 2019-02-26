@@ -161,24 +161,28 @@
 
             }
         });
-        $scope.setButtonColor = function (colorName) {
-            var palette = vm.palettes[colorName];
-            var rgbObj = palette[500].value;
 
-            var color = {
+        $scope.myClassObj = {}
+        $scope.setButtonColor = function (colorName) {
+            let palette = vm.palettes[colorName];
+            let rgbObj = palette[500].value;
+
+            let color = {
                 r: rgbObj[0],
                 g: rgbObj[1],
                 b: rgbObj[2],
                 a: 1
 
             };
-            var bg_500 = "background-color:rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";
-
-
-            var el = angular.element(document.querySelector('#templateButton'));
-            el.attr('style', bg_500);
-
+            $scope.myClassObj.style = {
+                "background-color": "rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")"
+            }
+            // let bg_500 = "background-color:rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";
+            // let el = angular.element(document.querySelector('#templateButton'));
+            // el.attr('style', bg_500);
+            // console.log('TCL: $scope.setButtonColor -> bg_500', bg_500);
         }
+
         $scope.getTemplateColor = function () {
 
             if (sessionStorage.getItem("template_color") != null) {
@@ -252,7 +256,7 @@
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.settings = response.data;
-					// console.log('TCL: $scope.settings', $scope.settings)
+                    // console.log('TCL: $scope.settings', $scope.settings)
                     var customer_email = sessionStorage.getItem('customer_email');
                     $scope.settings.InvoiceContacts.to_email = [];
                     $scope.settings.InvoiceContacts.save_email_erp = false;
@@ -266,7 +270,7 @@
                     sessionStorage.setItem("invoice_template_id", $scope.settings.InvoiceTemplateId);
                     sessionStorage.setItem("template_color", $scope.settings.InvoiceTemplateColor);
                     vm.template_color = $scope.settings.InvoiceTemplateColor;
-                    $scope.IsDefaultTemplate = $scope.settings.IsDefaultTemplate;                    
+                    $scope.IsDefaultTemplate = $scope.settings.IsDefaultTemplate;
                     $scope.$broadcast("invoice-preview-event");
                     $scope.setButtonColor($scope.settings.InvoiceTemplateColor);
 
@@ -335,21 +339,21 @@
         }
         $scope.src = null
         $scope.$on('invoice-preview-event', function (event) {
-			// console.log('TCL: $scope.IsDefaultTemplate', $scope.IsDefaultTemplate)
+            // console.log('TCL: $scope.IsDefaultTemplate', $scope.IsDefaultTemplate)
             $scope.showProgress = true;
             $scope.fabMenu = false;
             $scope.src = null
             let url = Clique.getServiceUrl()
-			// console.log('TCL: url', url)
+            // console.log('TCL: url', url)
             // $http.get(url + "/dashboardtest/?invoice_id=" + 23, {
             if ($scope.IsDefaultTemplate == true) {
                 $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + invoice_id, {
                         responseType: 'arraybuffer'
                     })
                     .then(function (response) {
-						// console.log('TCL: response', response)
+                        // console.log('TCL: response', response)
                         $scope.src = new Uint8Array(response.data);
-						// console.log('TCL: $scope.src', $scope.src)
+                        // console.log('TCL: $scope.src', $scope.src)
                         $scope.showProgress = false;
                         if ($scope.isInvoicePaid == false) {
                             $scope.fabMenu = true;
@@ -359,7 +363,7 @@
                 $scope.promise = InvoiceModel.GetInvoicePreviewById(invoice_id);
                 $scope.promise.then(function (response) {
                     invoiceTemplate = response;
-					// console.log('TCL: getInvoiceStatistics -> response', response)
+                    // console.log('TCL: getInvoiceStatistics -> response', response)
                     $("#invoice_template").html('');
                     $("#invoice_template").append(response);
                     $scope.showProgress = false;

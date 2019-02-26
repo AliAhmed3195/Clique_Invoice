@@ -190,25 +190,25 @@
                 } else {}
             });
         }
-
+        $scope.myClassObj = {}
         $scope.setButtonColor = function (colorName) {
-            var palette = vm.palettes[colorName];
-            console.log("i am here")
-            var rgbObj = palette[500].value;
+            let palette = vm.palettes[colorName];
+            let rgbObj = palette[500].value;
 
-            var color = {
+            let color = {
                 r: rgbObj[0],
                 g: rgbObj[1],
                 b: rgbObj[2],
                 a: 1
 
             };
-            var bg_500 = "background-color:rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";
-
-
-            var el = angular.element(document.querySelector('#templateButton'));
-            el.attr('style', bg_500);
-            console.log(bg_500)
+            $scope.myClassObj.style = {
+                "background-color": "rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")"
+            }
+            // let bg_500 = "background-color:rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";
+            // let el = angular.element(document.querySelector('#templateButton'));
+            // el.attr('style', bg_500);
+            // console.log('TCL: $scope.setButtonColor -> bg_500', bg_500);
         }
 
 
