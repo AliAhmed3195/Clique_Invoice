@@ -40,7 +40,8 @@
     "card": "^2.4.0",
     "angular-trix": "^1.0.2",
     "jquery-file-download": "^1.4.6",
-    "angular-pdfjs-viewer": "~0.8.1"
+    "angular-pdfjs-viewer": "~0.8.1",
+    "ng-csv": "~0.3.6"
   },
   "devDependencies": {
     "angular-mocks": "1.6.4"
