@@ -3,6 +3,17 @@
         display: none !important;
     }
 
+    .parent-wapper {
+        margin-top: 5px;
+        margin-left: 20px;
+        margin-right: 10px;
+        margin-bottom: 18px;
+        width: 97%;
+        height: 150%;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+    }
+
     div#errorWrapper {
         display: none !important;
     }
@@ -19,17 +30,6 @@
 
     .pdfjs .pdfViewer .page {
         border: none !important;
-    }
-
-    .pdfjs .textLayer {
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 10px 20px rgba(0, 0, 0, 0.24);
-        top: -25px !important;
-        bottom: -30px !important;
-        border: 1px rgba(0, 0, 0, 0.87) solid !important;
-    }
-
-    .pdfjs .textLayer:hover {
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
 
     .pdfjs #mainContainer {
@@ -90,7 +90,7 @@
                     permission-only="'invoice-color'">
                     <md-fab-trigger>
 
-                        <md-button aria-label="share this post"  class="md-fab md-mini md-primary" palette-background="{{vm.template_color}}:500"
+                        <md-button aria-label="share this post" class="md-fab md-mini md-primary" palette-background="{{vm.template_color}}:500"
                             id="templateButton" ng-style="myClassObj.style">
                             <md-icon md-font-icon="fa fa-paint-brush"></md-icon>
                         </md-button>
@@ -230,7 +230,7 @@
             </md-fab-actions>
         </md-fab-speed-dial>
     </div>
-    <div style="width:100%;height:100%">
+    <div class="parent-wapper">
         <pdfjs-viewer data='src'></pdfjs-viewer>
     </div>
 </div>
