@@ -192,10 +192,10 @@
         }
         $scope.myClassObj = {}
         $scope.setButtonColor = function (colorName) {
-            let palette = vm.palettes[colorName];
-            let rgbObj = palette[500].value;
+            var palette = vm.palettes[colorName];
+            var rgbObj = palette[500].value;
 
-            let color = {
+            var color = {
                 r: rgbObj[0],
                 g: rgbObj[1],
                 b: rgbObj[2],
@@ -205,10 +205,6 @@
             $scope.myClassObj.style = {
                 "background-color": "rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")"
             }
-            // let bg_500 = "background-color:rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";
-            // let el = angular.element(document.querySelector('#templateButton'));
-            // el.attr('style', bg_500);
-            // console.log('TCL: $scope.setButtonColor -> bg_500', bg_500);
         }
 
 
