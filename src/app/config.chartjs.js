@@ -23,12 +23,19 @@
             responsive: true
         });
         Chart.defaults.global.colors = [{
-            backgroundColor: '#3D60D3',
-            pointBackgroundColor: '#3D60D3',
+            // backgroundColor: 'rgb(61, 96, 211 , 0.7)',
+            pointBackgroundColor: 'rgb(48, 100, 184)',
             borderColor: '#C56BA6',
             pointBorderColor: '#C56BA6',
         }, {
-            pointBackgroundColor: 'rgb(57, 209, 226)',
+            backgroundColor: 'rgb(211, 241, 250, 0.7)',
+            pointBackgroundColor: 'rgb(35, 185, 232, 0.9)',
+            pointHoverBackgroundColor: 'rgba(151,187,205,1)',
+            borderColor: '#24BAE8',
+            pointBorderColor: '#24BAE8',
+        }, {
+            backgroundColor: 'rgb(61, 96, 211,0.7)',
+            pointBackgroundColor: 'rgb(237, 80, 150)',
             pointHoverBackgroundColor: 'rgba(151,187,205,1)',
             borderColor: '#24BAE8',
             pointBorderColor: '#24BAE8',
