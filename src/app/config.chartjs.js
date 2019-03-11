@@ -22,7 +22,17 @@
             ],
             responsive: true
         });
-
+        Chart.defaults.global.colors = [{
+            backgroundColor: '#3D60D3',
+            pointBackgroundColor: '#3D60D3',
+            borderColor: '#C56BA6',
+            pointBorderColor: '#C56BA6',
+        }, {
+            pointBackgroundColor: 'rgb(57, 209, 226)',
+            pointHoverBackgroundColor: 'rgba(151,187,205,1)',
+            borderColor: '#24BAE8',
+            pointBorderColor: '#24BAE8',
+        }]
     }
 
 })();
