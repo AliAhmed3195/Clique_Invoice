@@ -1,25 +1,25 @@
-(function() {
+(function () {
     'use strict';
     angular
         .module('invoice')
         .controller('InvoiceController', Controller);
 
     /* @ngInject */
-    function Controller($window,$cookies, $rootScope, $filter, $scope, $timeout, $q, $mdDialog, InvoiceModel, Clique, $mdSidenav, $log, $state, triBreadcrumbsService, $stateParams, BulkPrintInvoices, SettingModel, clipboard, CliqueConstant, dataService, PermissionStore) {
+    function Controller($window, $cookies, $rootScope, $filter, $scope, $timeout, $q, $mdDialog, InvoiceModel, Clique, $mdSidenav, $log, $state, triBreadcrumbsService, $stateParams, BulkPrintInvoices, SettingModel, clipboard, CliqueConstant, dataService, PermissionStore) {
 
         var vm = this;
         vm.InvoiceData = [];
         $scope.showInvoiceToolBar = false;
         $scope.showInvoiceEmailToolBar = false;
         $scope.showInvoicePaymentButton = false;
-        $scope.showRecurringToolBar=false;
-		$scope.showBatchInvoices=false;
-		vm.isInvoiceLoaded= true;
+        $scope.showRecurringToolBar = false;
+        $scope.showBatchInvoices = false;
+        vm.isInvoiceLoaded = true;
         $scope.checkAll = {};
         $scope.hasInk;
         $scope.textToCopy = "";
-        $rootScope.printProcess=false;
-		$scope.sendProcess=false;
+        $rootScope.printProcess = false;
+        $scope.sendProcess = false;
 
         $scope.buttonPermissions = {
             invoice_addnew: false,
@@ -30,7 +30,7 @@
             invoice_link: false,
             invoice_recurring: false
         };
-        vm.notifications=[{
+        vm.notifications = [{
                 invoice_no: '10001',
                 transaction_id: '0000112',
                 amount: 12.00,
@@ -45,28 +45,28 @@
                 status: 'declined',
                 customer_name: 'John Smith',
                 date: new Date('2017-11-22 11:25 AM')
-            },{
+            }, {
                 invoice_no: '10001',
                 transaction_id: '0000112',
                 amount: 12.00,
                 status: 'approved',
                 customer_name: 'John Smith',
                 date: new Date('2014-04-03')
-            },{
+            }, {
                 invoice_no: '10001',
                 transaction_id: '0000112',
                 amount: 12.00,
                 status: 'approved',
                 customer_name: 'John Smith',
                 date: new Date('2014-04-03')
-            },{
+            }, {
                 invoice_no: '10001',
                 transaction_id: '0000112',
                 amount: 12.00,
                 status: 'approved',
                 customer_name: 'John Smith',
                 date: new Date('2014-04-03')
-            },{
+            }, {
                 invoice_no: '10001',
                 transaction_id: '0000112',
                 amount: 12.00,
@@ -75,9 +75,9 @@
                 date: new Date('2014-04-03')
             },
 
-            ];
-        var permission_arr = ['addnew', 'search', 'print', 'send', 'payment', 'link','recurring'];
-        angular.forEach(permission_arr, function(permission_name, key) {
+        ];
+        var permission_arr = ['addnew', 'search', 'print', 'send', 'payment', 'link', 'recurring'];
+        angular.forEach(permission_arr, function (permission_name, key) {
             if (PermissionStore.getPermissionDefinition('invoice-' + permission_name) != undefined) {
                 $scope.buttonPermissions['invoice_' + permission_name] = true;
             } else {
@@ -93,12 +93,12 @@
         /*Customer*/
         vm.customers = [];
         $scope.promise = InvoiceModel.GetCustomers();
-        $scope.promise.then(function(response) {
+        $scope.promise.then(function (response) {
 
-            if (response.statuscode == 0 && response.data!=undefined) {
+            if (response.statuscode == 0 && response.data != undefined) {
                 var total_count = response.data.total_count;
                 var items = response.data.items;
-                angular.forEach(items, function(value, key) {
+                angular.forEach(items, function (value, key) {
                     var customer = {
                         value: value.Id,
                         display: (value.DisplayName).toLowerCase()
@@ -133,8 +133,8 @@
         var m = date.getMonth();
 
         var saveInvoiceSearch = sessionStorage.getItem("invoice_search");
-       // var saveInvoiceSearch = $cookies.get('invoice_search');
-        console.log("saveInvoiceSearch",saveInvoiceSearch)
+        // var saveInvoiceSearch = $cookies.get('invoice_search');
+        // console.log("saveInvoiceSearch", saveInvoiceSearch)
         if (saveInvoiceSearch != null) {
 
             saveInvoiceSearch = JSON.parse(saveInvoiceSearch);
@@ -148,10 +148,10 @@
 
         var sessionFromDate;
         var sessionToDate;
-        var sessionInvoicePage = 1 ;
+        var sessionInvoicePage = 1;
         var filterstatus = 'all'
         var filtersession = 'all'
-        if (typeof(Storage) !== undefined) {
+        if (typeof (Storage) !== undefined) {
             sessionFromDate = sessionStorage.getItem('fromDate');
             sessionToDate = sessionStorage.getItem('toDate');
             sessionInvoicePage = sessionStorage.getItem('invoice_current_page');
@@ -159,16 +159,20 @@
             filtersession = sessionStorage.getItem('invoice_search_status');
             //filterstatus = filterstatusq.status
 
-            if(sessionInvoicePage==null ){sessionInvoicePage=1}
-            if(filtersession == null){filtersession = 'all'}
+            if (sessionInvoicePage == null) {
+                sessionInvoicePage = 1
+            }
+            if (filtersession == null) {
+                filtersession = 'all'
+            }
         }
 
         // if (typeof(cookie)  !== undefined){
         //     filterstatus = $cookies.get('invoice_search_status');
         //    }
-           console.log("last status",filtersession)
-      // var invoicedata = sessionStorage.getItem('invoice_search');
-		/*eof datatable*/
+        // console.log("last status", filtersession)
+        // var invoicedata = sessionStorage.getItem('invoice_search');
+        /*eof datatable*/
         vm.query = {
             status: filtersession,
             limit: 10,
@@ -220,7 +224,7 @@
         $scope.displayInvoices = [];
 
         $scope.promise = SettingModel.GetPaymentInfo();
-        $scope.promise.then(function(response) {
+        $scope.promise.then(function (response) {
             if (response.statuscode == 0) {
                 if (response.data.total_count > 0) {
                     $scope.paymentInfo = response.data.items[0];
@@ -232,14 +236,14 @@
 
         function isQuickBookConnected() {
             vm.promise = InvoiceModel.GetQuickBooksConnectionStatus();
-            vm.promise.then(function(response) {});
+            vm.promise.then(function (response) {});
         }
 
         function openSidebar(navID) {
 
             $mdSidenav(navID)
                 .toggle()
-                .then(function() {
+                .then(function () {
                     $log.debug("toggle " + navID + " is done");
                 });
         }
@@ -252,7 +256,7 @@
 
         function activate() {
             var bookmark;
-            $scope.$watch('vm.query.filter', function(newValue, oldValue) {
+            $scope.$watch('vm.query.filter', function (newValue, oldValue) {
                 if (!oldValue) {
                     bookmark = vm.query.page;
                 }
@@ -270,7 +274,7 @@
         }
 
         function normalizeInvoiceData() {
-            angular.forEach(vm.invoices.items, function(value, key) {});
+            angular.forEach(vm.invoices.items, function (value, key) {});
         }
 
         function getInvoices() {
@@ -286,38 +290,48 @@
             }
 
             var invoice_search_query = vm.query;
-            console.log(invoice_search_query,"invoice_search_query")
+            // console.log(invoice_search_query, "invoice_search_query")
             if (vm.selectedItem != null) {
                 invoice_search_query.customerSelectedItem = vm.selectedItem;
             }
-            if (typeof(Storage) !== "undefined") {
-                console.log("This Is Working",invoice_search_query)
-             //   $cookies.put("invoice_search_status", invoice_search_query.status)
+            if (typeof (Storage) !== "undefined") {
+                // console.log("This Is Working", invoice_search_query)
+                //   $cookies.put("invoice_search_status", invoice_search_query.status)
                 sessionStorage.setItem("invoice_search_status", invoice_search_query.status);
-                   sessionStorage.setItem("invoice_search", JSON.stringify(invoice_search_query));
-                   // $cookies.put("invoice_search", JSON.stringify(invoice_search_query))
-                    sessionStorage.setItem("fromDate", $scope.from);
-                    sessionStorage.setItem("toDate", $scope.to);
-                }
+                sessionStorage.setItem("invoice_search", JSON.stringify(invoice_search_query));
+                // $cookies.put("invoice_search", JSON.stringify(invoice_search_query))
+                sessionStorage.setItem("fromDate", $scope.from);
+                sessionStorage.setItem("toDate", $scope.to);
+            }
 
             vm.promise = InvoiceModel.GetAllInvoice(vm.query);
 
-            vm.promise.then(function(response) {
+            vm.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     vm.invoices = response.data;
                     vm.InvoiceData = vm.invoices.items;
-					$timeout(function () {
-						vm.isInvoiceLoaded= false;
-					}, 2000);
+                    $timeout(function () {
+                        vm.isInvoiceLoaded = false;
+                    }, 2000);
 
                 }
             });
+            $scope.IsDefaultTemplate = false
+            $scope.promise = SettingModel.GetSettings();
+            $scope.promise.then(function (response) {
+                if (response.statuscode == 0) {
+                    $scope.IsDefaultTemplate = response.data.IsDefaultTemplate;
+                }
+            });
+
         }
-        $scope.refreshInvoiceGrid = function() {
+        $scope.refreshInvoiceGrid = function () {
             $state.reload();
         }
-        $scope.resetForm = function() {
-             var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+        $scope.resetForm = function () {
+            var date = new Date(),
+                y = date.getFullYear(),
+                m = date.getMonth();
 
             vm.query = {
                 status: 'all',
@@ -331,7 +345,7 @@
             $scope.to = new Date(y, m + 1, 0)
             vm.selectedItem = "";
             sessionStorage.setItem("invoice_search", "{}");
-          //  $cookies.put('invoice_search','{}')
+            //  $cookies.put('invoice_search','{}')
         }
 
         function removeFilter() {
@@ -360,10 +374,10 @@
             sessionStorage.setItem('invoice_id', invoice.Id);
             sessionStorage.setItem('invoice_issuedate', invoice.TxnDate);
             sessionStorage.setItem('invoice_detail', JSON.stringify(invoice));
-          // console.log("(invoice.DocNumber ",invoice.DocNumber,"123" )
-            if(invoice.DocNumber ==  null || invoice.DocNumber ===  "" ){
+            // console.log("(invoice.DocNumber ",invoice.DocNumber,"123" )
+            if (invoice.DocNumber == null || invoice.DocNumber === "") {
                 invoice.DocNumber = invoice.Id
-          //      console.log("this work")
+                //      console.log("this work")
             }
             $state.go('triangular.invoice-detail', {
                 id: invoice.DocNumber
@@ -374,23 +388,23 @@
         function openRecuringDialog() {
             if ($scope.invoiceSelection.length > 0) {
                 var filteredInvoice
-                angular.forEach($scope.invoiceSelection, function(invoice_id, key) {
+                angular.forEach($scope.invoiceSelection, function (invoice_id, key) {
                     filteredInvoice = $filter('filter')(vm.InvoiceData, {
                         'Id': invoice_id
                     })[0];
                 });
                 sessionStorage.setItem('invoice_detail', JSON.stringify(filteredInvoice));
                 $state.go('triangular.invoice-create', {
-                        action: 'recurring'
+                    action: 'recurring'
                 });
             }
         }
 
         function printBulkInvoice() {
             //fa fa-refresh fa-spin fa-3x
-            $rootScope.printProcess=true;
+            $rootScope.printProcess = true;
             $scope.promise = SettingModel.GetSettings();
-            $scope.promise.then(function(response) {
+            $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.settings = response.data;
                     sessionStorage.setItem("invoice_template_id", $scope.settings.InvoiceTemplateId);
@@ -404,11 +418,11 @@
 
         function sendBulkInvoice() {
 
-			 //fa fa-refresh fa-spin fa-3x
-            $scope.sendProcess=true;
-			$timeout(function () {
-			 $scope.sendProcess=false;
-			}, 2000);
+            //fa fa-refresh fa-spin fa-3x
+            $scope.sendProcess = true;
+            $timeout(function () {
+                $scope.sendProcess = false;
+            }, 2000);
 
             $mdDialog.show({
                 scope: $scope,
@@ -430,7 +444,9 @@
 
         function copyCustomerPortalLink() {
             $mdDialog.show({
-                locals: { InvoiceData: vm.InvoiceData},
+                locals: {
+                    InvoiceData: vm.InvoiceData
+                },
                 scope: $scope,
                 preserveScope: true,
                 parent: angular.element(document.body),
@@ -443,13 +459,13 @@
         };
 
         function toolBarProcess() {
-			//alert(1);
+            //alert(1);
             $scope.selectedInvoiceData = [];
             $scope.selectedCustomer = [];
 
             if ($scope.invoiceSelection.length > 0) {
                 ;
-                angular.forEach($scope.invoiceSelection, function(invoice_id, key) {
+                angular.forEach($scope.invoiceSelection, function (invoice_id, key) {
                     var filteredInvoice = $filter('filter')(vm.InvoiceData, {
                         'Id': invoice_id
                     }, true)[0];
@@ -477,12 +493,12 @@
             if ($scope.selectedInvoiceData.length == 1) {
                 $scope.showInvoiceEmailToolBar = true;
             }
-            console.log("length",$scope.selectedInvoiceData.length)
-            $scope.showRecurringToolBar=false;
+            // console.log("length", $scope.selectedInvoiceData.length)
+            $scope.showRecurringToolBar = false;
             if ($scope.invoiceSelection.length == 1) {
                 $scope.showRecurringToolBar = true;
             }
-			$scope.showBatchInvoices=false;
+            $scope.showBatchInvoices = false;
             if ($scope.invoiceSelection.length >= 1) {
                 $scope.showBatchInvoices = true;
             }
@@ -490,7 +506,7 @@
 
         }
 
-        $scope.toggleAll = function() {
+        $scope.toggleAll = function () {
             if ($scope.checkAll) {
                 $scope.invoiceSelection = angular.copy($scope.displayInvoices);
             } else {
@@ -498,7 +514,7 @@
             }
             toolBarProcess();
         }
-        $scope.clearInvoiceArray = function(index) {
+        $scope.clearInvoiceArray = function (index) {
             if (index == 0) {
                 $scope.displayInvoices = [];
             }
@@ -513,9 +529,9 @@
             toolBarProcess();
         };
 
-		// set Page number in cookies when page change
-		$scope.logPagination = function (page, limit) {
-			sessionStorage.setItem('invoice_current_page', page);
-  		}
+        // set Page number in cookies when page change
+        $scope.logPagination = function (page, limit) {
+            sessionStorage.setItem('invoice_current_page', page);
+        }
     }
 })();

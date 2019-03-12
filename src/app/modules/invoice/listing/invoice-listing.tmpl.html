@@ -108,8 +108,9 @@ font-weight: bold;
                 <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
                 <md-tooltip>Search Invoice</md-tooltip>
             </md-button>
+            <!-- IsDefaultTemplate add to ng-show to hide print button -->
             <md-button aria-label="print" class="md-primary md-raised md-small" ng-click="vm.printBulkInvoice();"
-                ng-show="showInvoiceToolBar" ng-if="buttonPermissions.invoice_print" ng-disabled="printProcess">
+                ng-show="showInvoiceToolBar && !IsDefaultTemplate" ng-if="buttonPermissions.invoice_print" ng-disabled="printProcess">
                 <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}" style="font-size:14px;"></md-icon>
                 <md-tooltip>Print Invoice</md-tooltip>
             </md-button>
