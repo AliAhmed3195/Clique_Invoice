@@ -311,6 +311,8 @@
                     Clique.showToast(response.statusmessage, 'bottom right', 'error');
                 }
             });
+            $window.location.reload();
+
         }
 
 
