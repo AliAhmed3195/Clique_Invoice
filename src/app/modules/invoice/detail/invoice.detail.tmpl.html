@@ -199,14 +199,12 @@
         </md-button> -->
 
 
-        <!-- Note:
-        Task to be done. -->
-
-        <!-- <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_print', $event)"
+        <!-- pdf print  -->
+        <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="printPDFInvoice();"
             permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
             <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
-            <md-tooltip>Invoice Print</md-tooltip>
-        </md-button> -->
+            <md-tooltip>Invoice Print PDF</md-tooltip>
+        </md-button>
 
         <md-button aria-label="Payment Method" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('payment_methods', $event)"
             permission="" permission-only="'invoice-paymentmethod'">
@@ -223,11 +221,11 @@
         <!-- Note:
         Task to be done. -->
 
-        <!-- <md-button aria-label="Invoice Statistic" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_stats', $event)"
+        <md-button aria-label="Invoice Statistic" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_stats', $event)"
             permission="" permission-only="'invoice-statistics'">
             <md-icon md-font-icon="fa fa-bar-chart"></md-icon>
             <md-tooltip>Invoice Statistics</md-tooltip>
-        </md-button> -->
+        </md-button>
 
         <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" permission=""
             permission-only="'invoice-color'">

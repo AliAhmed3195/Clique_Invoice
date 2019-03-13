@@ -8,7 +8,6 @@ font-weight: bold;
     <md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isInvoiceLoaded"></md-progress-linear>
 </div>
 
-
 <div ng-show="!vm.isInvoiceLoaded">
     <!--<md-sidenav class="md-sidenav-right md-whiteframe-z4" md-component-id="gateway_sync" style="min-width:280px !important;">
     <md-toolbar class="md-theme-light">
@@ -109,11 +108,18 @@ font-weight: bold;
                 <md-tooltip>Search Invoice</md-tooltip>
             </md-button>
             <!-- IsDefaultTemplate add to ng-show to hide print button -->
-            <md-button aria-label="print" class="md-primary md-raised md-small" ng-click="vm.printBulkInvoice();"
+            <md-button aria-label="print" class="md-primary md-raised md-small" ng-click="vm.printBulkInvoice($event);"
                 ng-show="showInvoiceToolBar && !IsDefaultTemplate" ng-if="buttonPermissions.invoice_print" ng-disabled="printProcess">
                 <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}" style="font-size:14px;"></md-icon>
                 <md-tooltip>Print Invoice</md-tooltip>
             </md-button>
+
+            <md-button aria-label="print" class="md-primary md-raised md-small" ng-click="vm.printPDFInvoice();"
+                ng-show="showInvoiceToolBar && IsDefaultTemplate" ng-if="buttonPermissions.invoice_print" ng-disabled="printProcess">
+                <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}" style="font-size:14px;"></md-icon>
+                <md-tooltip>Print Invoice</md-tooltip>
+            </md-button>
+
             <md-button aria-label="send" class="md-primary md-raised md-small" ng-click="vm.sendBulkInvoice();" ng-show="showInvoiceEmailToolBar"
                 ng-if="buttonPermissions.invoice_send">
                 <md-icon md-font-icon="{{sendProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-paper-plane'}}"
@@ -176,9 +182,8 @@ font-weight: bold;
                     </thead>
                     <tbody md-body>
                         <!-- ng-disabled="invoice.IsPaid==1" -->
-                        <tr md-row md-on-select="vm.toolBarProcess()"
-                         md-select="invoice.Id"
-                            md-select-id="invoice.Id" md-auto-select ng-repeat="invoice in vm.InvoiceData | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                        <tr md-row md-on-select="vm.toolBarProcess()" md-select="invoice.Id" md-select-id="invoice.Id"
+                            md-auto-select ng-repeat="invoice in vm.InvoiceData | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
                             <td md-cell>{{invoice.DocNumber}}</td>
                             <td md-cell>{{::invoice.CustomerRef.name}}</td>
 

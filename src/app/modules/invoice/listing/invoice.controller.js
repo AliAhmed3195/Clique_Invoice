@@ -5,7 +5,7 @@
         .controller('InvoiceController', Controller);
 
     /* @ngInject */
-    function Controller($window, $cookies, $rootScope, $filter, $scope, $timeout, $q, $mdDialog, InvoiceModel, Clique, $mdSidenav, $log, $state, triBreadcrumbsService, $stateParams, BulkPrintInvoices, SettingModel, clipboard, CliqueConstant, dataService, PermissionStore) {
+    function Controller($window, $http, $sce, $cookies, $rootScope, $filter, $scope, $timeout, $q, $mdDialog, InvoiceModel, Clique, $mdSidenav, $log, $state, triBreadcrumbsService, $stateParams, BulkPrintInvoices, SettingModel, clipboard, CliqueConstant, dataService, PermissionStore) {
 
         var vm = this;
         vm.InvoiceData = [];
@@ -208,6 +208,7 @@
         };
         vm.getInvoices = getInvoices;
         vm.removeFilter = removeFilter;
+        vm.printPDFInvoice = printPDFInvoice;
         vm.printBulkInvoice = printBulkInvoice;
         vm.sendBulkInvoice = sendBulkInvoice;
         vm.paymentInvoice = paymentInvoice;
@@ -399,6 +400,32 @@
                 });
             }
         }
+
+
+        function printPDFInvoice() {
+            $rootScope.printProcess = true;
+
+            var url = Clique.getServiceUrl()
+            var invoice_id = $scope.invoiceSelection[0]
+            $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + invoice_id, {
+                    responseType: 'arraybuffer'
+                })
+                .then(function (response) {
+
+                    var pdfFile = new Blob([response.data], {
+                        type: "application/pdf"
+                    });
+                    var pdfUrl = URL.createObjectURL(pdfFile);
+                    //window.open(pdfUrl);
+                    printJS(pdfUrl);
+                    // var printwWindow = $window.open(pdfUrl);
+                    // printwWindow.print();
+                    $rootScope.printProcess = false;
+
+                });
+
+        }
+
 
         function printBulkInvoice() {
             //fa fa-refresh fa-spin fa-3x

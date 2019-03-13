@@ -412,6 +412,30 @@
             }
 
         }
+
+        $scope.printPDFInvoice = function () {
+            $rootScope.printProcess = true;
+
+            var url = Clique.getServiceUrl()
+            // var invoice_id = $scope.invoiceSelection[0]
+            $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + invoice_id, {
+                    responseType: 'arraybuffer'
+                })
+                .then(function (response) {
+
+                    var pdfFile = new Blob([response.data], {
+                        type: "application/pdf"
+                    });
+                    var pdfUrl = URL.createObjectURL(pdfFile);
+                    //window.open(pdfUrl);
+                    printJS(pdfUrl);
+                    // var printwWindow = $window.open(pdfUrl);
+                    // printwWindow.print();
+                    $rootScope.printProcess = false;
+
+                });
+
+        }
         $scope.collectPayment = function () {
             $rootScope.dataObj = [];
             var invoice_detail = sessionStorage.getItem("invoice_detail");
