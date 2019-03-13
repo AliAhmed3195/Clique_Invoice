@@ -58,7 +58,7 @@
     <md-progress-linear md-mode="indeterminate"></md-progress-linear>
 </div>
 
-<div class="invoice_container" ng-show='!IsDefaultTemplate'>
+<div class="pdf-container invoice_container">
 
     <div flex layout="row" id="invoice_detail_layout">
         <md-content style="overflow: hidden; height: 100%;" flex="100" flex-gt-xs="100" flex-gt-lg="40" layout-padding>
@@ -70,13 +70,20 @@
                     <md-icon md-font-icon="fa fa-paper-plane-o"></md-icon>
                     <md-tooltip>Send Invoice</md-tooltip>
                 </md-button>
-                <md-button aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_template', $event)"
+                <md-button ng-show='!IsDefaultTemplate' aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_template', $event)"
                     permission="" permission-only="'invoice-templates'">
                     <md-icon md-font-icon="fa fa-file-text"></md-icon>
                     <md-tooltip>Invoice Template</md-tooltip>
                 </md-button>
 
-                <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_print', $event)"
+                <md-button ng-show='!IsDefaultTemplate' aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_print', $event)"
+                    permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
+                    <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
+                    <md-tooltip>Invoice Print</md-tooltip>
+                </md-button>
+
+                
+                <md-button ng-show='IsDefaultTemplate' aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="printPDFInvoice()"
                     permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
                     <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
                     <md-tooltip>Invoice Print</md-tooltip>
@@ -100,7 +107,7 @@
                     <md-tooltip>Invoice Statistics</md-tooltip>
                 </md-button>
 
-                <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" permission=""
+                <md-fab-speed-dial ng-show='!IsDefaultTemplate' md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" permission=""
                     permission-only="'invoice-color'">
                     <md-fab-trigger>
 
@@ -126,7 +133,7 @@
                 align="center">
                 <img src="assets/images/elements/paid.png" width="500" ng-show="displayPaidStamp">
             </div>
-            <md-card class="page" layout-padding id="invoice_template" style="width: 98%; height: 100%;">
+            <md-card ng-show='!IsDefaultTemplate' class="page" layout-padding id="invoice_template" style="width: 98%; height: 100%;">
                 <div flex layout="row" layout-align="center center" id="invoice_template" style="width: 100%; height: 100%;">
                     <div layout="row" layout-sm="column" layout-align="space-around">
                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -137,6 +144,8 @@
             </md-card>
         </md-content>
     </div>
+    <pdfjs-viewer ng-show='IsDefaultTemplate' data='src'></pdfjs-viewer>
+
     <md-sidenav class="md-sidenav-left md-whiteframe-z4 stat" md-component-id="statistics" style="min-width:490px !important;">
 
         <md-toolbar class="md-theme-light">
@@ -183,73 +192,3 @@
     </md-sidenav>
 </div>
 
-<div class="pdf-container" ng-show='IsDefaultTemplate'>
-    <div flex layout="row" layout-align="end end" ng-show="fabMenu">
-
-        <md-button aria-label="Send Email" class="md-fab md-primary md-mini" ng-click="vm.subMenu('email', $event)"
-            permission="" permission-only="'invoice-send'">
-            <md-icon md-font-icon="fa fa-paper-plane-o"></md-icon>
-            <md-tooltip>Send Invoice</md-tooltip>
-        </md-button>
-
-        <!-- <md-button ng-show='!IsDefaultTemplate' aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_template', $event)"
-            permission="" permission-only="'invoice-templates'">
-            <md-icon md-font-icon="fa fa-file-text"></md-icon>
-            <md-tooltip>Invoice Template</md-tooltip>
-        </md-button> -->
-
-
-        <!-- pdf print  -->
-        <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="printPDFInvoice();"
-            permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
-            <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
-            <md-tooltip>Invoice Print PDF</md-tooltip>
-        </md-button>
-
-        <md-button aria-label="Payment Method" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('payment_methods', $event)"
-            permission="" permission-only="'invoice-paymentmethod'">
-            <md-icon md-font-icon="fa fa-list-alt"></md-icon>
-            <md-tooltip>Payment Method</md-tooltip>
-        </md-button>
-
-        <md-button aria-label="Collect Payment" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('collect_payment', $event)"
-            permission="" permission-only="'invoice-paymentmethod'">
-            <md-icon md-font-icon="fa fa-credit-card"></md-icon>
-            <md-tooltip>Collect Payment</md-tooltip>
-        </md-button>
-
-        <!-- Note:
-        Task to be done. -->
-
-        <md-button aria-label="Invoice Statistic" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_stats', $event)"
-            permission="" permission-only="'invoice-statistics'">
-            <md-icon md-font-icon="fa fa-bar-chart"></md-icon>
-            <md-tooltip>Invoice Statistics</md-tooltip>
-        </md-button>
-
-        <md-fab-speed-dial md-direction="up" md-open="vm.fabStatus" ng-class="vm.fabAnimation" permission=""
-            permission-only="'invoice-color'">
-            <!-- <md-fab-trigger>
-
-                <md-button ng-show='!IsDefaultTemplate' aria-label="share this post" class="md-fab md-mini md-primary" palette-background="{{vm.template_color}}:500"
-                    id="templateButton">
-                    <md-icon md-font-icon="fa fa-paint-brush"></md-icon>
-                </md-button>
-        
-            </md-fab-trigger> -->
-            <md-fab-actions style="position:absolute;top:50px;right:10px;border:0px solid;width:300px;">
-
-                <md-button aria-label="Twitter" class="md-fab md-raised md-mini" palette-background="red:500" ng-click="setTemplateTheme('#F44336')"
-                    ng-hide="true">
-                </md-button>
-
-                <md-button aria-label="Twitter" class="md-fab md-raised md-mini" ng-repeat="(name,palette) in vm.palettes"
-                    palette-background="{{name}}:500" ng-click="setTemplateTheme(name,palette)">
-                </md-button>
-            </md-fab-actions>
-        </md-fab-speed-dial>
-    </div>
-    <!-- <div class="parent-wapper"> -->
-    <pdfjs-viewer data='src'></pdfjs-viewer>
-    <!-- </div> -->
-</div>
