@@ -76,14 +76,14 @@
                     <md-tooltip>Invoice Template</md-tooltip>
                 </md-button>
 
-                <md-button ng-show='!IsDefaultTemplate' aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_print', $event)"
+                <md-button ng-if="buttonPermissions.invoice_print" ng-show='!IsDefaultTemplate' aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_print', $event)"
                     permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
                     <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
                     <md-tooltip>Invoice Print</md-tooltip>
                 </md-button>
 
                 
-                <md-button ng-show='IsDefaultTemplate' aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="printPDFInvoice()"
+                <md-button ng-if="buttonPermissions.invoice_print" ng-show='IsDefaultTemplate' aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="printPDFInvoice()"
                     permission="" permission-only="'invoice-print'" ng-disabled="printProcess">
                     <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
                     <md-tooltip>Invoice Print</md-tooltip>
@@ -96,7 +96,7 @@
                 </md-button>
 
                 <md-button aria-label="Collect Payment" class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('collect_payment', $event)"
-                    permission="" permission-only="'invoice-paymentmethod'">
+                    permission="" permission-only="'invoice-payment'">
                     <md-icon md-font-icon="fa fa-credit-card"></md-icon>
                     <md-tooltip>Collect Payment</md-tooltip>
                 </md-button>

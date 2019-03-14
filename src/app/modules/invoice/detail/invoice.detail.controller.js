@@ -28,7 +28,7 @@
 
 
     /* @ngInject */
-    function Controller($scope, $timeout, $interval, $q, $http, $sce, $compile, Clique, InvoiceModel, SettingModel, $mdDialog, $mdToast, $element, $stateParams, triBreadcrumbsService, $state, $mdBottomSheet, $rootScope, $mdSidenav, $mdColorPalette, $mdColors, $mdColorUtil, triTheming, BulkPrintInvoices) {
+    function Controller($scope, PermissionStore, $timeout, $interval, $q, $http, $sce, $compile, Clique, InvoiceModel, SettingModel, $mdDialog, $mdToast, $element, $stateParams, triBreadcrumbsService, $state, $mdBottomSheet, $rootScope, $mdSidenav, $mdColorPalette, $mdColors, $mdColorUtil, triTheming, BulkPrintInvoices) {
 
         $scope.pdf = []
         $scope.pdf.src = "www.pdf995.com/samples/pdf.pdf";
@@ -335,6 +335,8 @@
         }
         $scope.src = null
         $scope.$on('invoice-preview-event', function (event) {
+            console.log('TCL: PermissionStore', PermissionStore)
+
             // // console.log('TCL: $scope.IsDefaultTemplate', $scope.IsDefaultTemplate)
             $scope.showProgress = true;
             $scope.fabMenu = false;
@@ -372,6 +374,46 @@
             }
         });
 
+        $scope.buttonPermissions = {
+            invoice_addnew: false,
+            invoice_search: false,
+            invoice_print: false,
+            invoice_send: false,
+            invoice_payment: false,
+            invoice_link: false,
+            invoice_recurring: false,
+
+            invoice_color: false,
+            invoice_statistics: false,
+            invoice_paymentmethod: false,
+            invoice_templates: false,
+            invoice_payment: false,
+
+        };
+        // var permission_arr = ['addnew', 'search', 'print', 'send', 'payment', 'link', 'recurring'];
+        var permission_arr = [
+            "addnew",
+            "listing",
+            "send",
+            "sendbulk",
+            "link",
+            "payment",
+            "search",
+            "statistics",
+            "detail",
+            "templates",
+            "paymentmethod",
+            "color"
+        ];
+
+        angular.forEach(permission_arr, function (permission_name, key) {
+            if (PermissionStore.getPermissionDefinition('invoice-' + permission_name) != undefined) {
+                $scope.buttonPermissions['invoice_' + permission_name] = true;
+            } else {
+                $scope.buttonPermissions['invoice_' + permission_name] = false;
+            }
+
+        });
 
 
         function subMenu(type) {
