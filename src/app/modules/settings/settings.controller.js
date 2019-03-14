@@ -306,12 +306,19 @@
                     } else {
                         // console.log("i am at 1")
                         Clique.showToast('Settings Updated successfully', 'bottom right', 'success');
+                        // $route.reload()
+                        $timeout(function () {
+                            $window.location.reload();
+                            // $state.reload();
+
+                        }, 500);
+
+
                     }
                 } else {
                     Clique.showToast(response.statusmessage, 'bottom right', 'error');
                 }
             });
-            $window.location.reload();
 
         }
 
