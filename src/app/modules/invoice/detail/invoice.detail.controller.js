@@ -387,7 +387,6 @@
             invoice_statistics: false,
             invoice_paymentmethod: false,
             invoice_templates: false,
-            invoice_payment: false,
 
         };
         // var permission_arr = ['addnew', 'search', 'print', 'send', 'payment', 'link', 'recurring'];
