@@ -181,7 +181,6 @@
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.setting = response.data;
-                    console.log('TCL: $scope.setting', $scope.setting)
                     sessionStorage.setItem("template_color", $scope.setting.InvoiceTemplateColor);
                     vm.template_color = $scope.setting.InvoiceTemplateColor;
                     $scope.$broadcast("invoice-preview-event");
