@@ -24,8 +24,8 @@
             'transactions',
             //'customer',
             // commented for live
-            // 'recurring',
-            // 'statement',
+            'recurring',
+            'statement',
             'salesreceipt',
             'angular-clipboard',
             'app.permission',
