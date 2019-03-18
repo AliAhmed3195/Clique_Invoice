@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
     angular
         .module('settings')
@@ -20,6 +20,8 @@
             priority: 5.0,
             state: 'triangular.settings',
             type: 'link',
+            permission: 'settings-depositToAccount',
+
         });
     }
 })();
