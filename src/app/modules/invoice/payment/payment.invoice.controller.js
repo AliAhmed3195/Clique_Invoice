@@ -366,8 +366,18 @@
         }
 
 
+        function resetChargeAmount() {
+            $scope.isAmountInvalid = false;
+            $scope.totalAmount = 0;
+            if ($scope.selectedInvoiceData.length > 0) {
+                angular.forEach($scope.selectedInvoiceData, function (item, key) {
+                    item.ChargeAmount = item.Balance
+                });
+            }
+        }
 
         $scope.changePaymentMode = function (type) {
+            resetChargeAmount()
             $scope.ccprofile = JSON.parse('{"profile_id":0, "last_digits":"0"}');
             $scope.paymentMode = type;
             $scope.UpdateCCFields({
@@ -388,7 +398,7 @@
                     $scope.requiredCreditCardNumber = false;
                     $scope.requiredCardHolderName = false;
                     $scope.totalAmount = $rootScope.FinalTotal
-                    console.log($scope.totalAmount)
+                    // console.log($scope.totalAmount)
                     break;
 
                 case "creditcard":
@@ -408,8 +418,8 @@
                         $scope.totalAmount = $rootScope.FinalTotal
                     }
 
-                    console.log($scope.newAmount)
-                    console.log($scope.totalAmount)
+                    // console.log($scope.newAmount)
+                    // console.log($scope.totalAmount)
                     $scope.requiredAccountNo = false;
                     $scope.requiredBankaba = false;
                     $scope.requiredAccountName = false;
@@ -424,7 +434,7 @@
                     $scope.disableinpt = false;
                     $scope.convfee = false;
                     $scope.totalAmount = $rootScope.FinalTotal
-                    console.log($scope.totalAmount)
+                    // console.log($scope.totalAmount)
                     break;
             }
         }
@@ -465,7 +475,7 @@
                     $rootScope.FinalTotal = $scope.totalAmount;
 
                 });
-                console.log($rootScope.FinalTotal)
+                // console.log($rootScope.FinalTotal)
                 if (("ConvenienceFee" in $scope.selectedInvoiceData[0]) == true) {
                     if ($scope.selectedInvoiceData[0].ConvenienceFee.length > 0) {
                         if ($scope.selectedInvoiceData[0].ConvenienceFee[0].is_active == true) {
