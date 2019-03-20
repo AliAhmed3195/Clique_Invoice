@@ -24125,6 +24125,33 @@ chart-legend ul {
       min-width: 260px;
       max-width: 260px; }
 
+.triangular-loader {
+  background: #fff; }
+
+.app-loader md-progress-linear {
+  width: 80%; }
+
+.triangular-toolbar.ng-enter {
+  transition: .5s; }
+
+.triangular-toolbar.ng-enter {
+  animation-name: slideInDown;
+  animation-iteration-count: 1;
+  animation-duration: 1s;
+  animation-delay: 0s;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; }
+
+.triangular-toolbar.ng-leave {
+  display: none; }
+
+.toolbar-icon {
+  font-size: 28px !important;
+  font-weight: normal !important;
+  color: #00bcd4 !important; }
+
 .dashboard-container .layout-margin {
   margin: 0px; }
 
@@ -24541,33 +24568,6 @@ md-button.width-100 {
 
 .capitalize {
   text-transform: capitalize; }
-
-.triangular-loader {
-  background: #fff; }
-
-.app-loader md-progress-linear {
-  width: 80%; }
-
-.triangular-toolbar.ng-enter {
-  transition: .5s; }
-
-.triangular-toolbar.ng-enter {
-  animation-name: slideInDown;
-  animation-iteration-count: 1;
-  animation-duration: 1s;
-  animation-delay: 0s;
-  animation-timing-function: ease;
-  animation-fill-mode: both;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden; }
-
-.triangular-toolbar.ng-leave {
-  display: none; }
-
-.toolbar-icon {
-  font-size: 28px !important;
-  font-weight: normal !important;
-  color: #00bcd4 !important; }
 
 .md-small-icon {
   margin: 0px;
