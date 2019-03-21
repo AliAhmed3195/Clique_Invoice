@@ -252,7 +252,7 @@
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.settings = response.data;
-					// // // console.log('TCL: $scope.settings', $scope.settings)
+                    // // // console.log('TCL: $scope.settings', $scope.settings)
                     var customer_email = sessionStorage.getItem('customer_email');
                     $scope.settings.InvoiceContacts.to_email = [];
                     $scope.settings.InvoiceContacts.save_email_erp = false;
@@ -333,46 +333,49 @@
                 vm.showInvoiceStatsProgress = false;
             });
         }
-        $scope.src = null
         $scope.$on('invoice-preview-event', function (event) {
-			// console.log('TCL: PermissionStore', PermissionStore)
-
-			// // // console.log('TCL: $scope.IsDefaultTemplate', $scope.IsDefaultTemplate)
             $scope.showProgress = true;
             $scope.fabMenu = false;
+            if ($scope.IsDefaultTemplate == true) {
+                displayPDF()
+            } else {
+                displayTemplate()
+            }
+        });
+
+        function displayPDF() {
             $scope.src = null
             var url = Clique.getServiceUrl()
-			// // // console.log('TCL: url', url)
-            // $http.get(url + "/dashboardtest/?invoice_id=" + 23, {
-            if ($scope.IsDefaultTemplate == true) {
-                $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + invoice_id, {
-                        responseType: 'arraybuffer'
-                    })
-                    .then(function (response) {
-						// // // console.log('TCL: response', response)
-                        $scope.src = new Uint8Array(response.data);
-						// // // console.log('TCL: $scope.src', $scope.src)
-                        $scope.showProgress = false;
-                        $scope.displayPaidStamp = true
-                        if ($scope.isInvoicePaid == false) {
-                            $scope.fabMenu = true;
-                        }
-                    });
-            } else {
-                $scope.promise = InvoiceModel.GetInvoicePreviewById(invoice_id);
-                $scope.promise.then(function (response) {
-                    invoiceTemplate = response;
-					// // // console.log('TCL: getInvoiceStatistics -> response', response)
-                    $("#invoice_template").html('');
-                    $("#invoice_template").append(response);
+            $http.get(url + "/erp/quickbooks/invoice/preview/?invoice_id=" + invoice_id, {
+                    responseType: 'arraybuffer'
+                })
+                .then(function (response) {
+                    $scope.src = new Uint8Array(response.data);
                     $scope.showProgress = false;
-                    $scope.displayPaidStamp = true;
+                    $scope.displayPaidStamp = true
                     if ($scope.isInvoicePaid == false) {
                         $scope.fabMenu = true;
                     }
+                }, function (error) {
+                    console.log('TCL: displayPDF -> error', error)
+                    $scope.$broadcast("invoice-preview-event");
+
                 });
-            }
-        });
+        }
+
+        function displayTemplate() {
+            $scope.promise = InvoiceModel.GetInvoicePreviewById(invoice_id);
+            $scope.promise.then(function (response) {
+                invoiceTemplate = response;
+                $("#invoice_template").html('');
+                $("#invoice_template").append(response);
+                $scope.showProgress = false;
+                $scope.displayPaidStamp = true;
+                if ($scope.isInvoicePaid == false) {
+                    $scope.fabMenu = true;
+                }
+            });
+        }
 
         $scope.buttonPermissions = {
             invoice_addnew: false,
@@ -382,12 +385,12 @@
             invoice_payment: false,
             invoice_link: false,
             invoice_recurring: false,
-            
+
             invoice_color: false,
             invoice_statistics: false,
             invoice_paymentmethod: false,
             invoice_templates: false,
-            
+
         };
         // var permission_arr = ['addnew', 'search', 'print', 'send', 'payment', 'link', 'recurring'];
         var permission_arr = [
@@ -405,18 +408,18 @@
             "color",
             "print"
         ];
-        
+
         angular.forEach(permission_arr, function (permission_name, key) {
             if (PermissionStore.getPermissionDefinition('invoice-' + permission_name) != undefined) {
                 $scope.buttonPermissions['invoice_' + permission_name] = true;
             } else {
                 $scope.buttonPermissions['invoice_' + permission_name] = false;
             }
-            
+
         });
-		// console.log('TCL: $scope.buttonPermissions', $scope.buttonPermissions)
-        
-        
+        // console.log('TCL: $scope.buttonPermissions', $scope.buttonPermissions)
+
+
         function subMenu(type) {
             switch (type) {
                 case "email":
