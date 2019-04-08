@@ -353,9 +353,9 @@
                     $scope.src = new Uint8Array(response.data);
                     $scope.showProgress = false;
                     $scope.displayPaidStamp = true
-                    if ($scope.isInvoicePaid == false) {
-                        $scope.fabMenu = true;
-                    }
+                    // if ($scope.isInvoicePaid == false) {
+                    $scope.fabMenu = true;
+                    // }
                 }, function (error) {
                     console.log('TCL: displayPDF -> error', error)
                     $scope.$broadcast("invoice-preview-event");
@@ -371,9 +371,9 @@
                 $("#invoice_template").append(response);
                 $scope.showProgress = false;
                 $scope.displayPaidStamp = true;
-                if ($scope.isInvoicePaid == false) {
-                    $scope.fabMenu = true;
-                }
+                // if ($scope.isInvoicePaid == false) {
+                $scope.fabMenu = true;
+                // }
             });
         }
 
