@@ -359,6 +359,12 @@
         }
 
         function openInvoiceDetail(invoice) {
+
+            // to remove print iframe
+            var myEl = angular.element(document.getElementsByClassName('pdfIframe'));
+            myEl.remove();
+
+
             var invoice_status = '';
             if (invoice.Balance == 0) {
                 invoice_status = 'paid';
@@ -401,7 +407,6 @@
             }
         }
 
-
         function printPDFInvoice() {
             $rootScope.printProcess = true;
 
@@ -417,15 +422,34 @@
                     });
                     var pdfUrl = URL.createObjectURL(pdfFile);
                     //window.open(pdfUrl);
-                    printJS(pdfUrl);
+                    // printJS(pdfUrl);
                     // var printwWindow = $window.open(pdfUrl);
                     // printwWindow.print();
+                    printPdf(pdfUrl)
                     $rootScope.printProcess = false;
 
                 });
 
         }
 
+        function printPdf(url) {
+            var iframe = document.createElement('iframe');
+            // iframe.id = 'pdfIframe'
+            iframe.className='pdfIframe'
+            document.body.appendChild(iframe);
+            iframe.style.display = 'none';
+            iframe.onload = function () {
+                setTimeout(function () {
+                    iframe.focus();
+                    iframe.contentWindow.print();
+                    URL.revokeObjectURL(url)
+                    // document.body.removeChild(iframe)
+                    console.log("TCL: iframe.onload -> url", url)
+                }, 1);
+            };
+            iframe.src = url;
+            // URL.revokeObjectURL(url)
+        }
 
         function printBulkInvoice() {
             //fa fa-refresh fa-spin fa-3x

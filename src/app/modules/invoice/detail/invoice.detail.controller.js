@@ -474,14 +474,39 @@
                     });
                     var pdfUrl = URL.createObjectURL(pdfFile);
                     //window.open(pdfUrl);
-                    printJS(pdfUrl);
+                    // printJS(pdfUrl);
                     // var printwWindow = $window.open(pdfUrl);
                     // printwWindow.print();
+                    printPdf(pdfUrl)
+                    // var par = document.getElementById('pdfIframe')
+                    // par.parentElement.removeChild(par);
+                    // setTimeout(function () {
+                    //     var myEl = angular.element(document.querySelector('#pdfIframe'));
+                    //     myEl.remove();
+                    // }, 1000)
                     $rootScope.printProcess = false;
-
                 });
-
         }
+
+        function printPdf(url) {
+            var iframe = document.createElement('iframe');
+            // iframe.id = 'pdfIframe'
+            iframe.className='pdfIframe'
+            document.body.appendChild(iframe);
+            iframe.style.display = 'none';
+            iframe.onload = function () {
+                setTimeout(function () {
+                    iframe.focus();
+                    iframe.contentWindow.print();
+                    URL.revokeObjectURL(url)
+                    // document.body.removeChild(iframe)
+                    console.log("TCL: iframe.onload -> url", url)
+                }, 1);
+            };
+            iframe.src = url;
+            // URL.revokeObjectURL(url)
+        }
+
         $scope.collectPayment = function () {
             $rootScope.dataObj = [];
             var invoice_detail = sessionStorage.getItem("invoice_detail");
