@@ -444,7 +444,6 @@
                     iframe.contentWindow.print();
                     URL.revokeObjectURL(url)
                     // document.body.removeChild(iframe)
-                    console.log("TCL: iframe.onload -> url", url)
                 }, 1);
             };
             iframe.src = url;
