@@ -4,3 +4,4 @@ bower_components
 *.zip
 dist
 .tmp
+*.rar
