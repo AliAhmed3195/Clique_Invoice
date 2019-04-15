@@ -175,9 +175,21 @@
                 }
             }
         }
+        getProfileLink()
 
-        $scope.getProfileLink = function () {
+        function getProfileLink() {
             $scope.promise = SettingModel.GetProfileLink();
+            $scope.promise.then(function (response) {
+                if (response.statuscode == 0) {
+                    $scope.profileLink = response.data.link
+                } else {}
+            });
+        }
+
+
+        $scope.postProfileLink = function () {
+            $scope.profileLink = ''
+            $scope.promise = SettingModel.PostProfileLink();
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.profileLink = response.data.link

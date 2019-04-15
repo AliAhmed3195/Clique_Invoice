@@ -25,10 +25,15 @@
         service.GetErpStatus = GetErpStatus;
         service.SaveEmailSettings = SaveEmailSettings;
         service.GetProfileLink = GetProfileLink;
+        service.PostProfileLink = PostProfileLink;
 
 
         return service;
         
+        
+        function PostProfileLink() {
+            return Clique.callService('post','/profilelink/','').then(handleSuccess, handleError);
+        }
         function GetProfileLink() {
             return Clique.callService('get','/profilelink/','').then(handleSuccess, handleError);
         }
