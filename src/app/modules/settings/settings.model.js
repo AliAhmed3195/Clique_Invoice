@@ -24,10 +24,14 @@
         service.GetAccount = GetAccount;
         service.GetErpStatus = GetErpStatus;
         service.SaveEmailSettings = SaveEmailSettings;
+        service.GetProfileLink = GetProfileLink;
 
 
         return service;
-
+        
+        function GetProfileLink() {
+            return Clique.callService('get','/profilelink/','').then(handleSuccess, handleError);
+        }
         function GetSettings() {
             return Clique.callService('get','/settings/','').then(handleSuccess, handleError);
         }
