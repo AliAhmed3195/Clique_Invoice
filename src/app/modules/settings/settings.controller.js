@@ -175,20 +175,13 @@
                 }
             }
         }
-        // getProfile()
 
         $scope.getProfileLink = function () {
             $scope.promise = SettingModel.GetProfileLink();
             $scope.promise.then(function (response) {
-                console.log("TCL: response", response)
-                // if (response.statuscode == 0) {
-                //     $scope.setting = response.data;
-                //     sessionStorage.setItem("template_color", $scope.setting.InvoiceTemplateColor);
-                //     vm.template_color = $scope.setting.InvoiceTemplateColor;
-                //     $scope.$broadcast("invoice-preview-event");
-                //     $scope.setButtonColor($scope.setting.InvoiceTemplateColor);
-                //     getInvoiceTemplates();
-                // } else {}
+                if (response.statuscode == 0) {
+                    $scope.profileLink = response.data.link
+                } else {}
             });
         }
 
