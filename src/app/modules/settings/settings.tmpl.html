@@ -309,20 +309,30 @@
             </md-content>
         </md-tab>
 
-        <md-tab label="Profile">
+        <md-tab label="Payment Link">
             <md-content class="md-padding">
                 <form name="profilelink">
                     <md-content class="md-padding">
 
                         <md-card style="padding:25px">
                             <h3 class="md-title"> Payment Link</h3>
+                            <div layout="column" layout-align="center center">
+                                <div flex>
+                                    <h2 class="md-title">
+                                        Start accepting payments within <b>QuickBooks</b> Online.
+                                    </h2>
+                                </div>
+                                <div flex="45">
+                                    Please click on generate payment link button to generate payment link.
+                                </div>
+                                <h4 flex="75">
+                                    Just paste this link on the email template inside your QuickBooks
+                                    (settings->customize form) to accept payment from
+                                    QuickBooks.
+                                </h4>
+                            </div>
 
-                            <md-input-container ng-if='profileLink != undefined' class="md-block">
-                                <input readonly="true" id="profileLink" label="profileLink" name="profileLink"
-                                    type="text" ng-model="profileLink" />
-                            </md-input-container>
-
-                            <div layout="column" layout-align="center start">
+                            <div layout="column" layout-align="center center">
                                 <div flex>
                                     <md-button ng-click="postProfileLink()" class="md-primary md-raised">Generate Link
                                     </md-button>

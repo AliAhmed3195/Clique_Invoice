@@ -175,25 +175,32 @@
                 }
             }
         }
-        getProfileLink()
 
-        function getProfileLink() {
-            $scope.promise = SettingModel.GetProfileLink();
-            $scope.promise.then(function (response) {
-                if (response.statuscode == 0) {
-                    $scope.profileLink = response.data.link
-                } else {}
-            });
+        function copyToClipboard(text) {
+            var text_to_share = text;
+            var copyElement = document.createElement("span");
+            copyElement.appendChild(document.createTextNode(text_to_share));
+            copyElement.id = 'tempCopyToClipboard';
+            angular.element(document.body.append(copyElement));
+            var range = document.createRange();
+            range.selectNode(copyElement);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            copyElement.remove();
         }
 
-
         $scope.postProfileLink = function () {
-            $scope.profileLink = ''
             $scope.promise = SettingModel.PostProfileLink();
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.profileLink = response.data.link
-                } else {}
+                    copyToClipboard(response.data.link)
+                    Clique.showToast('Link copied to clipboard successfully', 'bottom right', 'success');
+                } else {
+
+                }
             });
         }
 
