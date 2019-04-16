@@ -315,27 +315,42 @@
                     <md-content class="md-padding">
 
                         <md-card style="padding:25px">
-                            <h3 class="md-title"> Payment Link</h3>
-                            <div layout="column" layout-align="center center">
+                            <!-- <h3 class="md-title"> Payment Link</h3> -->
+                            <div layout="column" layout-align="center center" layout-margin>
                                 <div flex>
-                                    <h2 class="md-title">
+                                    <h1 class="md-display-1">
                                         Start accepting payments within <b>QuickBooks</b> Online.
-                                    </h2>
+                                    </h1>
                                 </div>
+
                                 <div flex="45">
-                                    Please click on generate payment link button to generate payment link.
+                                    <div class="md-caption">
+                                        Please click on generate payment link button to generate payment link.
+                                    </div>
                                 </div>
-                                <h4 flex="75">
-                                    Just paste this link on the email template inside your QuickBooks
-                                    (settings->customize form) to accept payment from
-                                    QuickBooks.
-                                </h4>
+
+                                <div flex="75">
+                                    <div class="md-caption">
+                                        Just paste this link on the email template inside your QuickBooks
+                                        (settings->customize form) to accept payment from
+                                        QuickBooks.
+                                    </div>
+                                </div>
+
+                                <div flex="90" id='paymentlink' ng-if='profileLink != undefined'>
+                                    <div style="font-weight:bold" class="md-caption" ng-bind-html='profileLink'>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div layout="column" layout-align="center center">
                                 <div flex>
-                                    <md-button ng-click="postProfileLink()" class="md-primary md-raised">Generate Link
+                                    <md-button ng-click="postProfileLink()" class="md-primary md-raised">Generate
+                                        Payment Link
                                     </md-button>
+                                    <!-- <md-button ng-click="postProfileLink()" class="md-raised"> Link
+                                    </md-button> -->
                                 </div>
                             </div>
                         </md-card>

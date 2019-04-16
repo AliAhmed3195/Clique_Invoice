@@ -192,15 +192,14 @@
         }
 
         $scope.postProfileLink = function () {
+            $scope.profileLink = ''
             $scope.promise = SettingModel.PostProfileLink();
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.profileLink = response.data.link
                     copyToClipboard(response.data.link)
                     Clique.showToast('Link copied to clipboard successfully', 'bottom right', 'success');
-                } else {
-
-                }
+                } else {}
             });
         }
 
