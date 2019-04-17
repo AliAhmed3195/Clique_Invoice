@@ -333,7 +333,7 @@
                 <div flex>
                     <md-input-container class="md-block">
                         <label>Email Address</label>
-                        <input name="BillEmail" type="email" ng-model="invoice.BillEmail.Address">
+                        <input name="BillEmail" multiple-emails ng-model="invoice.BillEmail.Address">
                         <div ng-messages="createnew.BillEmail.$error" md-auto-hide="false">
                             <div ng-message when="email">
                                 <span translate>Please enter a valid email address</span>
