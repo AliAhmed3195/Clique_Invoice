@@ -47,9 +47,8 @@
                     <label>Email Address</label>
                     <input
                     name="BillEmail"
-                    type="email"
                     ng-model="invoice.BillEmail.Address"
-
+                    multiple-emails
                     >
                      <div ng-messages="createnew.BillEmail.$error" md-auto-hide="false" >
                         <div ng-message when="required">
