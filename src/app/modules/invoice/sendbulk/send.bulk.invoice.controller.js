@@ -30,8 +30,8 @@
                 replace: true,
                 transclude: false,
                 // includes our template
-                template: '<div class="ng-binding" style="height:50px;"><md-input-container class="hover-edit-trigger" style="width: 220px;">' +
-                    '<div class="hover-text-field" ng-show="!editState" ng-click="toggle()" style="width: 235px;">{{model}} <i class="zmdi zmdi-border-color" style="cursor: pointer;"></i></div>' +
+                template: '<div class="ng-binding" style="height:50px;"><md-input-container class="hover-edit-trigger">' +
+                    '<div class="hover-text-field" ng-show="!editState" ng-click="toggle()">{{model}} <i class="zmdi zmdi-border-color" style="cursor: pointer;"></i></div>' +
                     '<input  class="inputText" style="height: 50%;width: 80%;text-align: left;" label="subject" name="customeremail" multiple-emails ng-model="localModel" ng-enter="save()" ng-show="editState && type == \'inputText\'"/>' +
                     '<div ng-messages="sendEmail.customeremail">' +
                     '<div ng-message="email">Please enter a valid email address.</div>' +
