@@ -5,7 +5,8 @@
             <div class="md-dialog-content" style="min-width:400px !important; padding:0px;">
                 <md-content>
                     <md-list>
-                        <md-list-item class="md-3-line" ng-repeat="invoice in selectedInvoiceData" style="border-bottom:1px solid #ccc;">
+                        <md-list-item class="md-3-line" ng-repeat="invoice in selectedInvoiceData"
+                            style="border-bottom:1px solid #ccc;">
                             <div class="md-list-item-text">
 
                                 <div id="anchor{{invoice.Id}}" class="anchor-">&nbsp;</div>
@@ -13,17 +14,19 @@
                                 <h3>{{invoice.CustomerRef.name}}</h3>
                                 <div layout="row">
                                     <div flex="80">
-                                        <p ng-if="invoice.BillEmail !=null" click-to-edit type="inputText" ng-model="customerEmail"
-                                            width="60%">{{customerEmail}}</p>
-                        <!-- <input name="BillEmail" multiple-emails ng-model="customerEmail" click-to-edit type="inputText"> -->
-
+                                        <p ng-if="invoice.BillEmail !=null" click-to-edit type="inputText"
+                                            ng-model="customerEmail" width="60%">{{customerEmail}}</p>
+                                        <!-- <input name="BillEmail" multiple-emails ng-model="customerEmail" click-to-edit type="inputText"> -->
+                                        
                                     </div>
                                     <div flex="10">
                                         <md-input-container>
                                             <label>Template</label>
                                             <md-select ng-model="selectedTemplate" name="type">
-                                                <md-option ng-click="SelectedTemplateValue(template)" ng-repeat="template in settings.InvoiceContacts.template_email track by $index"
-                                                    ng-value="{{template}}" ng-selected="template.isSelected == true">{{template.name}}</md-option>
+                                                <md-option ng-click="SelectedTemplateValue(template)"
+                                                    ng-repeat="template in settings.InvoiceContacts.template_email track by $index"
+                                                    ng-value="{{template}}" ng-selected="template.isSelected == true">
+                                                    {{template.name}}</md-option>
 
                                             </md-select>
                                         </md-input-container>
@@ -33,12 +36,14 @@
                                 <h2>{{invoice.TotalAmt | currency}}</h2>
                                 <p>
                                     <md-chips class="status" ng-show="sentInvoice.indexOf(invoice.Id)!=-1">
-                                        <md-chip class="status {{(invoiceMessages | parseErrorMessage:invoice.Id).type}}">{{(invoiceMessages
+                                        <md-chip
+                                            class="status {{(invoiceMessages | parseErrorMessage:invoice.Id).type}}">{{(invoiceMessages
                                             | parseErrorMessage:invoice.Id).message}}</md-chip>
                                     </md-chips>
 
                                     <md-chips class="status" ng-show="sentInvoice.indexOf(invoice.Id)!=-1">
-                                        <md-chip class="status click" style="display:block;" ng-show="(invoiceMessages | parseErrorMessage:invoice.Id).type=='processed'">
+                                        <md-chip class="status click" style="display:block;"
+                                            ng-show="(invoiceMessages | parseErrorMessage:invoice.Id).type=='processed'">
                                             Invoice<b style="text-transform:lowercase !important"> has been sent
                                                 successfully to {{viewCustomerEmail}}</b></md-chip>
                                     </md-chips>
@@ -52,11 +57,12 @@
                 </md-content>
             </div>
         </md-dialog-content>
-        <md-dialog-actions layout="row" ng-hide="hideDialogActions" class="invoice_action" ng-init="isDisabledSentButton=false;"
-            style="height:100px !important;">
-            <md-progress-linear md-mode="determinate" value="{{progressValue}}" ng-show="showProgress"></md-progress-linear>
-            <md-button ng-click="send();isDisabledSentButton=true" ng-disabled="isDisabledSentButton || sendEmail.$invalid"
-                class="md-primary md-raised">
+        <md-dialog-actions layout="row" ng-hide="hideDialogActions" class="invoice_action"
+            ng-init="isDisabledSentButton=false;" style="height:100px !important;">
+            <md-progress-linear md-mode="determinate" value="{{progressValue}}" ng-show="showProgress">
+            </md-progress-linear>
+            <md-button ng-click="send();isDisabledSentButton=true"
+                ng-disabled="isDisabledSentButton || sendEmail.$invalid" class="md-primary md-raised">
                 <md-icon md-font-icon="fa fa-paper-plane"></md-icon>
                 </md-icon>
                 <span ng-if="isDisabledSentButton==false">
