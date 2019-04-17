@@ -32,8 +32,8 @@
                 // includes our template
                 template: '<div class="ng-binding" style="height:50px;"><md-input-container class="hover-edit-trigger" style="width: 220px;">' +
                     '<div class="hover-text-field" ng-show="!editState" ng-click="toggle()" style="width: 235px;">{{model}} <i class="zmdi zmdi-border-color" style="cursor: pointer;"></i></div>' +
-                    '<input  class="inputText" style="height: 50%;width: 100%;text-align: left;" label="subject" name="customeremail" type="email" ng-model="localModel" ng-enter="save()" ng-show="editState && type == \'inputText\'"/>' +
-                    '<div ng-messages="sendEmail.customeremail.$error">' +
+                    '<input  class="inputText" style="height: 50%;width: 80%;text-align: left;" label="subject" name="customeremail" multiple-emails ng-model="localModel" ng-enter="save()" ng-show="editState && type == \'inputText\'"/>' +
+                    '<div ng-messages="sendEmail.customeremail">' +
                     '<div ng-message="email">Please enter a valid email address.</div>' +
                     '</div>' +
                     '</md-input-container>' +
@@ -98,6 +98,32 @@
                     }
                 });
             };
+        })
+        .directive('multipleEmails', function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attrs, ctrl) {
+                    ctrl.$parsers.unshift(function (viewValue) {
+                        var emails = viewValue.split(',');
+                        var re = /\S+@\S+\.\S+/;
+                        var validityArr = emails.map(function (str) {
+                            return re.test(str.trim());
+                        });
+                        var atLeastOneInvalid = false;
+                        angular.forEach(validityArr, function (value) {
+                            if (value === false)
+                                atLeastOneInvalid = true;
+                        });
+                        if (!atLeastOneInvalid) {
+                            ctrl.$setValidity('multipleEmails', true);
+                            return viewValue;
+                        } else {
+                            ctrl.$setValidity('multipleEmails', false);
+                            return undefined;
+                        }
+                    });
+                }
+            }
         });
 
     function Controller($scope, $rootScope, $mdDialog, SettingModel, InvoiceModel, $timeout, $location, $anchorScroll, $filter) {
@@ -242,7 +268,7 @@
                 $scope.currecntInvoice = invoice.invoice_id;
                 $scope.promise = InvoiceModel.SendInvoice(invoice);
                 $scope.promise.then(function (response) {
-				console.log('TCL: sendInvoice -> response', response)
+                    console.log('TCL: sendInvoice -> response', response)
 
                     if (response.statuscode == 0) {
 

@@ -13,8 +13,10 @@
                                 <h3>{{invoice.CustomerRef.name}}</h3>
                                 <div layout="row">
                                     <div flex="80">
-                                        <h3 ng-if="invoice.BillEmail !=null" click-to-edit type="inputText" ng-model="customerEmail"
-                                            width="100%">{{customerEmail}}</h3>
+                                        <p ng-if="invoice.BillEmail !=null" click-to-edit type="inputText" ng-model="customerEmail"
+                                            width="60%">{{customerEmail}}</p>
+                        <!-- <input name="BillEmail" multiple-emails ng-model="customerEmail" click-to-edit type="inputText"> -->
+
                                     </div>
                                     <div flex="10">
                                         <md-input-container>
