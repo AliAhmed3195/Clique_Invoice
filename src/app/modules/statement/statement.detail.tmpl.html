@@ -1,6 +1,4 @@
-
-
-<div  ng-show="showProgress" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
+<div ng-show="showProgress" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
     <md-progress-linear md-mode="indeterminate"></md-progress-linear>
 </div>
 
@@ -9,25 +7,30 @@
 
         <md-content flex="100" flex-gt-xs="100" flex-gt-lg="40" layout-padding>
 
-           <div flex layout="row" layout-align="end end" ng-show="showProgress==false">
+            <div flex layout="row" layout-align="end end" ng-show="showProgress==false">
 
-                <md-button aria-label="Send Email" class="md-fab md-primary md-mini" ng-click="sendEmailStatement();" permission="">
+                <md-button aria-label="Send Email" class="md-fab md-primary md-mini" ng-click="sendEmailStatement();"
+                    permission="" permission-only="'statement-send'">
                     <md-icon md-font-icon="fa fa-paper-plane-o"></md-icon>
                     <md-tooltip>Send Statement</md-tooltip>
                 </md-button>
-                <md-button aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="download();" permission="">
-                     <md-icon md-font-icon="{{downloadProgress==true ? 'zmdi zmdi-refresh zmdi-hc-spin' : 'zmdi zmdi-download'}}" style="color:white"></md-icon>
+                <md-button aria-label="Invoice Template" class="md-fab md-raised md-mini md-primary" ng-click="download();"
+                    permission="" permission-only="'statement-download'">
+                    <md-icon md-font-icon="{{downloadProgress==true ? 'zmdi zmdi-refresh zmdi-hc-spin' : 'zmdi zmdi-download'}}"
+                        style="color:white"></md-icon>
                     <md-tooltip>Download Statement</md-tooltip>
                 </md-button>
 
-                <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="print();" permission="">
+                <md-button aria-label="Invoice Print" class="md-fab md-raised md-mini md-primary" ng-click="print();"
+                    permission="" permission-only="'statement-print'">
+
                     <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"></md-icon>
                     <md-tooltip>Print Statement</md-tooltip>
                 </md-button>
 
             </div>
 
-           <!--<div ng-show="isInvoicePaid"  style="position:absolute; top:130px; right:100px;z-index:9999;opacity:0.4" align="center">
+            <!--<div ng-show="isInvoicePaid"  style="position:absolute; top:130px; right:100px;z-index:9999;opacity:0.4" align="center">
                 <img src="assets/images/elements/paid.png" width="500" ng-show="displayPaidStamp">
             </div>-->
             <md-card class="page" layout-padding id="invoice_template" style="min-height:540px;overflow:auto;">
@@ -41,5 +44,5 @@
             </md-card>
         </md-content>
     </div>
-    
+
 </div>

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -6,8 +6,8 @@
             'ui.router',
             'triangular',
             'ngAnimate', 'ngCookies', 'ngSanitize', 'ngMessages', 'ngMaterial',
-            'googlechart', 'chart.js', 'linkify', 'ui.calendar', 'angularMoment',  'uiGmapgoogle-maps', 'hljs', 'md.data.table', angularDragula(angular), 'ngFileUpload',
-            // 'pdfjsViewer',
+            'googlechart', 'chart.js', 'linkify', 'ui.calendar', 'angularMoment', 'uiGmapgoogle-maps', 'hljs', 'md.data.table', angularDragula(angular), 'ngFileUpload',
+            'pdfjsViewer',
             'app.translate',
             // only need one language?  if you want to turn off translations
             // comment out or remove the 'app.translate', line above
@@ -23,7 +23,8 @@
             'settings',
             'transactions',
             //'customer',
-           'recurring',
+            // recurring and statement commented for live
+            'recurring',
             'statement',
             'salesreceipt',
             'angular-clipboard',
@@ -37,6 +38,6 @@
 
         // set a constant for the API we are connecting to
         .constant('API_CONFIG', {
-            'url':  ''
+            'url': ''
         });
 })();

@@ -47,9 +47,8 @@
                     <label>Email Address</label>
                     <input
                     name="BillEmail"
-                    type="email"
                     ng-model="invoice.BillEmail.Address"
-
+                    multiple-emails
                     >
                      <div ng-messages="createnew.BillEmail.$error" md-auto-hide="false" >
                         <div ng-message when="required">
@@ -463,6 +462,7 @@
                     class="md-add-new"
                     type="submit"
                     ng-class="{ 'md-primary md-raised': createnew.$valid}"
+                permission permission-only="'salesreceipt-addnew'"
 
                     >
                     <md-icon md-font-icon="fa fa-paper-plane-o" style="font-size:14px;"></md-icon>&nbsp;{{createInvoiceBtnTitle}}
