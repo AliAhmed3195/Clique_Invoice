@@ -12,6 +12,16 @@
                 templateUrl: 'app/modules/salesreceipt/salesreceipt.tmpl.html',
                 controller: 'SalesReceiptController',
                 controllerAs: 'vm',
+                data: {
+                    layout: {
+                        // sideMenuSize: 'icon',
+                        showToolbar: false,
+                        // sidebarLeft
+                        // sidebarLeftController: false,
+                        // LeftSidenavController: false,
+                        // ToolbarController: false
+                    }
+                },
                 resolve: {
                     Countries: function($http) {
                       return $http.get('app/modules/invoice/data/countries.json');

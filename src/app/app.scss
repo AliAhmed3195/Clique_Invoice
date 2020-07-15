@@ -68,9 +68,9 @@ table.md-table {
     }
   }
 }
-thead th{
-  /*color:#000 !important;*/
-}
+// thead th{
+//   /*color:#000 !important;*/
+// }
 .scroller {
     height: 790px;
     min-height:590px;
@@ -147,9 +147,9 @@ md-progress-linear .md-container, md-progress-linear .md-container .md-bar
   background-color: #FFCCBA;
 }
 .md-sidenav-transaction{
-  widht:280px !important;
-  min-widht:280px !important;
-  max-widht:280px !important;
+  width:280px !important;
+  min-width:280px !important;
+  max-width:280px !important;
 }
 
 // import app scss

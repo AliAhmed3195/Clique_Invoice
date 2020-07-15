@@ -6,11 +6,11 @@
         .controller('DashboardAnalyticsController', DashboardAnalyticsController);
 
     /* @ngInject */
-    function DashboardAnalyticsController($filter, $scope, $timeout, $mdToast, $rootScope, $state, DashboardModel, Clique,$mdDialog) {
+    function DashboardAnalyticsController($filter, $scope,  $timeout, $mdToast, $rootScope, $state, DashboardModel, Clique,$mdDialog) {
 
         //remove invoice search
         sessionStorage.removeItem("invoice_search");
-
+      
         var vm = this;
         vm.showInvoiceList = showInvoiceList;
         vm.getInvoiceStatistics = getInvoiceStatistics;
@@ -26,6 +26,15 @@
             sessionFromDate = sessionStorage.getItem('fromDate');
             sessionToDate = sessionStorage.getItem('toDate');
         }
+        // vm.promise = DashboardModel.GetTotalUnread();
+        // vm.promise.then(function (response) {
+        //     debugger;
+        //    if(response.statuscode === 0) {
+        //        console.log('count is ' , response.data)
+        //        sessionStorage.setItem("count", response.data);
+        //        localStorage.setItem("count", response.data);
+        //    }
+        // });
 
         vm.fromDate = (sessionFromDate != undefined ? new Date(sessionFromDate) : new Date(y, m, 1));
         vm.toDate = sessionToDate != undefined ? new Date(sessionToDate) : new Date(y, m + 1, 0);

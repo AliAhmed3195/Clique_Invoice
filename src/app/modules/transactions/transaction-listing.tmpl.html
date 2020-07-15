@@ -1,6 +1,7 @@
+<div ng-show="vm.isTransactionLoaded" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
+    <md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isTransactionLoaded"></md-progress-linear>
+</div>
 
-<md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isTransactionLoaded"></md-progress-linear>
-<md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
 <div>
     <md-sidenav class="md-sidenav-left md-whiteframe-z4 md-sidenav-transaction" md-component-id="filter" style="width:300px !important;">
         <md-toolbar class="md-theme-light" >
@@ -52,7 +53,7 @@
              ng-csv="vm.tblData"
              csv-header="['TRANS. ID', 'DATE', 'AMOUNT','REMAINING','TRANS TYPE','STATUS','CUSTOMER','TYPE','Invoice NO #.']"
              csv-column-order="['ref_id','trans_date','trans_amount','remain_amount','trans_type','status','customer_name','process_type','invoice_no']"
-             filename="test.csv"
+             filename="Payments_{{vm.fileName}}.csv"
              export-csv-ignore="ignore"
              ng-hide="vm.isTransactionLoaded"
              >
@@ -103,7 +104,7 @@
                                 <td md-cell >
                                     {{::item.ref_id}}
                                 </td>
-                                <td md-cell class="col5">{{::item.trans_timestamp * 1000 | date: 'medium'}}</td>
+                                <td md-cell class="col5">{{::item.trans_timestamp * 1000 | date:'MM/dd/yyyy'}}</td>
                                 <td md-cell>{{::item.trans_amount | currency}}</td>
                                 <td md-cell>{{::item.remain_amount | currency}}</td>
                                 <td md-cell class="col4">{{::item.trans_type | transType}}</td>
@@ -114,7 +115,7 @@
                                     </span>
                                 </td>
                                 <td md-cell class="col2">{{::item.customer_name}}</td>
-                                <td md-cell class="col1 capitalize">{{item.process_type | processType}}</td>
+                                <td md-cell class="col1 ">{{item.process_type | processType}}</td>
                                 <td md-cell class="col1">{{item.invoice_no}}</td>
                                 <td md-cell>
                                     <div layout="row" layout-align="center center">

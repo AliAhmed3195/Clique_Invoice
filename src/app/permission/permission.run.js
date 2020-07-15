@@ -18,10 +18,12 @@
         $rootScope.promise = SettingModel.GetErpStatus();
             $rootScope.promise.then(function(response) {
                 if (response.statuscode == 0) {
-                    
-                    
+                   
+                   
+                   $rootScope.accounttype = response.data.erp.type;
+                   console.log("response1", $rootScope.accounttype);
                     var appFeatures=response.data.erp.app_features;
-                     console.log(appFeatures);
+                    console.log('app features', appFeatures);
 
                     if(appFeatures.length > 0){
                         angular.forEach(appFeatures, function(feature, key){

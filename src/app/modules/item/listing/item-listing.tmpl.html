@@ -1,0 +1,249 @@
+<style>
+    .notification md-list-item p span {
+        background: transparent !important;
+        font-weight: bold;
+    }
+
+</style>
+ <div ng-show="vm.isInvoiceLoaded" class="loader padding-100" layout="column" layout-fill=""
+    layout-align="center center" >
+    <md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isInvoiceLoaded">
+    </md-progress-linear>
+</div> 
+<div ng-show="vm.isEditData" layout="row"  layout-sm="column" layout-fill=""
+layout-align="space-around" style="position: absolute;bottom:1%;height:2000px;width:100%; z-index: 999;">
+    <md-progress-linear class="md-hue-2"  md-mode="indeterminate" ng-show="vm.isEditData" style="position:fixed;bottom:50%; width: 50%;"  ></md-progress-linear>
+</div>
+
+<div ng-show="!vm.isInvoiceLoaded" id="itemData" style="opacity: 1;">
+    <!--<md-sidenav class="md-sidenav-right md-whiteframe-z4" md-component-id="gateway_sync" style="min-width:280px !important;">
+    <md-toolbar class="md-theme-light">
+    <div layout="row" layout-align="center center">
+        <div flex="70">
+            <h1 class="md-toolbar-tools">Gateway Sync</h1>
+        </div>
+        <div flex="30">
+            <md-button class="md-fab md-mini" aria-label="Sync" >
+                <md-icon md-font-icon="fa fa-refresh" style="color: rgb(255, 152, 0)"></md-icon>
+            </md-button>
+        </div>
+    </div>
+    </md-toolbar>
+    <md-content>
+        <md-list class="md-dense notification" flex style="min-height:500px;">
+            <md-subheader class="md-no-sticky">{{vm.notifications.length}} transactions (QuickBooks)</md-subheader>
+            <md-list-item class="md-3-line" ng-repeat="notification in vm.notifications">
+              <md-icon md-font-icon="zmdi zmdi-alert-triangle" style="color: rgb(255, 152, 0)"></md-icon>
+              <div class="md-list-item-text" layout="column">
+                <h3 style="padding-top:5px;">Invoice #{{notification.invoice_no}} {{notification.customer_name}}</h3>
+                <h4>ID:{{notification.transaction_id}} | <span class="badge {{notification.status}} mp-caption" style="font-size:10px;">{{notification.status}}</span></h4>
+                <h4 style="font-size:16px;">{{notification.amount | currency}}</h4>
+                <p style="height:20px;"><span class="md-caption" am-time-ago="{{notification.date}}"></span></p>
+              </div>
+               <md-divider ></md-divider>
+        </md-list-item>
+
+    </md-content>
+</md-sidenav>-->
+
+
+    <md-sidenav class="md-sidenav-left md-whiteframe-z4" md-component-id="filter" style="min-width:280px !important;">
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">Search</h1>
+        </md-toolbar>
+        <form flex="" name="vm.filter.form">
+            <md-content class="md-padding">
+                <!-- <div class="margin-bottom-20" layout="row" layout-align="space-around center">
+                    <label>From</label>
+                    <md-datepicker ng-model="from" md-placeholder=""></md-datepicker>
+                </div>
+                <div class="margin-bottom-20" layout="row" layout-align="space-around center">
+                    <label>To &nbsp;</label>
+                    <md-datepicker ng-model="to" md-placeholder=""></md-datepicker>
+                </div>
+                <md-input-container class="md-block"></md-input-container> -->
+                <!-- <md-input-container class="md-block">
+                    <label>Status</label>
+                    <md-select placeholder="Status" ng-model="vm.query.status">
+                        <md-option value="all">ALL</md-option>
+                        <md-option value="paid">PAID</md-option>
+                        <md-option value="dues">DUE</md-option>
+                        <md-option value="overdues">OVERDUE</md-option>
+                    </md-select>
+                </md-input-container> -->
+                <!-- <md-input-container class="md-block"></md-input-container>
+                <md-input-container class="md-block">
+                    <label>Invoice No.</label>
+                    <input name="Invoice No." name="Docnumber" type="text" ng-model="vm.query.docnumber">
+                </md-input-container> -->
+                <!-- <md-input-container class="md-block"></md-input-container> -->
+                <!-- md-items="item in vm.querySearch(vm.searchText)" -->
+                <md-autocomplete md-selected-item="vm.selectedItem" md-search-text="vm.searchText"
+                    md-items="item in vm.querySearch(vm.searchText)" md-item-text="item.display" md-min-length="1"
+                    placeholder="Search Item Name " md-autofocus>
+                    <md-item-template>
+                        <span md-highlight-text="vm.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No Item matching.
+                    </md-not-found>
+                </md-autocomplete>
+
+                <md-button class="md-primary md-raised width-100" ng-click="vm.getInvoices(); vm.openSidebar('filter')">
+                    Search
+                    <md-icon md-font-icon="zmdi zmdi-search"></md-icon>
+
+                </md-button>
+                <!-- <md-button class="md-primary md-raised width-100" ng-click="resetForm()">
+                    Clear
+                    <md-icon md-font-icon="zmdi zmdi-delete"></md-icon>
+                </md-button> -->
+
+            </md-content>
+        </form>
+    </md-sidenav>
+
+
+
+    <div layout="row" flex layout-align="start start" class="" style="padding:10px 0px 0px 10px !important;">
+        <div flex="90">
+            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.createItem()"
+                ng-if="buttonPermissions.invoice_addnew">
+                <md-icon md-font-icon="fa fa-plus" style="font-size:14px;"></md-icon>
+                <md-tooltip>Create item</md-tooltip>
+            </md-button>
+            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.openSidebar('filter')">
+                <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
+                <md-tooltip>Search item</md-tooltip>
+            </md-button>
+        </div>
+        <div flex="10" ng-show="false">
+            <div class="md-toolbar-tools-">
+                <md-button class="md-icon-button toolbar-button animated" ng-click="vm.openSidebar('gateway_sync')"
+                    aria-label="side navigation">
+                    <md-icon md-font-icon="fa fa-bell-o"></md-icon>
+                    <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn"
+                        style="background-color: red; color:white">{{vm.notifications.length}}</span>
+                </md-button>
+            </div>
+        </div>
+    </div>
+    <div layout="row" layout-xs="column" layout-margin ng-hide="">
+
+        <tri-widget flex title="" content-layout="column" content-layout-align="center">
+            <md-table-container id="invoice_listing">
+                <table md-table class="md-data-table2" md-progress="vm.promise">
+                    <thead md-head md-order="vm.query.order" md-on-reorder="vm.ItemData">
+                        <tr md-row>
+                            <th md-column></th>
+
+                            <th md-column  md-order-by="Id"><span translate>{{vm.columns.ID}}</span></th>
+                            <th md-column md-order-by="Name" decend-first class="col5"> <span translate>{{vm.columns.ItemName | uppercase}}</span>
+                            </th>
+                            <th md-column md-order-by="Type"><span translate>{{vm.columns.Type | uppercase}} </span></th>
+
+                            <th md-column md-order-by="UnitPrice" class="col5"> <span translate>{{vm.columns.Price | uppercase}}  <b>$ </b> </span></th>
+                            <th md-column md-order-by="Active"  class="col5"> <span translate>{{vm.columns.Active | uppercase}}</span></th>
+                            <th md-column md-order-by="Taxable"  class="col5"> <span translate>{{vm.columns.Taxable | uppercase}}</span></th>
+                            <!-- <th md-column class="col5"> <span translate>{{vm.columns.Image | uppercase}}</span></th> -->
+                            <th md-column  class="col5"> <span translate>ACTION</span></th>
+                            </tr>
+                    </thead>
+                    <tbody md-body>
+                        <!-- ng-disabled="item.IsPaid==1" -->
+                        <tr md-row md-on-select="vm.toolBarProcess()" md-select="item.Id" md-select-id="item.Id"
+                            md-auto-select
+                            ng-repeat="item in vm.ItemData | filter: vm.searchText   | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                            <td md-cell></td>
+
+                            <td md-cell>{{item.Id}}</td>
+                            <td md-cell>{{::item.Name}}</td>
+                            <td md-cell>{{item.Type}}</td>
+                            <td md-cell>{{item.UnitPrice | number : 2}}</td>
+
+                            <td md-cell class="col2">
+                                <span ng-if="item.Active==false">
+                                    <i class="zmdi zmdi-minus-circle-outline" style="color: red;"></i>
+                                </span>
+                                <span ng-if="item.Active==true">
+                                    <i class="zmdi zmdi-check-circle" style="color: green;"></i>
+                                </span>
+                            </td>
+                            <td md-cell class="col2">
+                                    <span ng-if="item.Taxable==false">
+                                        <i class="zmdi zmdi-minus-circle-outline" style="color: red;"></i>
+                                    </span>
+                                    <span ng-if="item.Taxable==true">
+                                        <i class="zmdi zmdi-check-circle" style="color: green;"></i>
+                                    </span>
+                                </td>
+                            <!-- <td md-cell><img width="50" height="50" ng-src="{{item.ThumbnailImage}}" alt=""> </td> -->
+
+
+
+                            <td md-cell ng-click="vm.editItem(item)"> 
+                                 <md-icon md-font-icon="zmdi zmdi-edit" style="cursor: pointer;" ></md-icon> 
+                                 <md-tooltip>Edit Item</md-tooltip>
+                                </td>
+                            <!-- <td md-cell class="col1">
+                                <md-chips class="status">
+                                    <md-chip
+                                        class="status {{item.SendGridEvent=='' ? 'notsent' : item.SendGridEvent}}">{{item.SendGridEvent==''
+                                        ? 'not sent' : item.SendGridEvent}}</md-chip>
+                                </md-chips>
+                            </td>
+                            <td md-cell>
+                                <md-button class="md-primary md-fab md-mini" ng-class="[vm.buttonClass, vm.buttonHue]"
+                                    aria-label="fab button" ng-click=vm.openInvoiceDetail(item) permission=""
+                                    permission-only="'item-detail'">
+                                    <md-icon md-font-icon="zmdi zmdi-mail-send"></md-icon>
+                                </md-button>
+                            </td> -->
+                        </tr>
+                        <tr md-row ng-show="vm.ItemData.length == 0">
+                            <td md-cell colspan="10" style="text-align:center !important;text-transform:none;">There is
+                                no data to display</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.query.limit" md-page="vm.query.page" md-total="{{vm.ItemData.length}}"
+                md-page-select md-on-paginate="logPagination"></md-table-pagination>
+        </tri-widget>
+    </div>
+    <div flex>
+        <md-fab-toolbar md-open="false" count="2" md-direction="right">
+            <!-- <md-fab-trigger class="align-with-text">
+                <md-button aria-label="menu" class="md-fab md-raised md-mini">
+                    <md-icon md-font-icon="fa fa-info-circle"></md-icon>
+                </md-button>
+            </md-fab-trigger> -->
+
+            <!-- <md-toolbar>
+                <md-fab-actions class="md-toolbar-tools">
+                    <md-chips class="status">
+                        <md-chip class="status delivered">delivered</md-chip>
+                        <md-chip class="status processed">processed</md-chip>
+                        <md-chip class="status open">opens</md-chip>
+                        <md-chip class="status click">clicks</md-chip>
+                        <md-chip class="status spam_report">spam report</md-chip>
+                        <md-chip class="status dropped">dropped</md-chip>
+                        <md-chip class="status notsent">not sent</md-chip>
+                    </md-chips>
+                </md-fab-actions>
+            </md-toolbar> <md-toolbar>
+                <md-fab-actions class="md-toolbar-tools">
+                    <md-chips class="status">
+                        <md-chip class="status delivered">delivered</md-chip>
+                        <md-chip class="status processed">processed</md-chip>
+                        <md-chip class="status open">opens</md-chip>
+                        <md-chip class="status click">clicks</md-chip>
+                        <md-chip class="status spam_report">spam report</md-chip>
+                        <md-chip class="status dropped">dropped</md-chip>
+                        <md-chip class="status notsent">not sent</md-chip>
+                    </md-chips>
+                </md-fab-actions>
+            </md-toolbar> -->
+        </md-fab-toolbar>
+    </div>
+</div>

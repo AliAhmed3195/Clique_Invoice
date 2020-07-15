@@ -26,10 +26,15 @@
         service.SaveEmailSettings = SaveEmailSettings;
         service.GetProfileLink = GetProfileLink;
         service.PostProfileLink = PostProfileLink;
+        service.CheckQBO = CheckQBO;
 
 
         return service;
         
+        
+        function CheckQBO() {
+            return Clique.callService('get','/erp/status','').then(handleSuccess, handleError);
+        }
         
         function PostProfileLink() {
             return Clique.callService('post','/profilelink/','').then(handleSuccess, handleError);

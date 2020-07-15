@@ -10,6 +10,7 @@
         
         var service = {};
             service.GetInvoiceStatistics = GetInvoiceStatistics;
+            service.GetTotalUnread = GetTotalUnread;
         return service;
 
         
@@ -18,7 +19,9 @@
             return Clique.callService('get','/invoice/dashboard/?'+qs,'').then(handleSuccess, handleError);
         }
       
-      
+        function GetTotalUnread() {
+            return Clique.callService('get', '/invoice/totalunreadcount/' , '').then(handleSuccess, handleError);
+          }
 
         // private functions
         function handleSuccess(res) {

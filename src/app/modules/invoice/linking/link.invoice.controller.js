@@ -8,6 +8,7 @@
         
     function Controller($scope, $rootScope,$mdDialog,SettingModel,InvoiceModel,$timeout,$locale,Clique,printer,$sce,InvoiceData,$filter)
     {
+        debugger;
        var vm = this;
        $scope.textToCopy=[];
        $scope.allLinks="";
@@ -29,13 +30,15 @@
              $scope.promise = InvoiceModel.GetInvoiceLink({"data":invoiceParams});
              $scope.promise.then(function(response){
                 if(response.statuscode==0){
-                    
+                    // debugger;
                     $scope.textToCopy = response.data;    
-                    
+                    console.log("$scope.textToCopy", $scope.textToCopy);
                     if($scope.textToCopy.length > 0){
                         angular.forEach($scope.textToCopy, function(value, key){
                             $scope.allLinks+=value;
                             $scope.allLinks+='\n';
+                            console.log("$scope.allLinks",$scope.allLinks);
+
                         });
                     }
                 }

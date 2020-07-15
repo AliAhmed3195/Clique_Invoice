@@ -2,11 +2,30 @@
     md-chips.md-cyan-theme .md-chips {
         box-shadow: none !important;
     }
-    .jp-card-container{
 
+    .jp-card-container {}
+
+    .checkbox {
+        margin: 0 0px !important;
+        height: 40px;
+        min-width: 0;
+        line-height: 24px;
+        padding: 8px !important;
+        width: 0px !important;
+        border-radius: 50%;
     }
+
+    .left-checkbox {
+        margin-right: -14px !important;
+    }
+
 </style>
-<md-sidenav class="md-sidenav-right md-whiteframe-z4" md-component-id="recurring_notification" style="min-width:340px !important;">
+<div ng-show="vm.showProges" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
+    <md-progress-linear class="margin-bottom-20" md-mode="indeterminate"></md-progress-linear>
+</div>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z4" md-component-id="recurring_notification"
+    style="min-width:340px !important;">
     <md-progress-linear md-mode="indeterminate" ng-show="showHistoryProgress"></md-progress-linear>
     <md-toolbar class="md-theme-light">
         <div layout="row" layout-align="center center">
@@ -17,93 +36,117 @@
         </div>
     </md-toolbar>
     <md-content>
-    <md-tabs md-dynamic-height md-border-bottom>
-      <md-tab>
-        <md-tab-label>
-        Info
-        </md-tab-label>
-        <md-tab-body>
-          <md-content >
-               <div layout="column" class="md-padding" layout-align="start center">
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab>
+                <md-tab-label>
+                    Info
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content>
+                        <div layout="column" class="md-padding" layout-align="start center">
 
 
 
-                    <div flex="100" >
-                        <md-button
-                        class=" md-primary"
-                        style="border:1px dashed #ccc;"
-                        ng-disabled="recurringObject.Status==true"
-                        ng-click="vm.recurringStatus(recurringObject.Id,1)"
-                        >
-                            <md-icon md-font-icon="zmdi zmdi-play"></md-icon>
-                            Start
-                        </md-button>
-                        <md-button
-                        class="md-primary"
-                        style="border:1px dashed #ccc;"
-                        ng-click="vm.recurringStatus(recurringObject.Id,0)"
-                        ng-disabled="recurringObject.Status==false"
-                        >
-                        <md-icon md-font-icon="zmdi zmdi-pause"></md-icon>
-                        Pause</md-button>
-                    </div>
-                     <div flex="100" >
-                        <md-progress-linear md-mode="indeterminate" ng-show="showProfileGetProgress"></md-progress-linear>
-                        <div class='card-wrapper' ng-show="showProfileCard"></div>
-                        <form id="form">
-                            <input type="text" class="ccnumber hide_field" name="number" value="{{vm.cardInfo.ccnumber}}"  >
-                            <input type="text" class="ccname hide_field" name="name" value="{{vm.cardInfo.ccname}}"  />
-                            <input type="text" class="ccnexpiry hide_field" name="expiry" value="{{vm.cardInfo.ccmm}}/{{vm.cardInfo.ccyy}}"  />
-                            <input type="text" class="cccvc hide_field" name="cvc" value=""  />
-                        </form>
-                    </div>
-                    <div flex="100">
-                        &nbsp;
-                    </div>
-                    <div flex="100" ng-if="recurringObject.ErrorCount > 0 || recurringObject.OccurrencesCount > 0">
-                         <div style="width:100% !important; margin:0 auto;" align="center">
-                            <canvas class="chart-doughnut" chart-data="vm.pieData" chart-labels="vm.pieLabels" chart-legend="true" chart-options="vm.pieOptions"></canvas>
-                        </div>
-                    </div>
-
-               </div>
-            </md-content>
-        </md-tab-body>
-
-      </md-tab>
-      <md-tab ng-disabled="recurringObject.ErrorCount<=0">
-          <md-tab-label >
-            Error
-            <span class="toolbar-button-badge ng-scope md-cyan-white-theme"
-            theme-background="warn"
-            style="background-color: #FA7044; color:white"
-            ng-show="recurringObject.ErrorCount > 0"
-            >{{recurringObject.ErrorCount}}</span>
-        </md-tab-label>
-        <md-tab-body>
-                <md-content style="max-height:450px;">
-                    <md-list class="md-dense notification" flex>
-                        <div ng-repeat="notification in notifications">
-                            <md-subheader class="md-sticky md-primary md-hue-2 md-caption">
-                                <md-icon md-font-icon="zmdi zmdi-alert-triangle" style="color: rgb(255, 152, 0)"></md-icon>
-                                #{{notification.id}} | Queued At: {{notification.date | date:'medium'}}</md-subheader>
-                            <md-list-item class="secondary-button-padding">
-                                <p class="md-padding">{{vm.recurringHistoryStatus(notification)}}</p>
-                                <md-button class="md-primary" ng-click="vm.recurringRetry(notification.id)">
-                                    <md-icon md-font-icon="zmdi zmdi-refresh-alt" style="color: rgb(255, 152, 0)"></md-icon>
-                                    Retry
+                            <div flex="100">
+                                <md-button class=" md-primary" style="border:1px dashed #ccc;"
+                                    ng-disabled="recurringObject.Status==true"
+                                    ng-click="vm.recurringStatus(recurringObject.Id,1)">
+                                    <md-icon md-font-icon="zmdi zmdi-play"></md-icon>
+                                    Start
                                 </md-button>
-
-                            </md-list-item>
-                            <p class="md-padding md-margin md-caption rhistory_error">{{notification.error_message}}</p>
-                            <md-divider></md-divider>
+                                <md-button class="md-primary" style="border:1px dashed #ccc;"
+                                    ng-click="vm.recurringStatus(recurringObject.Id,0)"
+                                    ng-disabled="recurringObject.Status==false">
+                                    <md-icon md-font-icon="zmdi zmdi-pause"></md-icon>
+                                    Pause
+                                </md-button>
+                            </div>
+                            <div flex="100">
+                                <md-progress-linear md-mode="indeterminate" ng-show="showProfileGetProgress">
+                                </md-progress-linear>
+                                <form id="form" ng-show="showProfileCard">
+                                    <div layout-gt-sm="row">
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <input readonly type="text" id="CardNumber" name="cardnumber"
+                                                ng-model="vm.cardInfo.ccname">
+                                            <div class="hint">Name</div>
+                                        </md-input-container>
+                                        <div flex="5" hide-xs hide-sm>
+                                            <!-- Spacer //-->
+                                        </div>
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <input readonly type="text" id="CardNumber" name="cardnumber"
+                                                ng-model="vm.cardInfo.ccyy">
+                                            <div class="hint">Create Date</div>
+                                        </md-input-container>
+                                    </div>
+                                    <div layout-gt-sm="row">
+                                        <md-input-container class="md-block" flex-gt-sm>
+                                            <input readonly type="text" id="CardNumber" name="cardnumber"
+                                                ng-model="vm.cardInfo.ccnumber" data-ng-pattern="ccPattern"
+                                                data-ng-minlength="14" maxlength="16"
+                                                ng-required="requiredCreditCardNumber" data-credit-card-type
+                                                ng-disabled="usedCardProfile" autocomplete="on|off">
+                                            <div>
+                                                <img ng-show="true" ng-repeat="card in cardlogos" align="right"
+                                                    ng-src="assets/images/cardicons/{{card.src}}"
+                                                    style="opacity:{{ccinfo.type==card.id ? 1 : 0}}; margin-right:2px;width:38px">
+                                            </div>
+                                        </md-input-container>
+                                    </div>
+                                </form>
+                            </div>
+                            <div flex="100">
+                                &nbsp;
+                            </div>
+                            <div flex="100"
+                                ng-if="recurringObject.ErrorCount > 0 || recurringObject.OccurrencesCount > 0">
+                                <div style="width:100% !important; margin:0 auto;" align="center">
+                                    <canvas class="chart-doughnut" chart-data="vm.pieData" chart-labels="vm.pieLabels"
+                                        chart-legend="true" chart-options="vm.pieOptions"></canvas>
+                                </div>
+                            </div>
 
                         </div>
-                    </md-list>
-                </md-content>
-            </md-tab-body>
-      </md-tab>
-    </md-tabs>
+                    </md-content>
+                </md-tab-body>
+
+            </md-tab>
+            <md-tab ng-disabled="recurringObject.ErrorCount<=0">
+                <md-tab-label>
+                    Error
+                    <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn"
+                        style="background-color: #FA7044; color:white"
+                        ng-show="recurringObject.ErrorCount > 0">{{recurringObject.ErrorCount}}</span>
+                </md-tab-label>
+                <md-tab-body>
+                    <md-content style="max-height:450px;">
+                        <md-list class="md-dense notification" flex>
+                            <div ng-repeat="notification in notifications">
+                                <md-subheader class="md-sticky md-primary md-hue-2 md-caption">
+                                    <md-icon md-font-icon="zmdi zmdi-alert-triangle" style="color: rgb(255, 152, 0)">
+                                    </md-icon>
+                                    #{{notification.id}} | Queued At: {{notification.date | date:'medium'}}
+                                </md-subheader>
+                                <md-list-item class="secondary-button-padding">
+                                    <p class="md-padding">{{vm.recurringHistoryStatus(notification)}}</p>
+                                    <md-button class="md-primary" ng-click="vm.recurringRetry(notification.id)">
+                                        <md-icon md-font-icon="zmdi zmdi-refresh-alt" style="color: rgb(255, 152, 0)">
+                                        </md-icon>
+                                        Retry
+                                    </md-button>
+
+                                </md-list-item>
+                                <p class="md-padding md-margin md-caption rhistory_error">{{notification.error_message}}
+                                </p>
+                                <md-divider></md-divider>
+
+                            </div>
+                        </md-list>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+        </md-tabs>
     </md-content>
 </md-sidenav>
 <md-sidenav class="md-sidenav-left md-whiteframe-z4" md-component-id="filter" style="min-width:280px !important;">
@@ -112,14 +155,14 @@
     </md-toolbar>
     <form flex="" name="vm.filter.form">
         <md-content class="md-padding">
-            <div class="margin-bottom-20" layout="row" layout-align="space-around center">
+            <!-- <div class="margin-bottom-20" layout="row" layout-align="space-around center">
                 <label>From</label>
                 <md-datepicker ng-model="fromdate" md-placeholder=""></md-datepicker>
             </div>
             <div class="margin-bottom-20" layout="row" layout-align="space-around center">
                 <label>To &nbsp;</label>
                 <md-datepicker ng-model="todate" md-placeholder=""></md-datepicker>
-            </div>
+            </div> -->
             <md-input-container class="md-block"></md-input-container>
             <md-input-container class="md-block">
                 <label>Status</label>
@@ -134,13 +177,7 @@
             <md-input-container class="md-block"></md-input-container>
             <md-input-container class="md-block">
                 <label>Customer Name</label>
-                <input
-                    name="Customer Name"
-
-                    type="text"
-                    ng-model="searchCustomer"
-
-                    >
+                <input name="Customer Name" type="text" ng-model="searchCustomer">
             </md-input-container>
 
 
@@ -157,31 +194,49 @@
         </md-content>
     </form>
 </md-sidenav>
-<div layout="row" flex  layout-align="start start" class="" style="padding:10px 0px 0px 10px !important;">
-    <div flex="90">
+<div layout="row" flex layout-align="start start" class="" style="padding:10px 0px 0px 10px !important;">
+    <div flex="2">
+        <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.openSidebar('filter')">
+            <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
+            <md-tooltip>Search Invoice</md-tooltip>
+        </md-button>
+    </div>
 
-   <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.openSidebar('filter')"
-   >
-         <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
-         <md-tooltip>Search Invoice</md-tooltip>
-   </md-button>
+    <div flex="8">
+        <md-checkbox class="left-checkbox md-primary" ng-model="checkboxes" aria-label="Primary Checkbox"
+            ng-change="checkboxHandler()">
+        </md-checkbox>
+        <md-menu class="">
+            <md-button class="checkbox md-icon-button" aria-label="open menu" ng-click="$mdOpenMenu()">
+                <md-icon md-font-icon="zmdi zmdi-caret-down"></md-icon>
+                <md-tooltip>{{state}}</md-tooltip>
+            </md-button>
+            <md-menu-content width="2">
+                <md-menu-item ng-repeat="state in states">
+                    <md-button ng-click="filterRecurring(state)">
+                        {{state}}
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+    </div>
 
 
-   </div>
     <div flex="10" ng-show="false">
-       <div class="md-toolbar-tools-">
-       <md-button class="md-icon-button toolbar-button animated"
-       ng-click="vm.openSidebar('gateway_sync')" aria-label="side navigation" ng-hide="vm.tblData">
-               <md-icon md-font-icon="fa fa-bell-o"></md-icon>
-               <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn" style="background-color: red; color:white">{{vm.notifications.length}}</span>
-           </md-button>
-       </div>
-   </div>
+        <div class="md-toolbar-tools-">
+            <md-button class="md-icon-button toolbar-button animated" ng-click="vm.openSidebar('gateway_sync')"
+                aria-label="side navigation" ng-hide="vm.tblData">
+                <md-icon md-font-icon="fa fa-bell-o"></md-icon>
+                <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn"
+                    style="background-color: red; color:white">{{vm.notifications.length}}</span>
+            </md-button>
+        </div>
+    </div>
 </div>
 <div layout="row" layout-xs="column" layout-margin>
     <tri-widget flex title="" content-layout="column" content-layout-align="center">
         <md-table-container>
-            <table md-table class="md-data-table" md-progress="vm.promise">
+            <table md-table class="md-data-table">
 
                 <thead md-head md-order="vm.query.order" md-on-reorder="vm.tblData">
                     <tr md-row>
@@ -199,7 +254,8 @@
                 </thead>
                 <tbody md-body>
 
-                    <tr md-row ng-repeat="item in vm.tblData | filter: searchCustomer | filter:StatusFilter | myfilter:fromdate:todate | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                    <tr md-row
+                        ng-repeat="item in vm.tblData | filter: searchCustomer | filter:StatusFilter | myfilter:fromdate:todate | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
                         <td md-cell></td>
                         <td md-cell>{{item.RecurringParams.Name }}</td>
                         <td md-cell>{{item.RecurringParams.Interval.Mode  | intervalType}}</td>
@@ -209,10 +265,12 @@
                             <br>
                             <div ng-if="item.IsCompleted==false">
                                 <span ng-if="item.RecurringParams.End=='none'" class="badge processed">Unlimited</span>
-                                <span ng-if="item.RecurringParams.End=='by'" class="badge processed">End By {{::item.RecurringParams.EndDate  | date}}</span>
-                                <span ng-if="item.RecurringParams.End=='after'" class="badge processed">End After {{item.RecurringParams.occurrence-item.OccurrencesCount}} Occurrences</span>
+                                <span ng-if="item.RecurringParams.End=='by'" class="badge processed">End By
+                                    {{::item.RecurringParams.EndDate  | date}}</span>
+                                <span ng-if="item.RecurringParams.End=='after'" class="badge processed">End After
+                                    {{item.RecurringParams.occurrence-item.OccurrencesCount}} Occurrences</span>
                             </div>
-                             <span ng-if="item.IsCompleted==true" class="badge approved">Completed</span>
+                            <span ng-if="item.IsCompleted==true" class="badge approved">Completed</span>
 
 
                         </td>
@@ -226,29 +284,33 @@
                         <td md-cell class="col3">
 
 
-                            <div ng-show="item.Status"  ng-if="item.IsCompleted==false"><i class="zmdi zmdi-check-circle zmdi-hc-fw" style="color:#2FC65A !important;"></i> <span class="md-subtitle">Running</span></div>
+                            <div ng-show="item.Status" ng-if="item.IsCompleted==false"><i
+                                    class="zmdi zmdi-check-circle zmdi-hc-fw" style="color:#2FC65A !important;"></i>
+                                <span class="md-subtitle">Running</span></div>
 
-                            <div ng-hide="item.Status" ng-if="item.IsCompleted==false"><i class="zmdi zmdi-pause-circle" style="color:#FA7044"></i> <span>Pause</span></div>
+                            <div ng-hide="item.Status" ng-if="item.IsCompleted==false"><i class="zmdi zmdi-pause-circle"
+                                    style="color:#FA7044"></i> <span>Pause</span></div>
 
-                            <div ng-show="item.IsCompleted"><i class="zmdi zmdi-check-circle zmdi-hc-fw" style="color:#2FC65A !important;"></i> <span class="md-subtitle">Completed</span></div>
+                            <div ng-show="item.IsCompleted"><i class="zmdi zmdi-check-circle zmdi-hc-fw"
+                                    style="color:#2FC65A !important;"></i> <span class="md-subtitle">Completed</span>
+                            </div>
 
 
                         </td>
                         <td md-cell class="col3">
-                            <md-button class="md-icon-button" ng-click="deleteRecurringConfirm(item.Id)" aria-label="Delete">
+                            <md-button class="md-icon-button" ng-click="deleteRecurringConfirm(item.Id)"
+                                aria-label="Delete">
                                 <md-icon md-font-icon="zmdi zmdi-close"></md-icon>
                             </md-button>
 
 
-                            <md-button
-
-                            class="md-icon-button toolbar-button animated"
-                            ng-click="vm.showRecurringHistory('recurring_notification',item)"
-                            aria-label="side navigation"
-
-                            >
+                            <md-button class="md-icon-button toolbar-button animated"
+                                ng-click="vm.showRecurringHistory('recurring_notification',item)"
+                                aria-label="side navigation">
                                 <md-icon md-font-icon="zmdi zmdi-menu"></md-icon>
-                                <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn" style="background-color: #FA7044; color:white" ng-show="item.ErrorCount > 0">{{item.ErrorCount}}</span>
+                                <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn"
+                                    style="background-color: #FA7044; color:white"
+                                    ng-show="item.ErrorCount > 0">{{item.ErrorCount}}</span>
                             </md-button>
 
                         </td>
@@ -257,10 +319,12 @@
 
                 </tbody>
                 <tr md-row ng-show="vm.tblData.length==0">
-                    <td md-cell colspan="10" style="text-align:center !important;text-transform:none;">There is no data to display</td>
+                    <td md-cell colspan="10" style="text-align:center !important;text-transform:none;">There is no data
+                        to display</td>
                 </tr>
             </table>
         </md-table-container>
-        <md-table-pagination md-limit="vm.query.limit" md-page="vm.query.page" md-total="{{vm.tblData.length}}" md-page-select></md-table-pagination>
+        <md-table-pagination md-limit="vm.query.limit" md-page="vm.query.page" md-total="{{vm.tblData.length}}"
+            md-page-select></md-table-pagination>
     </tri-widget>
 </div>

@@ -47,6 +47,7 @@
         });
 
     function Controller($window, $scope, $rootScope, $mdDialog, SettingModel, InvoiceModel, $timeout, $locale, Clique, printer, $state, triBreadcrumbsService, dataService, $http, VantivTriPOSiPP350, $filter) {
+     
         var vm = this;
         $scope.innerHeight = $window.innerHeight + 0;
 
@@ -99,6 +100,7 @@
         vm.fabStatuses = [false, true];
         vm.fabStatus = vm.fabStatuses[0];
         vm.share = true;
+      //  vm.processBBpos = processBBpos
         /*eof fab controller*/
 
 
@@ -174,6 +176,7 @@
         //creditcard
         $scope.requiredMonthField = true;
         $scope.requiredYearField = true;
+        $scope.requiredCVC = true;
         $scope.requiredCreditCardNumber = true;
         $scope.requiredCardHolderName = true;
 
@@ -319,17 +322,90 @@
 
         $scope.ccPattern = /[0-9-()]*[1-9][0-9-()]*/;
 
-
+// debugger;
         $scope.checkConv = false
         switch ($scope.paymentInfo.type) {
+            
 
-            case "cardconnect":
+            case "authorizenet":
                 $scope.paymentMode = 'creditcard';
                 $scope.activePaymentMethods.creditcard = true;
                 $scope.activePaymentMethods.cash = false;
                 if ($scope.paymentInfo.hasOwnProperty('configuration')) {
                     if ($scope.paymentInfo.configuration.hasOwnProperty('supported_methods')) {
                         if ($scope.paymentInfo.configuration.supported_methods.hasOwnProperty('ach')) {
+                            $scope.activePaymentMethods.ach = $scope.paymentInfo.configuration.supported_methods.ach;
+                        }
+                    }
+                }
+                break;
+                case "worldnet":
+               
+                $scope.paymentMode = 'creditcard';
+                $scope.activePaymentMethods.creditcard = true;
+                $scope.activePaymentMethods.cash = false;
+                if ($scope.paymentInfo.hasOwnProperty('configuration')) {
+                    if ($scope.paymentInfo.configuration.hasOwnProperty('supported_methods')) {
+                       
+                        if ($scope.paymentInfo.configuration.supported_methods.hasOwnProperty('ach')) {
+                           
+                            $scope.activePaymentMethods.ach = $scope.paymentInfo.configuration.supported_methods.ach;
+                        }
+                    }
+                }
+                break;
+
+
+                case "stripe":
+                $scope.paymentMode = 'creditcard';
+                $scope.activePaymentMethods.creditcard = true;
+                $scope.activePaymentMethods.cash = false;
+      
+                if ($scope.paymentInfo.hasOwnProperty('configuration')) {
+                    if ($scope.paymentInfo.configuration.hasOwnProperty('supported_methods')) {
+                        if ($scope.paymentInfo.configuration.supported_methods.hasOwnProperty('ach')) {
+                            $scope.activePaymentMethods.ach = $scope.paymentInfo.configuration.supported_methods.ach;
+                        }
+                    }
+                }
+                break;
+
+            case "usaepay":
+                $scope.paymentMode = 'creditcard';
+                $scope.activePaymentMethods.creditcard = true;
+                $scope.activePaymentMethods.cash = false;
+                if ($scope.paymentInfo.hasOwnProperty('configuration')) {
+                    if ($scope.paymentInfo.configuration.hasOwnProperty('supported_methods')) {
+                        if ($scope.paymentInfo.configuration.supported_methods.hasOwnProperty('ach')) {
+                            $scope.activePaymentMethods.ach = $scope.paymentInfo.configuration.supported_methods.ach;
+                        }
+                    }
+                }
+                break;
+
+            case "nmi":
+                $scope.paymentMode = 'creditcard';
+                $scope.activePaymentMethods.creditcard = true;
+                $scope.activePaymentMethods.cash = false;
+                if ($scope.paymentInfo.hasOwnProperty('configuration')) {
+                    if ($scope.paymentInfo.configuration.hasOwnProperty('supported_methods')) {
+                        if ($scope.paymentInfo.configuration.supported_methods.hasOwnProperty('ach')) {
+                            $scope.activePaymentMethods.ach = $scope.paymentInfo.configuration.supported_methods.ach;
+                        }
+                    }
+                }
+                break;
+
+            case "cardconnect":
+                $scope.paymentMode = 'creditcard';
+                $scope.activePaymentMethods.creditcard = true;
+                $scope.activePaymentMethods.cash = false;
+                if ($scope.paymentInfo.hasOwnProperty('configuration')) {
+                    debugger;
+                    if ($scope.paymentInfo.configuration.hasOwnProperty('supported_methods')) {
+                        debugger;
+                        if ($scope.paymentInfo.configuration.supported_methods.hasOwnProperty('ach')) {
+                            debugger;
                             $scope.activePaymentMethods.ach = $scope.paymentInfo.configuration.supported_methods.ach;
                         }
                     }
@@ -377,6 +453,7 @@
         }
 
         $scope.changePaymentMode = function (type) {
+            // debugger;
             resetChargeAmount()
             $scope.ccprofile = JSON.parse('{"profile_id":0, "last_digits":"0"}');
             $scope.paymentMode = type;
@@ -395,6 +472,7 @@
 
                     $scope.requiredMonthField = false;
                     $scope.requiredYearField = false;
+                    $scope.requiredCVC = false;
                     $scope.requiredCreditCardNumber = false;
                     $scope.requiredCardHolderName = false;
                     $scope.totalAmount = $rootScope.FinalTotal
@@ -425,6 +503,7 @@
                     $scope.requiredAccountName = false;
 
                     $scope.requiredMonthField = true;
+                    $scope.requiredCVC = true;
                     $scope.requiredYearField = true;
                     $scope.requiredCreditCardNumber = true;
                     $scope.requiredCardHolderName = true;
@@ -436,9 +515,19 @@
                     $scope.totalAmount = $rootScope.FinalTotal
                     // console.log($scope.totalAmount)
                     break;
+                    case "bbpos":
+                        $scope.disableinpt = false;
+                        $scope.convfee = false;
+                        $scope.totalAmount = $rootScope.FinalTotal
+                        // console.log($scope.totalAmount)
+                        break;
             }
         }
         // fetch all settings
+        $scope.valuesOfForm = function(value) {
+            // debugger;
+            console.log('values' , value)
+        }
         getSettings();
 
         function getSettings() {
@@ -465,18 +554,30 @@
 
         //caculate total amount
         if ($scope.selectedInvoiceData != undefined) {
+          
             if ($scope.selectedInvoiceData.length > 0) {
                 angular.forEach($scope.selectedInvoiceData, function (invoiceInfo, key) {
+                    debugger;
+                  console.log("invoiceInfo", invoiceInfo);
+                  console.log("$scope.selectedInvoiceData", $scope.selectedInvoiceData);
+                  $scope.sparseinvoice = invoiceInfo.sparse;
+                    $scope.SyncTokeninvoice = invoiceInfo.SyncToken;
+                    $scope.invoiceidpayment = invoiceInfo.Id;
+                    $scope.Balanceinvoice = parseFloat(invoiceInfo.Balance);
                     var Balance = parseFloat(invoiceInfo.Balance);
                     var invoice_id = parseInt(invoiceInfo.Id);
                     $scope.totalAmount += Balance;
                     customer_id = invoiceInfo.CustomerRef.value;
                     $scope.invoiceIds.push(invoice_id);
                     $rootScope.FinalTotal = $scope.totalAmount;
-
+                    $scope.invoicecustomername =$scope.selectedInvoiceData[0].CustomerRef.name;
+                    console.log("$scope.invoicecustomername",$scope.invoicecustomername);
+                    // $scope.selectedInvoiceData[0].CustomerRef.name;
                 });
                 // console.log($rootScope.FinalTotal)
+               
                 if (("ConvenienceFee" in $scope.selectedInvoiceData[0]) == true) {
+
                     if ($scope.selectedInvoiceData[0].ConvenienceFee.length > 0) {
                         if ($scope.selectedInvoiceData[0].ConvenienceFee[0].is_active == true) {
                             $scope.hconvFee = true;
@@ -485,27 +586,27 @@
                                 $scope.disableinpt = true;
                                 $scope.checkConv = true;
                             }
-
+                      
+                        
+                        
                             $scope.convfeeamount = $scope.selectedInvoiceData[0].ConvenienceFee[0].amount
                             $scope.convfeetype = $scope.selectedInvoiceData[0].ConvenienceFee[0].type
                             $rootScope.haveconfee = false
                             switch ($scope.selectedInvoiceData[0].ConvenienceFee[0].type) {
-                                case '$':
-                                    {
-                                        $scope.totalAmount = $scope.totalAmount + $scope.selectedInvoiceData[0].ConvenienceFee[0].amount
-                                        console.log("$scope.totalAmount", $scope.totalAmount)
-                                        $scope.newAmount = $scope.totalAmount
-                                        //  $rootScope.amount =  vm.invoice.Balance + vm.invoice.ConvenienceFee.amount
-                                    }
-                                    break;
-                                case '%':
-                                    {
-                                        $scope.totalAmount = $scope.totalAmount + (($scope.selectedInvoiceData[0].ConvenienceFee[0].amount * $scope.totalAmount) / 100)
-                                        console.log("$scope.totalAmount", $scope.totalAmount)
-                                        $scope.newAmount = $scope.totalAmount
-                                        // $rootScope.amount =  vm.invoice.Balance + ((vm.invoice.ConvenienceFee.amount *vm.invoice.Balance)/100)
-                                    }
-                                    break
+                                case '$': {
+                                    $scope.totalAmount = $scope.totalAmount + $scope.selectedInvoiceData[0].ConvenienceFee[0].amount
+                                    console.log("$scope.totalAmount", $scope.totalAmount)
+                                    $scope.newAmount = $scope.totalAmount
+                                    //  $rootScope.amount =  vm.invoice.Balance + vm.invoice.ConvenienceFee.amount
+                                }
+                                break;
+                            case '%': {
+                                $scope.totalAmount = $scope.totalAmount + (($scope.selectedInvoiceData[0].ConvenienceFee[0].amount * $scope.totalAmount) / 100)
+                                console.log("$scope.totalAmount", $scope.totalAmount)
+                                $scope.newAmount = $scope.totalAmount
+                                // $rootScope.amount =  vm.invoice.Balance + ((vm.invoice.ConvenienceFee.amount *vm.invoice.Balance)/100)
+                            }
+                            break
                             }
                         } else {
                             $scope.newAmount = $scope.totalAmount
@@ -594,6 +695,7 @@
             $scope.totalAmount = 0;
             if ($scope.selectedInvoiceData.length > 0) {
                 angular.forEach($scope.selectedInvoiceData, function (item, key) {
+                   
                     if (item.ChargeAmount > item.Balance || !angular.isNumber(item.ChargeAmount)) {
                         $scope.isAmountInvalid = true;
                     }
@@ -647,6 +749,7 @@
                 $scope.usedCardProfile = true;
 
                 $scope.requiredMonthField = false;
+                $scope.requiredCVC = false;
                 $scope.requiredYearField = false;
                 //$scope.ccPattern=/^[a-zA-Z0-9]*$/;
                 $scope.ccPattern = /^[a-zA-Z0-9]*$/;
@@ -657,6 +760,7 @@
                 if ($scope.paymentMode == 'creditcard') {
                     $scope.requiredMonthField = true;
                     $scope.requiredYearField = true;
+                    $scope.requiredCVC = true;
                     $scope.requiredAccountNo = false;
                     $scope.requiredBankaba = false;
 
@@ -671,6 +775,7 @@
                     $scope.requiredYearField = false;
                     $scope.requiredCreditCardNumber = false;
                     $scope.requiredCardHolderName = false;
+                    $scope.requiredCVC = false
                     $scope.requiredAccountNo = true;
                     $scope.requiredBankaba = true;
 
@@ -707,6 +812,7 @@
                 // console.log("data",$scope.selectedInvoiceData)
                 angular.forEach($scope.selectedInvoiceData, function (invoiceInfo, key) {
 
+console.log("$scope.selectedInvoiceData", $scope.selectedInvoiceData);
                     var ChargeAmount = parseFloat(invoiceInfo.ChargeAmount);
                     var invoice_id = parseInt(invoiceInfo.Id);
                     ////console.log(invoice_id);
@@ -752,6 +858,10 @@
                     };
                 } else {
 
+
+if($scope.payform.cc2 == "" || $scope.payform.cc2 == undefined)
+
+{
                     paymentObj = {
                         CustomerRef: {
                             value: CustomerId,
@@ -765,15 +875,48 @@
                         track2: $scope.payform.track2,
                         Month: $scope.payform.months,
                         Exp: $scope.payform.years,
-                        CCV2: $scope.payform.cc2,
                         StreetAddress: $scope.payform.streetaddress,
                         Zipcode: $scope.payform.zipcode,
                         CardProfile: $scope.payform.card_profile,
                         CustomerEmail: CustomerEmail,
                         DocNumber: DocNumber,
-                        Type: "invoice"
+                        Type: "invoice",
+                        Id: $scope.invoiceidpayment,
+                        Balance: $scope.Balanceinvoice,
+                        Sparse: $scope.sparseinvoice,
+                        SyncToken: $scope.SyncTokeninvoice
+                    }; 
+                }
+else{
+    paymentObj = {
+        CustomerRef: {
+            value: CustomerId,
+            name: CustomerName
+        },
+        Line: Line,
+        TotalAmt: $scope.totalAmount,
+        TransType: 'sale',
+        CardHolder: $scope.payform.cardholder,
+        CreditCardNumber: $scope.payform.cardnumber,
+        track2: $scope.payform.track2,
+        Month: $scope.payform.months,
+        Exp: $scope.payform.years,
+        CCV2: $scope.payform.cc2,
+        StreetAddress: $scope.payform.streetaddress,
+        Zipcode: $scope.payform.zipcode,
+        CardProfile: $scope.payform.card_profile,
+        CustomerEmail: CustomerEmail,
+        DocNumber: DocNumber,
+        Type: "invoice",
+        Id: $scope.invoiceidpayment,
+        Balance: $scope.Balanceinvoice,
+        Sparse: $scope.sparseinvoice,
+        SyncToken: $scope.SyncTokeninvoice
+    }; 
+}
 
-                    };
+
+
                 }
             } else if (mode == 'cash') {
                 paymentObj = {
@@ -822,7 +965,7 @@
                     };
                 }
             } else if (mode == 'bolt') {
-                $scope.totalAmount = $rootScope.FinalTotal
+                // $scope.totalAmount = $rootScope.FinalTotal
                 console.log($scope.totalAmount)
                 paymentObj = {
                     CustomerRef: {
@@ -897,6 +1040,7 @@
             }
 
             $scope.promise = InvoiceModel.CCPartialSale(paymentObj);
+            debugger;
             $scope.promise.then(function (response) {
                 $scope.disabledChargeButton = false;
                 if (response.statuscode == 0) {
@@ -1151,10 +1295,15 @@
                     $scope.settings.companyInfo = $scope.companyInfo.company;
 
                     $scope.settings.InvoiceContacts.to_email = [];
-                    if (customer_email != "") {
-                        $scope.settings.InvoiceContacts.to_email.push(customer_email);
-
+                    try {
+                        if (customer_email != "") {
+                            // $scope.settings.InvoiceContacts.to_email.push(customer_email);
+                            $scope.settings.InvoiceContacts.to_email = customer_email.split(",");
+                        }
+                    } catch (err) {
+                        console.log("TCL: $scope.emailReceipt -> err", err)
                     }
+
                     $scope.settings.receipt_type = tranType;
                     $scope.sendReceiptDialog();
                 }
@@ -1316,6 +1465,12 @@
             $scope.showCCSIcon = $scope.showCCS ? 'zmdi zmdi-account' : 'zmdi zmdi-account-add';
         }
 
+
+        if ($scope.settings.InvoiceContacts.to_email.length > 0) {
+            $scope.disabledSubmitButton = false;
+        } else {
+            $scope.disabledSubmitButton = true;
+        }
 
         $scope.cancel = function () {
             $mdDialog.hide();

@@ -1,0 +1,192 @@
+<style>
+ .md-button.md-cyan-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-cyan-theme.md-warn.md-raised:not([disabled]), .md-button.md-cyan-theme.md-warn.md-fab:not([disabled]):hover {
+    background-color:rgb(0,172,193);
+}
+    }
+</style>
+<md-dialog aria-label="Send Invoice" id="" style="min-width: 80%; min-height: 80%">
+    <form name="sendEmail">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Customer Information</h2>
+                <span flex></span>
+                <md-button ng-click="closeDialog()">
+                    <md-icon class="zmdi zmdi-close" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content class="md-padding">
+            <div flex-xs flex-gt-xs="100" layout="column">
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span style="margin-left: 2%" class="md-headline">Basic Info</span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-content class="md-padding">
+                          
+                            <md-input-container class="md-block">
+                                    <!-- md-font-icon="icon-domain" -->
+                                    <md-icon ></md-icon>
+                                    <input ng-model="data.DisplayName" type="text" ng-pattern="/^[a-zA-Z\s]*$/" placeholder="Name" required>
+                                </md-input-container>
+
+
+
+
+                            <md-input-container class="md-block">
+                                    <md-icon md-font-icon="icon-domain"></md-icon>
+                                    <input ng-model="data.CompanyName" type="text" placeholder="Company">
+                                </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-email" class="email"></md-icon>
+                            <input ng-model="data.PrimaryEmailAddr.Address" type="email" placeholder="Email" required>
+                        </md-input-container>
+
+                        
+                        <md-input-container class="md-block">
+                                <md-icon md-font-icon="icon-phone"></md-icon>
+                                <input ng-model="data.PrimaryPhone.FreeFormNumber" type="text" placeholder="Phone number">
+                            </md-input-container>
+                            <md-input-container class="md-block">     
+                                    <md-icon md-font-icon="icon-fax"></md-icon>                               
+                                    <input ng-model="data.Fax.FreeFormNumber"  type="text" placeholder="Fax">
+                                </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-domain"></md-icon>
+                            <input ng-model="data.Notes" type="text" placeholder="Notes">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-domain"></md-icon>
+                            <input ng-model="data.WebAddr.URI" type="text" placeholder="Web">
+                        </md-input-container>
+                        <!-- <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-map-marker"></md-icon>
+                            <input ng-model="data.ShipAddr.Line1" type="text" placeholder="Address">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-city"></md-icon>
+                            <input ng-model="data.ShipAddr.City" type="text" placeholder="City">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-at"></md-icon>
+                            <input ng-model="data.ShipAddr.CountrySubDivisionCode" type="text" placeholder="State">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-google-earth"></md-icon>
+                            <input ng-model="data.ShipAddr.Country" type="text" placeholder="Country">
+                        </md-input-container> -->
+
+                        <span style="margin-left: 2%" class="md-headline">Billing Address</span>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-map-marker"></md-icon>
+                            <input ng-model="data.BillAddr.Line1" type="text" placeholder="Address" >
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-city"></md-icon>
+                            <input ng-model="data.BillAddr.City" type="text" placeholder="City">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-at"></md-icon>
+                            <input ng-model="data.BillAddr.CountrySubDivisionCode" type="text" placeholder="State">
+                        </md-input-container>
+
+                        <md-input-container class="md-block">
+                                <md-icon md-font-icon="icon-zipcode"></md-icon>
+                            <input  ng-model="data.BillAddr.PostalCode"   type="text" placeholder="Zipcode"  >
+                        </md-input-container>
+
+                        <md-input-container class="md-block">
+                            <md-icon md-font-icon="icon-google-earth"></md-icon>
+                            <input ng-model="data.BillAddr.Country" type="text" placeholder="Country">
+                        </md-input-container>
+                        
+                     
+
+
+
+
+
+
+                        <div layout="column" ng-init="sameAsBilling=true">
+                            <h4 class="md-body-1">Shipping Address <md-checkbox ng-model="sameAsBilling"
+                                    ng-change="setCustomerShipping();">
+                                    </md-chekcbox> <span class="md-caption">Same as billing address</span></h4>
+                            <!-- <div ng-hide="sameAsBilling"> -->
+                            <md-input-container class="md-block" flex="" ng-hide="sameAsBilling">
+                                <label>Street</label>
+                                <input name="ShipAddr_Line1" type="text" ng-model="data.ShipAddr.Line1">
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="" ng-hide="sameAsBilling">
+                                <label>City/Town</label>
+                                <input name="ShipAddr_City" type="text" ng-model="data.ShipAddr.City">
+                            </md-input-container>
+                            <md-input-container class="md-block" flex="" ng-hide="sameAsBilling">
+                                <label>State/Province</label>
+                                <input name="ShipAddr_CountrySubDivisionCode" type="text"
+                                    ng-model="data.ShipAddr.CountrySubDivisionCode">
+                            </md-input-container>
+                            <md-input-container  class="md-block" flex="" ng-hide="sameAsBilling">
+                                <label>Zip code</label>
+                                <input name="ShipAddr_PostalCode" type="text" ng-model="data.ShipAddr.PostalCode">
+                            </md-input-container>
+                            <md-select ng-model="data.ShipAddr.Country" ng-selected="true" md-on-open="loadCountries()"
+                                style="min-width: 200px;" ng-hide="sameAsBilling" placeholder="Country" >
+                                <md-option ng-value="country.name" ng-repeat="country in countries">{{country.name}}
+                                </md-option>
+                            </md-select>
+                            <!-- </div> -->
+                        </div>
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </md-card-content>
+                </md-card>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" ng-hide="hideDialogActions" class="invoice_action"
+            style="height:100px !important;">
+            <md-progress-linear md-mode="determinate" value="{{progressValue}}" ng-show="showProgress">
+            </md-progress-linear>
+            <md-button ng-show="!isSending" ng-click="Save(); closeDialog();" ng-disabled="sendEmail.$invalid"
+                class="md-primary md-raised">
+                <md-icon md-font-icon=""></md-icon>
+                </md-icon>
+                <span>
+                    Save
+                </span>
+            </md-button>
+            <md-button ng-click="closeDialog()" class="md-primary md-warn">
+                <md-icon md-font-icon=""></md-icon>
+                </md-icon>
+                <span>
+                    Close
+                </span>
+            </md-button>
+            <md-button ng-show="isSending" ng-disabled="true" class="md-primary md-raised">
+                <md-icon md-font-icon="fa fa-paper-plane"></md-icon>
+                </md-icon>
+                <span>
+                    Sending..
+                </span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -38,7 +38,12 @@
               },
             data: {
                 layout: {
-                    sideMenuSize: 'icon'
+                    // sideMenuSize: 'icon',
+                    showToolbar: false,
+                    // sidebarLeft
+                    // sidebarLeftController: false,
+                    // LeftSidenavController: false,
+                    // ToolbarController: false
                 }
 
             },

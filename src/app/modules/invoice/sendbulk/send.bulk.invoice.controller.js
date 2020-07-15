@@ -32,12 +32,12 @@
                 // includes our template
                 template: '<div class="ng-binding" style="height:50px;"><md-input-container class="hover-edit-trigger">' +
                     '<div class="hover-text-field" ng-show="!editState" ng-click="toggle()">{{model}} <i class="zmdi zmdi-border-color" style="cursor: pointer;"></i></div>' +
-                    '<input  class="inputText" style="height: 50%;width: 80%;text-align: left;" label="subject" name="customeremail" multiple-emails ng-model="localModel" ng-enter="save()" ng-show="editState && type == \'inputText\'"/>' +
+                    '<input  class="inputText" style="height: 50%;width: 80%;text-align: left;" label="subject" name="customeremail" multiple-emails ng-model="model" ng-enter="save()" ng-show="editState && type == \'inputText\'"/>' +
                     '<div ng-messages="sendEmail.customeremail">' +
-                    '<div ng-message="email">Please enter a valid email address.</div>' +
+                    '<div ng-message="inputText">Please enter a valid email address.</div>' +
                     '</div>' +
                     '</md-input-container>' +
-                    '<div class="edit-button-group pull-right" ng-show="editState">' +
+                    '<div class="edit-button-group pull-right" ng-show="editState && multiEmailValid">' +
                     '<span><i class="zmdi zmdi-check zmdi-hc-2x" ng-click="save()" style="color:#08C65B;cursor: pointer;"></i></span><span>&nbsp;</span><span>&nbsp;</span>' +
                     '</div>' +
                     '</div>',
@@ -46,11 +46,11 @@
 
                     // make a local ref so we can back out changes, this only happens once and persists
                     scope.localModel = scope.model;
-
                     // apply the changes to the real model
                     scope.save = function () {
-                        scope.model = scope.localModel;
+                        // scope.model = scope.localModel;
                         $rootScope.customerEmail = scope.model;
+
                         scope.toggle();
                     };
 
@@ -68,6 +68,7 @@
                     scope.toggle = function () {
 
                         scope.editState = !scope.editState;
+                        scope.$parent.$parent.isDisabledSentButton = scope.editState;
 
                         /*
                          * a little hackish - find the "type" by class query
@@ -109,15 +110,28 @@
                         var validityArr = emails.map(function (str) {
                             return re.test(str.trim());
                         });
+                        scope.multiEmailValid = true;
                         var atLeastOneInvalid = false;
                         angular.forEach(validityArr, function (value) {
                             if (value === false)
                                 atLeastOneInvalid = true;
+                            scope.multiEmailValid = true;
+
                         });
                         if (!atLeastOneInvalid) {
+                            scope.multiEmailValid = true;
+                            try {
+                                scope.$parent.$parent.isDisabledSentButton = true;
+                            } catch (err) {
+                                console.log("TCL: err", err)
+                            }
+                            // if (scope.$parent.$parent.isDisabledSentButton != undefined && scope.$parent.$parent.isDisabledSentButton != nul) {
+                            //     scope.$parent.$parent.isDisabledSentButton = true;
+                            // }
                             ctrl.$setValidity('multipleEmails', true);
                             return viewValue;
                         } else {
+                            scope.multiEmailValid = false;
                             ctrl.$setValidity('multipleEmails', false);
                             return undefined;
                         }
@@ -129,7 +143,7 @@
     function Controller($scope, $rootScope, $mdDialog, SettingModel, InvoiceModel, $timeout, $location, $anchorScroll, $filter) {
         $scope.settings = {};
         $scope.sentInvoice = [];
-        $scope.showProgress = false;
+        $scope.showEmailProgress = false;
         $scope.progressValue = 0;
         $scope.currecntInvoice;
         $scope.invoiceMessages = [];
@@ -140,7 +154,9 @@
         getSettings();
         $scope.sprintName = "Sprint 3";
         $scope.sprintDesc = "Learn directives";
-
+        $scope.showEmailProgress = false
+        $scope.isDisabledSentButton = true
+        $scope.isSending = false
         $scope.gotoAnchor = function (x) {
             var newHash = 'anchor' + x;
             if ($location.hash() !== newHash) {
@@ -150,14 +166,53 @@
             }
         };
 
-        //console.log($scope.selectedInvoiceData);
+        function getContactEmail(id, email) {
+            debugger;
+            console.log("getContactEmail", email);
+            $scope.showEmailProgress = true
+            $scope.promise = InvoiceModel.GetContactEmail(id);
+            $scope.promise.then(function (response) {
+                if (response.statuscode == 0) {
+                    // if (!response.data.item) {
+                    if (response.data.item != null) {
+                        $scope.isDisabledSentButton = false
+                        $scope.showEmailProgress = false
+                        $rootScope.customerEmail = response.data.item;
+                    } else {
+                        $scope.showEmailProgress = false
+                        // $rootScope.customerEmail = email;
+                        $scope.isDisabledSentButton = true
+                    }
+                }
+            });
+        }
+
+        function getContactEmailById(id) {
+            debugger;
+            $scope.showEmailProgress = true
+            $scope.promise = InvoiceModel.GetContactEmail(id);
+            $scope.promise.then(function (response) {
+                if (response.statuscode == 0) {
+                    $scope.showEmailProgress = false
+                    if (response.data.item != null) {
+                        $scope.isDisabledSentButton = false
+                        $rootScope.customerEmail = response.data.item;
+                    } else {
+                        $scope.showEmailProgress = false
+                        // $rootScope.customerEmail = email;
+                        $scope.isDisabledSentButton = true
+                    }
+                }
+            });
+        }
         // Get Customer Email address to show and edit
         angular.forEach($scope.selectedInvoiceData, function (invoiceInfo, key) {
-            if (invoiceInfo.BillEmail != null) {
-                $rootScope.customerEmail = invoiceInfo.BillEmail.Address;
+            if (invoiceInfo.BillEmail == null || invoiceInfo.BillEmail.Address == null) {
+                getContactEmailById(invoiceInfo.CustomerRef.value)
+            } else {
+                getContactEmail(invoiceInfo.CustomerRef.value, invoiceInfo.BillEmail.Address)
             }
         });
-
         $scope.SelectedTemplateValue = function (value) {
             $rootScope.email_template = value;
             //       console.log($rootScope.email_template);
@@ -165,7 +220,7 @@
 
         }
         $scope.send = function () {
-            //       console.log($rootScope.email_template)
+            $scope.isSending = true
             if ($rootScope.email_template == undefined) {
                 $rootScope.email_template = {}
                 $rootScope.email_template.name = ''
@@ -210,7 +265,7 @@
 
             //  console.log("outisde",$rootScope.email_template)
 
-            $scope.showProgress = true;
+            $scope.showEmailProgress = true;
             var invoiceTime = 0; //sec
             angular.forEach($scope.selectedInvoiceData, function (invoiceInfo, key) {
 
@@ -219,8 +274,9 @@
                     to_email.push(invoiceInfo.BillEmail.Address);
                 }*/
                 $scope.viewCustomerEmail = $rootScope.customerEmail;
+                var customerEmailArray = $rootScope.customerEmail.split(',');
                 var invoice = {
-                    to: [$rootScope.customerEmail],
+                    to: customerEmailArray,
                     cc: $scope.settings.InvoiceContacts.cc_email,
                     bcc: $scope.settings.InvoiceContacts.bcc_email,
                     subject: $rootScope.email_template.subject,
@@ -242,7 +298,6 @@
 
                 invoiceTime += 999; //sec
             });
-
         };
         $scope.cancel = function () {
             $mdDialog.cancel();
@@ -268,8 +323,6 @@
                 $scope.currecntInvoice = invoice.invoice_id;
                 $scope.promise = InvoiceModel.SendInvoice(invoice);
                 $scope.promise.then(function (response) {
-                    console.log('TCL: sendInvoice -> response', response)
-
                     if (response.statuscode == 0) {
 
                         var message = {
@@ -309,7 +362,7 @@
         function processInvoice(invoice) {
             $scope.sentInvoice.push(invoice.invoice_id);
             if ($scope.sentInvoice.length == $scope.selectedInvoiceData.length) {
-                $scope.showProgress = false;
+                $scope.showEmailProgress = false;
                 $scope.currecntInvoice = 0;
                 $timeout(function () {
                     $scope.refreshInvoiceGrid();

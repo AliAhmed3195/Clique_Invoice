@@ -84,7 +84,12 @@
                                     <md-icon md-font-icon="fa fa-plus" style="font-size:12px;"></md-icon>>
                                     <md-tooltip>Add New Template</md-tooltip>
                                 </md-button>
-
+                                <div flex="5"></div>
+                                <md-checkbox ng-model="selectedtemplate.isSelected"
+                                    style="height: 30px; width: 300px; padding-top: 3px; padding-left: 5px; margin-top: 20px;"
+                                    ng-selected="selectedTemplate.isSelected == true" aria-label="Set As Default">
+                                    Set As Default
+                                </md-checkbox>
 
                             </div>
                             <md-input-container class="md-block">
@@ -116,14 +121,6 @@
                                     <md-chip>[company_weburl]</md-chip>
                                     <md-chip>[date]</md-chip>
                                 </md-chips>
-                            </div>
-                            <div layout="column" layout-align="center start">
-                                <div flex="66">
-                                    <md-checkbox ng-model="selectedtemplate.isSelected"
-                                        ng-selected="selectedTemplate.isSelected == true" aria-label="Set As Default">
-                                        Set As Default
-                                    </md-checkbox>
-                                </div>
                             </div>
                             <div layout="column" layout-align="center start">
                                 &nbsp;
@@ -212,7 +209,7 @@
                             </div>
 
                             <div layout="column" layout-align="center start" permission
-                                permission-only="'settings-depositToAccount'">
+                                permission-only="'settings-depositToAccount'" ng-hide="erptype == 'Standalone'"  >
                                 <h3>Deposit To Account</h3>
                                 <!--{{setting.account_id}}-->
                                 <md-input-container class="md-block">
@@ -248,7 +245,7 @@
                             <md-card-header>
                                 <md-card-avatar>
 
-                                    <img src="assets/images/logo.png" />
+                                    <img ng-src="{{appLogo}}" />
                                 </md-card-avatar>
                                 <md-card-header-text>
                                     <span class="md-title">{{invoiceTemplate.name}}</span>
@@ -308,14 +305,12 @@
 
             </md-content>
         </md-tab>
-
-        <md-tab label="Payment Link">
+        <md-tab ng-if="showPaymentLink" label="Payment Link">
             <md-content class="md-padding">
                 <form name="profilelink">
                     <md-content class="md-padding">
 
                         <md-card style="padding:25px">
-                            <!-- <h3 class="md-title"> Payment Link</h3> -->
                             <div layout="column" layout-align="center center" layout-margin>
                                 <div flex>
                                     <h1 class="md-display-1">
@@ -332,7 +327,7 @@
                                 <div flex="75">
                                     <div class="md-caption">
                                         Just paste this link on the email template inside your QuickBooks
-                                        (settings->customize form) to accept payment from
+                                        (Settings > Custom Form Styles  > Emails) to accept payment from
                                         QuickBooks.
                                     </div>
                                 </div>
@@ -349,10 +344,16 @@
                                     <md-button ng-click="postProfileLink()" class="md-primary md-raised">Generate
                                         Payment Link
                                     </md-button>
-                                    <!-- <md-button ng-click="postProfileLink()" class="md-raised"> Link
-                                    </md-button> -->
                                 </div>
                             </div>
+
+                            <div layout="column" layout-align="center center">
+                                <div flex>
+                                    <img class="projectGif" src="assets/images/Custom-Form-Edit-Animated-Giff.gif"
+                                        width="750">
+                                </div>
+                            </div>
+
                         </md-card>
                     </md-content>
                 </form>

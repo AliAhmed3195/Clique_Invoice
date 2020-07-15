@@ -494,6 +494,7 @@
               });
         }
         function Sale(mode){
+            // debugger;
             ////console.log($scope.ccprofile);
             $scope.disabledChargeButton=true;
             $timeout(function(){
@@ -710,6 +711,7 @@
 
             $scope.promise = InvoiceModel.CCSale(paymentObj);
             $scope.promise.then(function(response) {
+                // debugger;
                 $scope.disabledChargeButton=false;
                 if(response.statuscode == 0){
                     $scope.IsPaidInvoice=true;
@@ -719,6 +721,7 @@
                     $scope.transactionResponse=response.data;
 
                     $scope.showEmailDialog=false;
+                    Clique.showToast(response.statusmessage, 'bottom right', 'success');
                     if($scope.transactionResponse.status=='declined'){
                       Clique.showToast(response.statusmessage, 'bottom right', 'error');
                     }
@@ -862,8 +865,13 @@
                     $scope.settings.companyInfo=$scope.companyInfo.company;
                     $scope.settings.receipt_type=tranType;
                     $scope.settings.InvoiceContacts.to_email = [];
-                    if (customer_email != "") {
-                        $scope.settings.InvoiceContacts.to_email.push(customer_email);
+                    try{
+                        if (customer_email != null) {
+                            // $scope.settings.InvoiceContacts.to_email.push(customer_email);
+                            $scope.settings.InvoiceContacts.to_email=customer_email.split(",");
+                        }
+                    }catch(err){
+                    console.log("TCL: $scope.emailReceipt -> err", err)
                     }
                     $scope.sendReceiptDialog();
                 }
@@ -1077,11 +1085,18 @@
 
     }
     function ReceiptController($timeout, $mdDialog, $filter, triSkins, $window, $rootScope, $scope, SettingModel, Clique,TransactionModel) {
+        // debugger;
             var vm = this;
             $scope.disabledSubmitButton = false;
             $scope.showCCSIcon = 'zmdi zmdi-account-add';
             $scope.showCCS = false;
 
+            if ($scope.settings.InvoiceContacts.to_email.length > 0) {
+                $scope.disabledSubmitButton = false;
+            } else {
+                $scope.disabledSubmitButton = true;
+            }
+    
             $scope.toggleCCS = function() {
                 $scope.showCCS = !$scope.showCCS;
                 $scope.showCCSIcon = $scope.showCCS ? 'zmdi zmdi-account' : 'zmdi zmdi-account-add';

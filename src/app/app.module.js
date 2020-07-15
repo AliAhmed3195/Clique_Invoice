@@ -22,14 +22,21 @@
             'invoice',
             'settings',
             'transactions',
-            //'customer',
+            'customer', 
+            // 'email',
+            'thread',
+            // 'inbox',
             // recurring and statement commented for live
             'recurring',
-            'statement',
+            'taxrate',
+            'item',
+            'chartaccount',
+            //  'statement',
             'salesreceipt',
             'angular-clipboard',
             'app.permission',
             'angularTrix',
+            'ngAvatar'
 
             //'angularjs-crypto',
             //'permission',

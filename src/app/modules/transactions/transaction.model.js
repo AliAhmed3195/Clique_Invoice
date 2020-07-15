@@ -17,6 +17,7 @@
 
         
         function GetAllTransaction(query) {
+            // debugger;
             var qs = $httpParamSerializer(query);
             return Clique.callService('get','/invoice/transactions/?'+qs,'').then(handleSuccess, handleError);
         }
@@ -37,7 +38,6 @@
 
         // private functions
         function handleSuccess(res) {
-            console.log(res);
             return res.data;
         }
         function handleError(error) {

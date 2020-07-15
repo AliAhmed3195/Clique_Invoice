@@ -3,7 +3,7 @@
         display: none !important;
     }
 
-    .parent-wapper {
+    /* .parent-wapper {
         margin-top: 5px;
         margin-left: 20px;
         margin-right: 10px;
@@ -12,7 +12,7 @@
         height: 150%;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
         transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
-    }
+    } */
 
     div#errorWrapper {
         display: none !important;
@@ -26,25 +26,28 @@
 
 
     .pdfjs .pdfViewer .page {
-        width: 97%;
         border: none !important;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     }
 
-
+    .pdfjs .textLayer {
+        top: 10px !important;
+    }
 
     .pdfjs #viewerContainer {
-        overflow-y: scroll;
-        scrollbar-width: none;
+        overflow: visible !important;
+        /* overflow-y: scroll; */
+        /* scrollbar-width: none; */
         /* Firefox */
-        -ms-overflow-style: none;
+        /* -ms-overflow-style: none; */
         /* IE 10+ */
-        margin-bottom: 50px;
+        margin-bottom: 90px;
+        margin-top: 1px;
     }
 
     div#viewer {
-        margin-top: 5px;
-        margin-bottom: 5px
+        margin-top: 1px;
+        margin-bottom: 1px
     }
 
     .pdfjs #viewerContainer::-webkit-scrollbar {
@@ -95,27 +98,29 @@
                     <md-tooltip>Invoice Print</md-tooltip>
                 </md-button>
 
-                <md-button ng-if="!isInvoicePaid" aria-label="Payment Method" class="md-fab md-raised md-mini md-primary"
-                    ng-click="vm.subMenu('payment_methods', $event)" permission=""
-                    permission-only="'invoice-paymentmethod'">
+                <md-button ng-if="!isInvoicePaid" aria-label="Payment method"
+                    class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('payment_methods', $event)"
+                    permission="" permission-only="'invoice-paymentmethod'">
                     <md-icon md-font-icon="fa fa-list-alt"></md-icon>
-                    <md-tooltip>Payment Method</md-tooltip>
+                    <md-tooltip>Preferred Processor</md-tooltip>
                 </md-button>
 
-                <md-button ng-if="!isInvoicePaid" aria-label="Collect Payment" class="md-fab md-raised md-mini md-primary"
-                    ng-click="vm.subMenu('collect_payment', $event)" permission="" permission-only="'invoice-payment'">
+                <md-button ng-if="!isInvoicePaid" aria-label="Collect Payment"
+                    class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('collect_payment', $event)"
+                    permission="" permission-only="'invoice-payment'">
                     <md-icon md-font-icon="fa fa-credit-card"></md-icon>
                     <md-tooltip>Collect Payment</md-tooltip>
                 </md-button>
 
-                <md-button ng-if="!isInvoicePaid" aria-label="Invoice Statistic" class="md-fab md-raised md-mini md-primary"
-                    ng-click="vm.subMenu('invoice_stats', $event)" permission="" permission-only="'invoice-statistics'">
+                <md-button ng-if="!isInvoicePaid" aria-label="Invoice Statistic"
+                    class="md-fab md-raised md-mini md-primary" ng-click="vm.subMenu('invoice_stats', $event)"
+                    permission="" permission-only="'invoice-statistics'">
                     <md-icon md-font-icon="fa fa-bar-chart"></md-icon>
                     <md-tooltip>Invoice Statistics</md-tooltip>
                 </md-button>
 
-                <md-fab-speed-dial ng-if="!isInvoicePaid" ng-show='!IsDefaultTemplate' md-direction="up" md-open="vm.fabStatus"
-                    ng-class="vm.fabAnimation" permission="" permission-only="'invoice-color'">
+                <md-fab-speed-dial ng-if="!isInvoicePaid" ng-show='!IsDefaultTemplate' md-direction="up"
+                    md-open="vm.fabStatus" ng-class="vm.fabAnimation" permission="" permission-only="'invoice-color'">
                     <md-fab-trigger>
 
                         <md-button aria-label="share this post" class="md-fab md-mini md-primary"

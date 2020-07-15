@@ -12,6 +12,7 @@
         $scope.showInvoiceToolBar = false;
         $scope.showInvoiceEmailToolBar = false;
         $scope.showInvoicePaymentButton = false;
+        $scope.showInvoiceLink = false;
         $scope.showRecurringToolBar = false;
         $scope.showBatchInvoices = false;
         vm.isInvoiceLoaded = true;
@@ -175,20 +176,15 @@
         /*eof datatable*/
         vm.query = {
             status: filtersession,
-            limit: 10,
+            limit: 100,
             order: '-TxnDate',
-            page: sessionInvoicePage
+            page: sessionInvoicePage,
+            limitSelect: true,
+
         };
-        $scope.selected = [];
 
         $scope.from = (sessionFromDate != undefined ? new Date(sessionFromDate) : new Date(y, m, 1));
         $scope.to = sessionToDate != undefined ? new Date(sessionToDate) : new Date(y, m + 1, 0);
-
-
-        // if ($stateParams.type) {
-
-        //     vm.query.status = $stateParams.type;
-        // }
 
         vm.selected = [];
         vm.columns = {
@@ -206,6 +202,9 @@
                 debounce: 500
             }
         };
+        // $scope.toggleLimitOptions = function () {
+        //     $scope.limitOptions = $scope.limitOptions ? undefined : [10, 25, 50, 100];
+        // };
         vm.getInvoices = getInvoices;
         vm.removeFilter = removeFilter;
         vm.printPDFInvoice = printPDFInvoice;
@@ -218,7 +217,7 @@
         vm.openRecuringDialog = openRecuringDialog;
         vm.createInvoice = createInvoice;
         vm.toolBarProcess = toolBarProcess;
-
+        // vm.limitOptions = [10, 25, 50, 100];
 
         activate();
         $scope.invoiceSelection = [];
@@ -320,6 +319,7 @@
             $scope.IsDefaultTemplate = false
             $scope.promise = SettingModel.GetSettings();
             $scope.promise.then(function (response) {
+             //   debugger
                 if (response.statuscode == 0) {
                     $scope.IsDefaultTemplate = response.data.IsDefaultTemplate;
                 }
@@ -338,7 +338,7 @@
                 status: 'all',
                 docnumber: '',
                 customer: '',
-                limit: 10,
+                limit: 100,
                 order: '-TxnDate',
                 page: 1
             }
@@ -360,6 +360,8 @@
 
         function openInvoiceDetail(invoice) {
 
+            sessionStorage.setItem('customer_id',invoice.CustomerRef.value)
+
             // to remove print iframe
             var myEl = angular.element(document.getElementsByClassName('pdfIframe'));
             myEl.remove();
@@ -373,11 +375,11 @@
             }
 
             sessionStorage.setItem('invoice_status', invoice_status);
-            if (invoice.BillEmail != null) {
-                sessionStorage.setItem('customer_email', invoice.BillEmail.Address);
-            } else {
-                sessionStorage.setItem('customer_email', '');
-            }
+            // if (invoice.BillEmail != null) {
+            //     sessionStorage.setItem('customer_email', invoice.BillEmail.Address);
+            // } else {
+            //     // sessionStorage.setItem('customer_email', '');
+            // }
             sessionStorage.setItem('invoice_id', invoice.Id);
             sessionStorage.setItem('invoice_issuedate', invoice.TxnDate);
             sessionStorage.setItem('invoice_detail', JSON.stringify(invoice));
@@ -435,7 +437,7 @@
         function printPdf(url) {
             var iframe = document.createElement('iframe');
             // iframe.id = 'pdfIframe'
-            iframe.className='pdfIframe'
+            iframe.className = 'pdfIframe'
             document.body.appendChild(iframe);
             iframe.style.display = 'none';
             iframe.onload = function () {
@@ -477,16 +479,18 @@
             $mdDialog.show({
                 scope: $scope,
                 preserveScope: true,
+                controller: 'SendBulkInvoiceController',
                 parent: angular.element(document.body),
                 templateUrl: 'app/modules/invoice/sendbulk/send.bulk.invoice.html',
                 clickOutsideToClose: true,
                 fullscreen: true,
-                controller: 'SendBulkInvoiceController'
+                
             });
         }
 
         function paymentInvoice() {
             var customer_id;
+        //    debugger;
             $rootScope.dataObj = {};
             $rootScope.dataObj = $scope.selectedInvoiceData;
             $state.go("triangular.invoice-payment");
@@ -534,10 +538,15 @@
             } else {
                 $scope.showInvoiceToolBar = false;
             }
-
+            // to hide invoice link and collect payment            
+            $scope.showInvoiceLink = false;
             $scope.showInvoicePaymentButton = false;
-            if ($scope.selectedCustomer.length == 1) {
+            if ($scope.selectedCustomer.length == 1 && $scope.selectedInvoiceData[0].IsPaid != 1) {
+                $scope.showInvoiceLink = true;
                 $scope.showInvoicePaymentButton = true;
+            }
+            if ($scope.invoiceSelection.length > 1) {
+                $scope.showInvoiceLink = false;
             }
             $scope.showInvoiceEmailToolBar = false;
             if ($scope.selectedInvoiceData.length == 1) {
@@ -552,7 +561,6 @@
             if ($scope.invoiceSelection.length >= 1) {
                 $scope.showBatchInvoices = true;
             }
-
 
         }
 

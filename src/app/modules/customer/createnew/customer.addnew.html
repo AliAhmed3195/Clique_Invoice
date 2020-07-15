@@ -1,0 +1,146 @@
+<md-dialog aria-label="Add New Customer" class="fullscreen-dialog">
+    <md-progress-linear class="md-primary" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+    <md-dialog-content class="addnewcustomer">
+        <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+
+        <form class="md-padding" name="customerForm">
+            <h4 class="md-title">Customer Information</h4>
+
+            <div layout="column">
+                <md-input-container flex="">
+                    <label>Customer Name</label>
+                    <input type="text" name="display_name" ng-model="customer.DisplayName" md-autofocus
+                        ng-maxlength="100" ng-pattern="/^[a-zA-Z\s]*$/" required>
+                    <div ng-messages="customerForm.display_name.$error" md-auto-hide="false">
+                        <p ng-message when="required">Please enter your first name</p>
+                        <p ng-message when="maxlength">Text should not be greater then 100 characters</p>
+                        <p ng-message when="pattern">Only alphabets are allowed</p>
+                    </div>
+                </md-input-container>
+                <md-input-container flex="">
+                    <label>Email</label>
+                    <input name="email" required multiple-emails ng-model="customer.PrimaryEmailAddr.Address">
+                    <div ng-messages="customerForm.email.$error" md-auto-hide="false">
+                        <div ng-message="required">
+                            <span translate>Please enter your email address</span>
+                        </div>
+                        <div ng-message="multipleEmails">
+                            <span translate>Please enter a valid email address</span>
+                        </div>
+                    </div>
+                </md-input-container>
+
+                <div layout="row">
+                    <md-input-container flex="">
+                        <label>Company</label>
+                        <input name="company_name" type="text" ng-model="customer.CompanyName" ng-maxlength="100">
+                        <div ng-messages="customerForm.company_name.$error" md-auto-hide="false">
+                            <p ng-message when="maxlength">Text should not be greater then 100 characters</p>
+                        </div>
+                    </md-input-container>
+                    <md-input-container flex="">
+                        <label>PrimaryPhone</label>
+                        <input name="PrimaryPhone" type="text" ng-model="customer.PrimaryPhone.FreeFormNumber">
+                    </md-input-container>
+                </div>
+
+                <div layout="row">
+                    <md-input-container flex="">
+                        <label>Fax</label>
+                        <input name="Fax" type="text" ng-model="customer.Fax.FreeFormNumber">
+                    </md-input-container>
+                    <md-input-container flex="">
+                        <label>Website</label>
+                        <!--//ng-pattern="/^https?://.+$/"-->
+                        <input name="WebAddr" ng-pattern="/^(https?:\/\/)+[a-z0-9-]+(\.[a-z0-9-]+)+(\/[a-z0-9-]+)*\/?$/"
+                            type="text" ng-model="customer.WebAddr.URI" ng-maxlength="100">
+                        <div ng-messages="customerForm.WebAddr.$error" md-auto-hide="false">
+                            <p ng-message when="pattern">Invalid web address </p>
+                            <p ng-message when="maxlength">Webaddress should not be greater then 100 characters</p>
+                        </div>
+                    </md-input-container>
+                </div>
+
+                <md-input-container flex="">
+                    <label>Note</label>
+                    <input name="Notes" type="text" ng-model="customer.Notes" md-maxlength="100">
+                    <div ng-messages="customerForm.Notes.$error" md-auto-hide="false">
+                        <p ng-message when="md-maxlength">Maximum 100 characters allowed</p>
+                    </div>
+                </md-input-container>
+            </div>
+            <div layout="column">
+                <h4 class="md-body-1">Billing Address</h4>
+                <div layout="row">
+                    <md-input-container flex="">
+                        <label>Street</label>
+                        <input name="BillAddr_Line1" type="text" ng-model="customer.BillAddr.Line1">
+                    </md-input-container>
+                    <md-input-container flex="">
+                        <label>City/Town</label>
+                        <input name="BillAddr_City" type="text" ng-model="customer.BillAddr.City">
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <md-input-container flex="">
+                        <label>State/Province</label>
+                        <input name="BillAddr_CountrySubDivisionCode" type="text"
+                            ng-model="customer.BillAddr.CountrySubDivisionCode">
+                    </md-input-container>
+                    <md-input-container flex="">
+                        <label>Zip code</label>
+                        <input name="BillAddr_PostalCode" type="text" ng-model="customer.BillAddr.PostalCode">
+                    </md-input-container>
+                </div>
+
+                <md-select placeholder="Country" ng-model="customer.BillAddr.Country" md-on-open="loadCountries()"
+                    style="min-width: 200px;">
+                    <md-option ng-value="country.name" ng-repeat="country in countries">{{country.name}}
+                    </md-option>
+                </md-select>
+            </div>
+            <div layout="column" ng-init="sameAsBilling=true">
+                <h4 class="md-body-1">Shipping Address <md-checkbox ng-model="sameAsBilling"
+                        ng-change="setCustomerShipping();">
+                        </md-chekcbox> <span class="md-caption">Same as billing address</span></h4>
+                <!-- <div ng-hide="sameAsBilling"> -->
+                <md-input-container flex="" ng-hide="sameAsBilling">
+                    <label>Street</label>
+                    <input name="ShipAddr_Line1" type="text" ng-model="customer.ShipAddr.Line1">
+                </md-input-container>
+                <md-input-container flex="" ng-hide="sameAsBilling">
+                    <label>City/Town</label>
+                    <input name="ShipAddr_City" type="text" ng-model="customer.ShipAddr.City">
+                </md-input-container>
+                <md-input-container flex="" ng-hide="sameAsBilling">
+                    <label>State/Province</label>
+                    <input name="ShipAddr_CountrySubDivisionCode" type="text"
+                        ng-model="customer.ShipAddr.CountrySubDivisionCode">
+                </md-input-container>
+                <md-input-container flex="" ng-hide="sameAsBilling">
+                    <label>Zip code</label>
+                    <input name="ShipAddr_PostalCode" type="text" ng-model="customer.ShipAddr.PostalCode">
+                </md-input-container>
+                <md-select placeholder="Country" ng-model="customer.ShipAddr.Country" md-on-open="loadCountries()"
+                    style="min-width: 200px;" ng-hide="sameAsBilling">
+                    <md-option ng-value="country.name" ng-repeat="country in countries">{{country.name}}
+                    </md-option>
+                </md-select>
+                <!-- </div> -->
+            </div>
+
+
+
+            
+            <div layout="row" layout-align="end start" ng-hide="hideDialogActions">
+                <md-button class="md-primary md-raised" ng-click="addNewCustomer();"
+                    ng-disabled="customerForm.$invalid">Save</md-button>
+                <!-- <div class="md-actions"> -->
+                <md-button class="md-primary md-warn" ng-click="cancel()">
+                    Close
+                </md-button>
+                <!-- </div> -->
+            </div>
+        </form>
+    </md-dialog-content>
+</md-dialog>

@@ -17,7 +17,7 @@
         });
 
     function StatementController($scope, $rootScope, $timeout, $interval, $q, $http, $compile, Clique, InvoiceModel, SettingModel, RecurringModel, $mdDialog, $mdToast, $element, $state, triTheming, $mdSidenav, $filter, PermissionStore) {
-
+        debugger;
         var date = new Date();
         var y = date.getFullYear();
         var m = date.getMonth();

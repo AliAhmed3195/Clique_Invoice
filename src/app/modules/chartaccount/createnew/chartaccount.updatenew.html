@@ -1,0 +1,118 @@
+<!-- <style>
+ .Regiontax {
+margin-bottom: 90px;
+    }
+</style> -->
+
+<md-dialog aria-label="Add New Tax" class="fullscreen-dialog">
+    <md-progress-linear class="md-primary" md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+
+    <md-dialog-content class="addnewitem">
+
+        <md-progress-linear md-mode="indeterminate" ng-show="showProgress"></md-progress-linear>
+        <form class="md-padding" name="itemForm">
+            <h4 class="md-title">Update Tax</h4>
+
+            <div layout="column">
+
+                    <md-input-container flex="50" >
+                        <label>Tax Rate Type </label>
+                        <md-select ng-model="item.Type" id= "taxtype1" name="Type" ng-change="" required>
+                            <md-option ng-value="type.id" ng-repeat="type in [{'id':1,'name':'VAT'},{'id':2,'name':'GST'},{'id':3,'name':'Custom'}]" >{{ type.name }}
+                            </md-option>
+                        </md-select>
+                        <br/>
+                        <br/>
+                        <div ng-messages="itemForm.Type.$error" md-auto-hide="false">
+                            <!-- <p ng-message when="required">Required field</p> -->
+                        </div>
+    
+            <div layout="column" >
+
+                <md-input-container flex="33" ng-if="item.Type == '3'"   >
+
+                    <label>Name</label>
+                   
+                    <input name="Name" id= "Nametype" class = "Nametype" type="text"   ng-model="item.CustomName" required >
+
+
+                    <!-- <div ng-messages="itemForm.CustomName.$error" md-auto-hide="false"> -->
+                        <!-- <p ng-message when="required">Required field</p>
+                        <p ng-message when="maxlength">Maximum 100 characters allowed</p> -->
+                    </div>
+                </md-input-container>
+
+                <div layout="row">
+                    <md-input-container flex="">
+                        <label>Region</label>
+                        <input name="Region" id="Regiontax" type="text" ng-model="item.Region" ng-maxlength="20">
+                        <div ng-messages="itemForm.Region.$error" md-auto-hide="false">
+                            <p ng-message when="maxlength">Maximum 100 characters allowed</p>
+                        </div>
+                    </md-input-container>
+                </div>
+
+                    <div layout="row">
+                    <md-input-container flex="">
+                        <label>Rate</label>
+                        <input name="Rate" type="text" ng-blur="adddecimalplaces(item.Rate);" ng-model="item.Rate" placeholder="%" required>
+                        <div ng-messages="itemForm.Rate.$error" md-auto-hide="false">
+                           
+                        </div>
+                    </md-input-container>
+                </div>
+        <md-input-container flex="50">
+                    <label>Rate Type</label>
+                    
+                    <md-select name="RateType" ng-model="item.RateType" ng-change=""style="min-width:170px;" required>
+                        <!-- <md-option ng-value="">Inclusive</md-option>
+                        <md-option ng-value="">Exclusive</md-option> -->
+                        
+                        <md-option ng-value="ratetype.id" ng-repeat="ratetype in [{'id':1,'name':'Exclusive'},{'id':2,'name':'Inclusive'}]">{{ ratetype.name }}
+                            </md-option>
+                    </md-select>
+
+                    <!-- <md-select ng-model="item.Type" name="item.RateType" ng-change="" required>
+                            <md-option ng-value="type" ng-repeat="RateType in ['Inclusive','Exclusive']">{{ RateType }}
+                            </md-option>
+                        </md-select> -->
+
+                    <div ng-messages="itemForm.Ratetype.$error" md-auto-hide="false">
+                        <p ng-message when="required">Required field</p>
+                    </div>
+                </md-input-container>
+            </div>
+
+
+
+            <div layout="row">
+                <md-input-container flex="">
+                    <label>Tax Rate Information</label>
+                    <textarea name="Description" ng-model="item.Description" md-maxlength="100"></textarea>
+                    <div ng-messages="itemForm.Description.$error" md-auto-hide="false">
+                        <p ng-message when="md-maxlength">Maximum 100 characters allowed</p>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <!-- <br> -->
+                <!-- ng-change="Activeornot(item.Active)" -->
+                <md-switch ng-model="item.Active"  md-no-ink  aria-label="Default Switch" class="md-primary" >
+                        Status
+                </md-switch>
+            </div>
+
+
+            <div layout="row" layout-align="end center" ng-click="hide(); refreshInvoiceGrid();">
+                <md-button class="md-primary md-raised" ng-click="addNew();" ng-disabled="itemForm.$invalid" >
+                    Save
+                </md-button>
+                <md-button class="md-primary md-warn" ng-click="cancel()">
+                    Close
+                </md-button>
+
+            </div>
+        </form>
+    </md-dialog-content>
+</md-dialog>

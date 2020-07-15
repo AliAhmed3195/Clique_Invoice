@@ -28,7 +28,14 @@
 
     function Controller($window, $scope, $rootScope, $timeout, $interval, $q, $http, $compile, Clique, InvoiceModel, SettingModel, $mdDialog, $mdToast, $state, triTheming) {
 
+        var appConfig = Clique.configApp();
+        $scope.appName = appConfig.appName;
+        $scope.appLogo = appConfig.appLogo;
+         var userInfo  = Clique.getUserInfo();
+        console.log('username' ,userInfo)
+      //   var useremail = userInfo.email;
 
+        // console.log("user email" , useremail);
 
         $scope.innerHeight = $window.innerHeight + 0;
 
@@ -120,7 +127,7 @@
 
         //getCompanyInfo();
         getSettings();
-
+        var userinfo = Clique.lo
 
 
 
@@ -141,13 +148,23 @@
 
 
         $scope.validateChip = function ($chip, type) {
+            debugger;
+           console.log('chip', $chip);
+           console.log('type', type);
+
+           
             //console.log("i am call");
             if (!$chip) return;
             // check if the current string length is greater than or equal to a character limit.
             //console.log($chip+'-'+type);
             if (type == "bcc") {
                 if (angular.isArray($scope.setting.InvoiceContacts.cc_email)) {
-
+                    //  user can not enter login useremail
+                    if($chip == useremail) {
+                        $scope.setting.InvoiceContacts.bcc_email.pop();
+                        Clique.showToast('The Merchants primary email cannot be used in Cc and Bcc!', 'bottom right', 'error');
+                       return   
+                    }
                     if (($scope.setting.InvoiceContacts.cc_email.indexOf($chip) >= 0) || ($scope.setting.InvoiceContacts.sender_email.indexOf($chip) >= 0)) {
                         Clique.showToast('Email already defined', 'bottom right', 'error');
                         $scope.setting.InvoiceContacts.bcc_email.pop();
@@ -155,7 +172,12 @@
                 }
             } else if (type == "cc") {
                 if (angular.isArray($scope.setting.InvoiceContacts.bcc_email)) {
-
+                    if($chip == useremail) {
+                         //  user can not enter login useremail
+                        $scope.setting.InvoiceContacts.cc_email.pop();
+                        Clique.showToast('The Merchants primary email cannot be used in Cc and Bcc!', 'bottom right', 'error');
+                        return   
+                    }
                     if (($scope.setting.InvoiceContacts.bcc_email.indexOf($chip) >= 0) || ($scope.setting.InvoiceContacts.sender_email.indexOf($chip) >= 0)) {
                         Clique.showToast('Email already defined', 'bottom right', 'error');
                         $scope.setting.InvoiceContacts.cc_email.pop();
@@ -202,6 +224,26 @@
                 } else {}
             });
         }
+        $scope.showPaymentLink = false;
+
+        function CheckQBO() {
+            $scope.promise = SettingModel.CheckQBO();
+            $scope.promise.then(function (response) {
+                    if (response.statuscode == 0) {
+                        
+                        $scope.erptype = response.data.erp.type;
+                        if (response.data.erp.type == "quickbooks") {
+                            $scope.showPaymentLink = true;
+                        }
+                    } else {
+                        $scope.showPaymentLink = false;
+                    }
+                },
+                function failure(err) {
+                    $scope.showPaymentLink = false;
+                });
+        }
+        CheckQBO();
 
         function getSettings() {
             $scope.promise = SettingModel.GetSettings();
@@ -505,7 +547,7 @@
                     Clique.showToast("Template Added Successfully", 'bottom right', 'success');
                     //    console.log($scope.setting.InvoiceContacts.template_email);
                     $mdDialog.hide();
-
+                    $state.reload();
                 } else {
                     Clique.showToast("Template Failed To Add", 'bottom right', 'error');
                 }

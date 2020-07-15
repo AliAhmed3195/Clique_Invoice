@@ -1,116 +1,139 @@
-(function() {
+(function () {
     'use strict';
     angular
-        .module('transactions',['ngCsv'])
+        .module('transactions', ['ngCsv'])
         .controller('TransactionController', Controller);
-        //.directive('connectToQuickbooks', connectToQuickbooks);
+    //.directive('connectToQuickbooks', connectToQuickbooks);
 
     /* @ngInject */
-    function Controller($window,printer,$http,$compile,$rootScope,$filter,$scope, $timeout, $q,$mdDialog,TransactionModel,Clique,$mdSidenav,$log,$state,triBreadcrumbsService,SettingModel,CliqueConstant,helper,VantivTriPOSiPP350) {
+    function Controller($window, printer, $http, $compile, $rootScope, $filter, $scope, $timeout, $q, $mdDialog, TransactionModel, Clique, $mdSidenav, $log, $state, triBreadcrumbsService, SettingModel, CliqueConstant, helper, VantivTriPOSiPP350)
+     {
 
-
+//  debugger;
+// console.log(helper);
+// console.log("printer", printer);
+// console.log("VantivTriPOSiPP350", VantivTriPOSiPP350);
         //remove invoice search
         sessionStorage.removeItem("invoice_search");
 
 
         var vm = this;
-        $rootScope.transactionResponse={id:1,name:'Faisal'};
-        var supportVoidRefund=false;
-        vm.isTransactionLoaded=true;
+        $rootScope.transactionResponse = {
+            id: 1,
+            name: 'Faisal'
+        };
+        var supportVoidRefund = false;
+        vm.isTransactionLoaded = true;
         vm.tblData = [];
+        vm.fileName = ''
+        vm.newfileName = ''
+
         $scope.processorType;
         vm.columns = function () {
-            return  ['ref_id','trans_timestamp','trans_amount','remain_amount','trans_type','status','customer_name','process_type','invoice_no'];
+            return ['ref_id', 'trans_timestamp', 'trans_amount', 'remain_amount', 'trans_type', 'status', 'customer_name', 'process_type', 'invoice_no'];
         };
-        $scope.orderdata = ['ref_id','trans_timestamp','trans_amount','remain_amount','trans_type','status','customer_name','process_type','invoice_no'];
-        $scope.hardwareSupport={
-            triposipp350:true
+        $scope.orderdata = ['ref_id', 'trans_timestamp', 'trans_amount', 'remain_amount', 'trans_type', 'status', 'customer_name', 'process_type', 'invoice_no'];
+        $scope.hardwareSupport = {
+            triposipp350: true
         };
         var x2js = new X2JS();
         //vantiv tripos
         $scope.laneId;
-        $scope.triPOSLaneInfo="";
-        $rootScope.parentTransType="";
+        $scope.triPOSLaneInfo = "";
+        $rootScope.parentTransType = "";
 
-        vm.disabledVoidOption=function(item){
-             //debugger;
-            switch(item.trans_type){
+        vm.disabledVoidOption = function (item) {
+            // debugger;
+
+            switch (item.trans_type) {
                 case "triposipp350_debit":
                     return true;
-                break;
+                    break;
                 case "triposipp350_gift":
                     return true;
-                break;
+                    break;
                 default:
-                    if(item.trans_amount!=item.remain_amount || item.trans_amount <= 0 ){
+                    // remain_amount is not updated from server
+                    if (item.trans_amount != item.remain_amount || item.trans_amount <= 0) {
                         return true;
-                    }else{
+                    } else {
                         return false;
                     }
-                break;
+                    break;
             }
             return true;
         }
-        vm.showRefundOption=function(transType){
+        vm.showRefundOption = function (transType) {
             return true;
         }
         $scope.promise = SettingModel.GetPaymentInfo();
-        $scope.promise.then(function(response){
-            if(response.statuscode==0){
-
+        $scope.promise.then(function (response) {
+            if (response.statuscode == 0) {
+// debugger;
                 ///Get Settings/////
                 $scope.promise = SettingModel.GetCompanyInfo();
-                $scope.promise.then(function(response){
-                    if(response.statuscode==0){
-                        $rootScope.companyInfo=response.data;
+                // debugger;
+                $scope.promise.then(function (response) {
+                    if (response.statuscode == 0) {
+                        $rootScope.companyInfo = response.data;
 
                     }
                 });
 
-                $scope.paymentInfo=response.data;
-                if(response.data.total_count > 0){
-                    angular.forEach(response.data.items, function(value, key){
-                        var is_default=value.is_default;
-                        var voidrefund=value.voidrefund;
+                $scope.paymentInfo = response.data;
+                if (response.data.total_count > 0) {
+                    angular.forEach(response.data.items, function (value, key) {
+                        var is_default = value.is_default;
+                        var voidrefund = value.voidrefund;
 
-                        if(is_default==true){
+                        if (is_default == true) {
 
 
-                                if(helper.checkHardwareModel(value,'triposipp350')==true){
-                                    $scope.hardwareSupport.triposipp350=true;
-                                    VantivTriPOSiPP350.config.serviceAddress=value.configuration.hardware.triposipp350.service_address;
-                                    VantivTriPOSiPP350.config.tpAuthorizationCredential=value.configuration.hardware.triposipp350.developer_key;
-                                    VantivTriPOSiPP350.config.tpAuthorizationSecret=value.configuration.hardware.triposipp350.developer_secret;
+                            if (helper.checkHardwareModel(value, 'triposipp350') == true) {
+                                $scope.hardwareSupport.triposipp350 = true;
+                                VantivTriPOSiPP350.config.serviceAddress = value.configuration.hardware.triposipp350.service_address;
+                                VantivTriPOSiPP350.config.tpAuthorizationCredential = value.configuration.hardware.triposipp350.developer_key;
+                                VantivTriPOSiPP350.config.tpAuthorizationSecret = value.configuration.hardware.triposipp350.developer_secret;
 
-                                   if($scope.laneId==null || $scope.laneId==undefined){
-                                         //Get Lane Information
-                                        VantivTriPOSiPP350.getLaneInfo(VantivTriPOSiPP350.config,function(res){
-                                          var response=res.data;
-                                          $scope.triPOSLaneInfo=response;
-                                          $scope.triPOSLaneInfo._hasErrors;
-                                          if($scope.triPOSLaneInfo._hasErrors==true){
-                                            $scope.triPOSLaneInfo.errorMessage=response._errors[0].developerMessage;
-                                          }else{
-                                            $scope.laneId=parseInt($scope.triPOSLaneInfo.ipLanes[0].laneId);
-                                          }
-                                        });
-                                    }
-
+                                if ($scope.laneId == null || $scope.laneId == undefined) {
+                                    
+                                    //Get Lane Information
+                                    VantivTriPOSiPP350.getLaneInfo(VantivTriPOSiPP350.config, function (res) {
+                                        var response = res.data;
+                                        $scope.triPOSLaneInfo = response;
+                                        $scope.triPOSLaneInfo._hasErrors;
+                                        if ($scope.triPOSLaneInfo._hasErrors == true) {
+                                            $scope.triPOSLaneInfo.errorMessage = response._errors[0].developerMessage;
+                                        } else {
+                                            $scope.laneId = parseInt($scope.triPOSLaneInfo.ipLanes[0].laneId);
+                                        }
+                                    });
                                 }
-                            if(voidrefund==true){
-                                //
-                                supportVoidRefund=true;
-                                vm.tblAction=[
-                                        {name:'Void',icon:'fa fa-plus',method:'call-void',class:"md-warn md-raised md-small"},
-                                        {name:'Refund',icon:'fa fa-minus',method:'call-refund',class:"md-primary md-raised md-small"}
-                                    ];
 
-                                    $rootScope.$on("call-void", function(event,params){
-                                       callVoid(params);
-                                    });
-                                    $rootScope.$on("call-refund", function(event,params){
-                                       callRefund(params);
-                                    });
+                            }
+                            if (voidrefund == true) {
+                              
+                                supportVoidRefund = true;
+                                vm.tblAction = [{
+                                        name: 'Void',
+                                        icon: 'fa fa-plus',
+                                        method: 'call-void',
+                                        class: "md-warn md-raised md-small"
+                                    },
+                                    {
+                                        name: 'Refund',
+                                        icon: 'fa fa-minus',
+                                        method: 'call-refund',
+                                        class: "md-primary md-raised md-small"
+                                    }
+                                ];
+
+                                $rootScope.$on("call-void", function (event, params) {
+                                    callVoid(params);
+                                });
+                                $rootScope.$on("call-refund", function (event, params) {
+                                    callRefund(params);
+                                });
 
 
                             }
@@ -119,24 +142,25 @@
                 }
             }
         });
-        $scope.sendReceiptDialog = function() {
+        $scope.sendReceiptDialog = function () {
+          
             $mdDialog.show({
-                controller: ReceiptController,
-                templateUrl: 'app/modules/transactions/sendConfirmationDialog.html',
-                parent: angular.element(document.body),
-                scope: $scope.$new(),
-                //targetEvent: ev,
-                clickOutsideToClose: true
-            })
-            .then(function(answer) {
+                    controller: ReceiptController,
+                    templateUrl: 'app/modules/transactions/sendConfirmationDialog.html',
+                    parent: angular.element(document.body),
+                    scope: $scope.$new(),
+                    //targetEvent: ev,
+                    clickOutsideToClose: true
+                })
+                .then(function (answer) {
 
-            }, function() {
+                }, function () {
 
-            });
+                });
         };
-        $scope.emailReceipt=function(transData,transType){
+        $scope.emailReceipt = function (transData, transType) {
 
-             $scope.settings = {
+            $scope.settings = {
                 InvoiceContacts: {
                     sender_email: '',
                     sender_name: '',
@@ -147,115 +171,120 @@
                 },
                 subject: '',
                 template_id: '',
-                title:"Send Reciept"
+                title: "Send Reciept"
             };
 
-            var receipt_type="normal";
+            var receipt_type = "normal";
             var isTriposipp350 = transType.search("triposipp350");
-            if(isTriposipp350==0){
-              receipt_type="triposipp350";
+            if (isTriposipp350 == 0) {
+                receipt_type = "triposipp350";
             }
 
 
-            var customer_email=transData.customer_email;
+            var customer_email = transData.customer_email;
             $scope.promise = SettingModel.GetSettings();
-            $scope.promise.then(function(response) {
+            $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
+                  
                     $scope.settings = response.data;
-                    $scope.settings.title="Send Receipt";
-                    $scope.settings.transaction=transData;
-                    $scope.settings.companyInfo=$rootScope.companyInfo.company;
-                    $scope.settings.receipt_type=receipt_type;
+                    console.log($scope.settings);
+                    $scope.settings.title = "Send Receipt";
+                    $scope.settings.transaction = transData;
+                    $scope.settings.companyInfo = $rootScope.companyInfo.company;
+                    $scope.settings.receipt_type = receipt_type;
 
                     $scope.settings.InvoiceContacts.to_email = [];
-                    if (customer_email != "") {
-                        $scope.settings.InvoiceContacts.to_email.push(customer_email);
+                    // if (customer_email != null || customer_email != "null") {
+                    //     // $scope.settings.InvoiceContacts.to_email.push(customer_email);
+                    //     $scope.settings.InvoiceContacts.to_email = customer_email.split(",");
+
+                    // }
+                    try {
+                        if (customer_email != null) {
+                            // $scope.settings.InvoiceContacts.to_email.push(customer_email);
+                            $scope.settings.InvoiceContacts.to_email = customer_email.split(",");
+                        }
+                    } catch (err) {
+                        console.log("TCL: $scope.emailReceipt -> err", err)
                     }
                     $scope.sendReceiptDialog();
                 }
             });
 
         };
-        $scope.callVoid=function(transData,transType){
+        $scope.callVoid = function (transData, transType) {
             //console.log("i am call void");
-            $rootScope.transData=transData;
-            $rootScope.parentTransType=transType;
+            $rootScope.transData = transData;
+            $rootScope.parentTransType = transType;
             $mdDialog.show({
-                  controller: DialogController,
-                  templateUrl: 'app/modules/transactions/transaction.void.tmpl.html',
-                  parent: angular.element(document.body),
-                  targetEvent: null,
-                  clickOutsideToClose:true,
-                  fullscreen: true,
-                  scope:$scope,
-                  preserveScope: true
+                    controller: DialogController,
+                    templateUrl: 'app/modules/transactions/transaction.void.tmpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: null,
+                    clickOutsideToClose: true,
+                    fullscreen: true,
+                    scope: $scope,
+                    preserveScope: true
                 })
-                .then(function(answer) {
-                }, function() {
-                });
+                .then(function (answer) {}, function () {});
         }
-        $scope.callRefund=function(transData,transType){
-            $rootScope.transData=transData;
-            $rootScope.parentTransType=transType;
+        $scope.callRefund = function (transData, transType) {
+            $rootScope.transData = transData;
+            $rootScope.parentTransType = transType;
             $mdDialog.show({
-                  controller: DialogController,
-                  templateUrl: 'app/modules/transactions/transaction.refund.tmpl.html',
-                  parent: angular.element(document.body),
-                  targetEvent: null,
-                  clickOutsideToClose:true,
-                  fullscreen: true,
-                  scope:$scope,
-                  preserveScope: true
+                    controller: DialogController,
+                    templateUrl: 'app/modules/transactions/transaction.refund.tmpl.html',
+                    parent: angular.element(document.body),
+                    targetEvent: null,
+                    clickOutsideToClose: true,
+                    fullscreen: true,
+                    scope: $scope,
+                    preserveScope: true
                 })
-                .then(function(answer) {
-                }, function() {
-                });
+                .then(function (answer) {}, function () {});
         }
-        $scope.printReceipt=function(transData,transType){
+        $scope.printReceipt = function (transData, transType) {
 
-            $rootScope.parentTransType=transType;
+            $rootScope.parentTransType = transType;
             //debugger;
-            $rootScope.transactionResponse=transData;
+            $rootScope.transactionResponse = transData;
             callPrintReceipt();
         }
-        function callPrintReceipt(){
 
-            var receipt_template="transaction.print.html";
+        function callPrintReceipt() {
+
+            var receipt_template = "transaction.print.html";
             var isTriposipp350 = ($rootScope.transactionResponse.trans_type).search("triposipp350");
-            if(isTriposipp350==0){
-                var transData=$rootScope.transactionResponse;
-                receipt_template="transaction.triposipp350.print.html";
-            }
-            else if($rootScope.parentTransType!=undefined){
-                if(($rootScope.parentTransType).search("triposipp350")==0)
-                {
-                    receipt_template="transaction.triposipp350.print.html";
+            if (isTriposipp350 == 0) {
+                var transData = $rootScope.transactionResponse;
+                receipt_template = "transaction.triposipp350.print.html";
+            } else if ($rootScope.parentTransType != undefined) {
+                if (($rootScope.parentTransType).search("triposipp350") == 0) {
+                    receipt_template = "transaction.triposipp350.print.html";
                 }
             }
             $mdDialog.show({
-                  controller: DialogController,
-                  templateUrl: 'assets/'+receipt_template,
-                  parent: angular.element(document.body),
-                  targetEvent: null,
-                  clickOutsideToClose:true,
-                  fullscreen: true
+                    controller: DialogController,
+                    templateUrl: 'assets/' + receipt_template,
+                    parent: angular.element(document.body),
+                    targetEvent: null,
+                    clickOutsideToClose: true,
+                    fullscreen: true
                 })
-                .then(function(answer) {
-                }, function() {
-                });
+                .then(function (answer) {}, function () {});
         }
 
-        function DialogController($window,$scope, $mdDialog) {
+        function DialogController($window, $scope, $mdDialog) {
 
-            $scope.transData=$rootScope.transData;
-            $scope.companyInfo=$rootScope.companyInfo;
-            $scope.hideDialogActions=false;
-            $scope.hideEmailReceiptButton=true;
-            $scope.transactionResponse=$rootScope.transactionResponse;
-            $scope.refund_amount=0.0;
+            $scope.transData = $rootScope.transData;
+            $scope.companyInfo = $rootScope.companyInfo;
+            $scope.hideDialogActions = false;
+            $scope.hideEmailReceiptButton = true;
+            $scope.transactionResponse = $rootScope.transactionResponse;
+            $scope.refund_amount = 0.0;
 
 
-             $scope.confirm = function(task) {
+            $scope.confirm = function (task) {
 
 
                 var transType = $scope.transData.trans_type;
@@ -267,7 +296,7 @@
 
                     if (transType.match(expr) && $scope.hardwareSupport.triposipp350) {
                         $scope.processTriPosVoid($scope.transData, task);
-                    }else{
+                    } else {
                         $scope.processRefundAndVoid(task);
                     }
                 } else if (task == 'refund') {
@@ -281,16 +310,17 @@
                         .ok('Confirm')
                         .cancel('Cancel');
 
-                    $mdDialog.show(confirm).then(function() {
+                    $mdDialog.show(confirm).then(function () {
 
                         if (transType.match(expr) && $scope.hardwareSupport.triposipp350) {
                             $scope.processTriPosRefund($scope.transData, task);
-                        }else{
+                        } else {
 
                             $scope.processRefundAndVoid(task);
                         }
                         //$scope.processRefundAndVoid(task);
-                    }, function() {
+                    }, function () {
+                        console.log("error")
 
                     });
                 }
@@ -299,236 +329,231 @@
 
 
 
-            $scope.processTriPosVoid=function(transData,task){
-                 $scope.showProgress=true;
-                 $scope.hideDialogActions=true;
-                 var trans_id=transData.ref_id;
-                 var trans_type=(transData.trans_type).split('_');
-                 var url=VantivTriPOSiPP350.config.serviceAddress+'api/v1/void/'+trans_id;
-                 var params={laneId:$scope.laneId};
+            $scope.processTriPosVoid = function (transData, task) {
+                $scope.showProgress = true;
+                $scope.hideDialogActions = true;
+                var trans_id = transData.ref_id;
+                var trans_type = (transData.trans_type).split('_');
+                var url = VantivTriPOSiPP350.config.serviceAddress + 'api/v1/void/' + trans_id;
+                var params = {
+                    laneId: $scope.laneId
+                };
 
-                VantivTriPOSiPP350.processVoidRefund
-                    (
-                   url,
-                   params,
-                   VantivTriPOSiPP350.config,
-                   function(res){
-                        $scope.showProgress=false;
-                        $scope.hideDialogActions=false;
-                        var response=res.data;
-                        var triPOSResponse=response;
-                        if(triPOSResponse._hasErrors==true){
-                          var error_message=response._errors[0].developerMessage;
-                          Clique.showToast(error_message,'bottom right','error');
-                          $mdDialog.hide();
-                        }
-                        else{
-
-                            var transStatus="";
-                            var reason="";
-                            if(triPOSResponse.isApproved==true){
-                                transStatus="approved";
-                            }
-                            else
-                            {
-                                transStatus="declined";
-                                reason=triPOSResponse._processor.processorResponseMessage;
-                            }
-
-                            var RawResponse="";
-                            var ResponseCode="";
-                            var  processorRawResponse="";
-                            var xml2json=x2js.xml_str2json(triPOSResponse._processor.processorRawResponse);
-                            RawResponse=xml2json.CreditCardVoidResponse.Response;
-                            if(transStatus=='approved'){
-                                ResponseCode=triPOSResponse._processor.hostResponseCode+"/"+triPOSResponse._processor.hostResponseMessage;
-                            }else{
-                                ResponseCode=triPOSResponse._processor.expressResponseCode+"/"+triPOSResponse._processor.expressResponseMessage;
-                            }
-                            var ProcessorInfo="";
-                                ProcessorInfo={
-                                  processorRawResponse:{
-                                    RawResponse:RawResponse,
-                                    MerchantId:triPOSResponse.merchantId,
-                                    TerminalId:triPOSResponse.terminalId,
-                                    ApprovalNumber:triPOSResponse.approvalNumber,
-                                    paymentType:'Void',
-                                    ResponseCode:ResponseCode,
-                                  },
-                                  transactionId:triPOSResponse.transactionId,
-                                  TransStatus:transStatus,
-                                  StatusMessage:reason
-                                }
-                            $scope.transData.ProcessorInfo=ProcessorInfo;
-                            $scope.transData.status=transStatus;
-                            $scope.transData.statusmessage=reason;
-                            $scope.transData.authcode=ResponseCode;
-                            $scope.transData.payment_data="";
-                            $scope.processRefundAndVoid(task);
-
-                        }
-                  });
-            }
-            $scope.processTriPosRefund=function(transData,task){
-                 $scope.showProgress=true;
-                 $scope.hideDialogActions=true;
-                 var trans_id=transData.ref_id;
-                 var trans_type=(transData.trans_type).split('_');
-                 var url=VantivTriPOSiPP350.config.serviceAddress+'api/v1/reversal/'+trans_id+'/'+trans_type[1];
-                 var refund_amount=parseFloat($scope.refund_amount);
-                 var params={
-                        laneId:$scope.laneId,
-                        transactionAmount:refund_amount
-                    };
-
-                VantivTriPOSiPP350.processVoidRefund
-                    (
-                   url,
-                   params,
-                   VantivTriPOSiPP350.config,
-                   function(res){
-                        $scope.showProgress=false;
-                        $scope.hideDialogActions=false;
-
-                        var response=res.data;
-                        var triPOSResponse=response;
-                        if(triPOSResponse._hasErrors==true){
-                          var error_message=response._errors[0].developerMessage;
-                          Clique.showToast(error_message,'bottom right','error');
-                          $mdDialog.hide();
-                        }
-                        else{
-                            debugger;
-                            var transStatus="";
-                            var reason="";
-                            if(triPOSResponse.isApproved==true){
-                                transStatus="approved";
-                            }
-                            else
-                            {
-                                transStatus="declined";
-                                reason=triPOSResponse._processor.processorResponseMessage;
-                            }
-
-
-
-                            var RawResponse="";
-                            var ResponseCode="";
-                            var processorRawResponse="";
-                            var payment_type=""
-                            var xml2json=x2js.xml_str2json(triPOSResponse._processor.processorRawResponse);
-                            payment_type=(triPOSResponse.paymentType).toLowerCase();
-                            //RawResponse=xml2json.CreditCardReversalResponse.Response;
-                            if(payment_type=='credit'){
-                                RawResponse=xml2json.CreditCardReversalResponse.Response;
-                            }else if(payment_type=='debit'){
-                                RawResponse=xml2json.DebitCardReversalResponse.Response;
-                            }else if(payment_type=='gift'){
-                                RawResponse=xml2json.GiftCardReversalResponse.Response;
-                            }
-                            if(transStatus=='approved'){
-                                ResponseCode=triPOSResponse._processor.hostResponseCode+"/"+triPOSResponse._processor.hostResponseMessage;
-                            }else{
-                                ResponseCode=triPOSResponse._processor.expressResponseCode+"/"+triPOSResponse._processor.expressResponseMessage;
-                            }
-
-                            var ProcessorInfo="";
-                                ProcessorInfo={
-                                  processorRawResponse:{
-                                    RawResponse:RawResponse,
-                                    MerchantId:triPOSResponse.merchantId,
-                                    TerminalId:triPOSResponse.terminalId,
-                                    ApprovalNumber:triPOSResponse.approvalNumber,
-                                    paymentType:'Refund',
-                                    ResponseCode:ResponseCode,
-                                  },
-                                  transactionId:triPOSResponse.transactionId,
-                                  TransStatus:transStatus,
-                                  StatusMessage:reason
-                                }
-                            $scope.transData.ProcessorInfo=ProcessorInfo;
-                            $scope.transData.status=transStatus;
-                            $scope.transData.statusmessage=reason;
-                            $scope.transData.authcode=ResponseCode;
-                            $scope.transData.payment_data="";
-
-                            $scope.processRefundAndVoid(task);
-
-                        }
-                  });
-
-            }
-
-            $scope.processRefundAndVoid = function(task) {
-
-                    $scope.showProgress=true;
-                    $scope.hideDialogActions=true;
-
-
-                   if(task=='refund'){
-                        var postData=$scope.transData;
-
-                        postData.refund_amount=$scope.refund_amount;
-                        postData.action='refund';
-                        postData.type=postData.process_type;
-
-                        vm.promise = TransactionModel.DoRefundTransaction(postData);
-                        vm.promise.then(function(response){
-                            if(response.statuscode==0){
-                                Clique.showToast(response.statusmessage,'bottom right','success');
-                                $rootScope.transactionResponse=response.data;
-                                getTransaction();
-                                callPrintReceipt();
-                            }
-                            else{
-                                Clique.showToast(response.statusmessage,'bottom right','error');
-                            }
-
+                VantivTriPOSiPP350.processVoidRefund(
+                    url,
+                    params,
+                    VantivTriPOSiPP350.config,
+                    function (res) {
+                        $scope.showProgress = false;
+                        $scope.hideDialogActions = false;
+                        var response = res.data;
+                        var triPOSResponse = response;
+                        if (triPOSResponse._hasErrors == true) {
+                            var error_message = response._errors[0].developerMessage;
+                            Clique.showToast(error_message, 'bottom right', 'error');
                             $mdDialog.hide();
+                        } else {
 
-                            $scope.showProgress=false;
-                        });
-                    }
-                    if(task=='void'){
+                            var transStatus = "";
+                            var reason = "";
+                            if (triPOSResponse.isApproved == true) {
+                                transStatus = "approved";
+                            } else {
+                                transStatus = "declined";
+                                reason = triPOSResponse._processor.processorResponseMessage;
+                            }
 
-                        var postData=$scope.transData;
-                        postData.action='void';
-                        postData.type=postData.process_type;
-                        vm.promise = TransactionModel.DoVoidTransaction(postData);
-                        vm.promise.then(function(response){
-                        if(response.statuscode==0){
-                             Clique.showToast(response.statusmessage,'bottom right','success');
-                             $rootScope.transactionResponse=response.data;
-                             getTransaction();
-                             callPrintReceipt();
+                            var RawResponse = "";
+                            var ResponseCode = "";
+                            var processorRawResponse = "";
+                            var xml2json = x2js.xml_str2json(triPOSResponse._processor.processorRawResponse);
+                            RawResponse = xml2json.CreditCardVoidResponse.Response;
+                            if (transStatus == 'approved') {
+                                ResponseCode = triPOSResponse._processor.hostResponseCode + "/" + triPOSResponse._processor.hostResponseMessage;
+                            } else {
+                                ResponseCode = triPOSResponse._processor.expressResponseCode + "/" + triPOSResponse._processor.expressResponseMessage;
+                            }
+                            var ProcessorInfo = "";
+                            ProcessorInfo = {
+                                processorRawResponse: {
+                                    RawResponse: RawResponse,
+                                    MerchantId: triPOSResponse.merchantId,
+                                    TerminalId: triPOSResponse.terminalId,
+                                    ApprovalNumber: triPOSResponse.approvalNumber,
+                                    paymentType: 'Void',
+                                    ResponseCode: ResponseCode,
+                                },
+                                transactionId: triPOSResponse.transactionId,
+                                TransStatus: transStatus,
+                                StatusMessage: reason
+                            }
+                            $scope.transData.ProcessorInfo = ProcessorInfo;
+                            $scope.transData.status = transStatus;
+                            $scope.transData.statusmessage = reason;
+                            $scope.transData.authcode = ResponseCode;
+                            $scope.transData.payment_data = "";
+                            $scope.processRefundAndVoid(task);
 
                         }
-                        else{
-                            Clique.showToast(response.statusmessage,'bottom right','error');
+                    });
+            }
+            $scope.processTriPosRefund = function (transData, task) {
+                $scope.showProgress = true;
+                $scope.hideDialogActions = true;
+                var trans_id = transData.ref_id;
+                var trans_type = (transData.trans_type).split('_');
+                var url = VantivTriPOSiPP350.config.serviceAddress + 'api/v1/reversal/' + trans_id + '/' + trans_type[1];
+                var refund_amount = parseFloat($scope.refund_amount);
+                var params = {
+                    laneId: $scope.laneId,
+                    transactionAmount: refund_amount
+                };
+
+                VantivTriPOSiPP350.processVoidRefund(
+                    url,
+                    params,
+                    VantivTriPOSiPP350.config,
+                    function (res) {
+                        $scope.showProgress = false;
+                        $scope.hideDialogActions = false;
+
+                        var response = res.data;
+                        var triPOSResponse = response;
+                        if (triPOSResponse._hasErrors == true) {
+                            var error_message = response._errors[0].developerMessage;
+                            Clique.showToast(error_message, 'bottom right', 'error');
+                            $mdDialog.hide();
+                        } else {
+                            // debugger;
+                            var transStatus = "";
+                            var reason = "";
+                            if (triPOSResponse.isApproved == true) {
+                                transStatus = "approved";
+                            } else {
+                                transStatus = "declined";
+                                reason = triPOSResponse._processor.processorResponseMessage;
+                            }
+
+
+
+                            var RawResponse = "";
+                            var ResponseCode = "";
+                            var processorRawResponse = "";
+                            var payment_type = ""
+                            var xml2json = x2js.xml_str2json(triPOSResponse._processor.processorRawResponse);
+                            payment_type = (triPOSResponse.paymentType).toLowerCase();
+                            //RawResponse=xml2json.CreditCardReversalResponse.Response;
+                            if (payment_type == 'credit') {
+                                RawResponse = xml2json.CreditCardReversalResponse.Response;
+                            } else if (payment_type == 'debit') {
+                                RawResponse = xml2json.DebitCardReversalResponse.Response;
+                            } else if (payment_type == 'gift') {
+                                RawResponse = xml2json.GiftCardReversalResponse.Response;
+                            }
+                            if (transStatus == 'approved') {
+                                ResponseCode = triPOSResponse._processor.hostResponseCode + "/" + triPOSResponse._processor.hostResponseMessage;
+                            } else {
+                                ResponseCode = triPOSResponse._processor.expressResponseCode + "/" + triPOSResponse._processor.expressResponseMessage;
+                            }
+
+                            var ProcessorInfo = "";
+                            ProcessorInfo = {
+                                processorRawResponse: {
+                                    RawResponse: RawResponse,
+                                    MerchantId: triPOSResponse.merchantId,
+                                    TerminalId: triPOSResponse.terminalId,
+                                    ApprovalNumber: triPOSResponse.approvalNumber,
+                                    paymentType: 'Refund',
+                                    ResponseCode: ResponseCode,
+                                },
+                                transactionId: triPOSResponse.transactionId,
+                                TransStatus: transStatus,
+                                StatusMessage: reason
+                            }
+                            $scope.transData.ProcessorInfo = ProcessorInfo;
+                            $scope.transData.status = transStatus;
+                            $scope.transData.statusmessage = reason;
+                            $scope.transData.authcode = ResponseCode;
+                            $scope.transData.payment_data = "";
+
+                            $scope.processRefundAndVoid(task);
+
+                        }
+                    });
+
+            }
+
+            $scope.processRefundAndVoid = function (task) {
+
+                $scope.showProgress = true;
+                $scope.hideDialogActions = true;
+
+
+                if (task == 'refund') {
+                    var postData = $scope.transData;
+
+                    postData.refund_amount = $scope.refund_amount;
+                    postData.action = 'refund';
+                    postData.type = postData.process_type;
+
+                    vm.promise = TransactionModel.DoRefundTransaction(postData);
+                    vm.promise.then(function (response) {
+                        if (response.statuscode == 0) {
+                            Clique.showToast(response.statusmessage, 'bottom right', 'success');
+                            $rootScope.transactionResponse = response.data;
+                            getTransaction();
+                            callPrintReceipt();
+                        } else {
+                            Clique.showToast(response.statusmessage, 'bottom right', 'error');
                         }
 
-                         $mdDialog.hide();
-                         $scope.showProgress=false;
-                        });
-                    }
+                        $mdDialog.hide();
+
+                        $scope.showProgress = false;
+                    });
+                }
+                if (task == 'void') {
+
+                    var postData = $scope.transData;
+                    postData.action = 'void';
+                    postData.type = postData.process_type;
+                    vm.promise = TransactionModel.DoVoidTransaction(postData);
+                    vm.promise.then(function (response) {
+                        if (response.statuscode == 0) {
+                            Clique.showToast(response.statusmessage, 'bottom right', 'success');
+                            $rootScope.transactionResponse = response.data;
+                            getTransaction();
+                            callPrintReceipt();
+
+                        } else {
+                            Clique.showToast(response.statusmessage, 'bottom right', 'error');
+                        }
+
+                        $mdDialog.hide();
+                        $scope.showProgress = false;
+                    });
+                }
             };
 
-            $scope.cancel = function() {
-              $mdDialog.cancel();
+            $scope.cancel = function () {
+                $mdDialog.cancel();
             };
 
-            $scope.print = function() {
-                var receipt_template="transaction.print.html";
+            $scope.print = function () {
+                var receipt_template = "transaction.print.html";
                 var isTriposipp350 = ($scope.transactionResponse.trans_type).search("triposipp350");
-                if(isTriposipp350==0){
-                    receipt_template="transaction.triposipp350.print.html";
-                }else if($rootScope.parentTransType!=undefined){
-                    if($rootScope.parentTransType.search("triposipp350")==0){
-                        receipt_template="transaction.triposipp350.print.html";
+                if (isTriposipp350 == 0) {
+                    receipt_template = "transaction.triposipp350.print.html";
+                } else if ($rootScope.parentTransType != undefined) {
+                    if ($rootScope.parentTransType.search("triposipp350") == 0) {
+                        receipt_template = "transaction.triposipp350.print.html";
                     }
                 }
 
-                printer.print('assets/'+receipt_template, {transactionResponse:$scope.transactionResponse,companyInfo:$rootScope.companyInfo});
+                printer.print('assets/' + receipt_template, {
+                    transactionResponse: $scope.transactionResponse,
+                    companyInfo: $rootScope.companyInfo
+                });
 
 
             };
@@ -569,45 +594,48 @@
 
         vm.getTransaction = getTransaction;
         vm.removeFilter = removeFilter;
-        vm.openSidebar=openSidebar;
+        vm.openSidebar = openSidebar;
         activate();
         ////////////////
 
         function openSidebar(navID) {
 
-             $mdSidenav(navID)
-                  .toggle()
-                  .then(function () {
+            $mdSidenav(navID)
+                .toggle()
+                .then(function () {
                     $log.debug("toggle " + navID + " is done");
-                  });
+                });
         }
-        $scope.resetForm = function() {
-              var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-                vm.query = {
-                    status: '',
-                    order: '-trans_timestamp',
-                    customer: '',
-                    limit: 20,
-                    page: 1
-                }
-                $scope.from = new Date(y, m, 1);
-                $scope.to = new Date(y, m + 1, 0)
-                sessionStorage.setItem("transaction_search", "{}");
-
+        $scope.resetForm = function () {
+            var date = new Date(),
+                y = date.getFullYear(),
+                m = date.getMonth();
+            vm.query = {
+                status: '',
+                order: '-trans_timestamp',
+                customer: '',
+                limit: 20,
+                page: 1
             }
+            $scope.from = new Date(y, m, 1);
+            $scope.to = new Date(y, m + 1, 0)
+            sessionStorage.setItem("transaction_search", "{}");
+
+        }
+
         function activate() {
             var bookmark;
             $scope.$watch('vm.query.filter', function (newValue, oldValue) {
                 //console.log('watching');
-                if(!oldValue) {
+                if (!oldValue) {
                     bookmark = vm.query.page;
                 }
 
-                if(newValue !== oldValue) {
+                if (newValue !== oldValue) {
                     vm.query.page = 1;
                 }
 
-                if(!newValue) {
+                if (!newValue) {
                     vm.query.page = bookmark;
                 }
 
@@ -616,10 +644,14 @@
         }
 
         function getTransaction() {
-            vm.isTransactionLoaded=true;
+            vm.isTransactionLoaded = true;
+// debugger;
 
 
             vm.query.from = $filter('date')($scope.from, "yyyy-MM-dd");
+
+            vm.fileName = $filter('date')(new Date(), "dd/MM/yy");
+
             vm.query.to = $filter('date')($scope.to, "yyyy-MM-dd");
 
 
@@ -628,42 +660,87 @@
 
 
             vm.promise = TransactionModel.GetAllTransaction(vm.query);
-            vm.promise.then(function(response){
-                if(response.statuscode==0){
-                    vm.tblData=response.data.items;
+            debugger;
+            vm.promise.then(function (response) {
+              
+                if (response.statuscode == 0) {
+                    debugger;
+                    // vm.tblData = response.data.items;
+                    console.log(response.data);
+                    filterArray(response.data.items)
                 }
-                vm.isTransactionLoaded=false;
+                vm.isTransactionLoaded = false;
 
             });
 
+        }
+
+        function filterArray(data) {
+            for (var i = 0; i < data.length; i++) {
+                for (var j = 0; j < data.length; j++) {
+                    if (data[i].ref_id === data[j].ref_id && data[i].trans_id !== data[j].trans_id) {
+                        if (data[j].trans_type == "refund" || data[j].trans_type == "void") {
+                            data[i].subtrans.push(data[j])
+                            data[j].subtrans = []
+                        }
+                    }
+                }
+            }
+            var result = []
+            for (var x = 0; x < data.length; x++) {
+                if (!(data[x].trans_type == "refund" || data[x].trans_type == "void")) {
+                    result.push(data[x])
+                }
+            }
+            for (var y = 0; y < result.length; y++) {
+                if (result[y].subtrans.length > 0) {
+                    var sum = 0;
+                    for (var z = 0; z < result[y].subtrans.length; z++) {
+                        if (result[y].subtrans[z].trans_type == "refund") {
+                            sum += result[y].subtrans[z].trans_amount
+                            result[y].remain_amount = result[y].trans_amount - sum
+                        } else {
+                            result[y].remain_amount = 0
+                        }
+                    }
+                }
+            }
+            vm.tblData = result;
         }
 
         function removeFilter() {
             vm.filter.show = false;
             vm.query.filter = '';
 
-            if(vm.filter.form.$dirty) {
+            if (vm.filter.form.$dirty) {
                 vm.filter.form.$setPristine();
             }
         }
 
 
-        function ReceiptController($timeout, $mdDialog, $filter, triSkins, $window, $rootScope, $scope, SettingModel, Clique,TransactionModel) {
+        function ReceiptController($timeout, $mdDialog, $filter, triSkins, $window, $rootScope, $scope, SettingModel, Clique, TransactionModel)
+         {
 
             $scope.disabledSubmitButton = false;
             $scope.showCCSIcon = 'zmdi zmdi-account-add';
             $scope.showCCS = false;
 
-            $scope.toggleCCS = function() {
+            if ($scope.settings.InvoiceContacts.to_email.length > 0) {
+                $scope.disabledSubmitButton = false;
+            } else {
+                $scope.disabledSubmitButton = true;
+            }
+
+            $scope.toggleCCS = function () {
                 $scope.showCCS = !$scope.showCCS;
                 $scope.showCCSIcon = $scope.showCCS ? 'zmdi zmdi-account' : 'zmdi zmdi-account-add';
             }
 
 
-            $scope.cancel = function() {
+            $scope.cancel = function () {
                 $mdDialog.hide();
             }
-            $scope.validateChip = function($chip, type) {
+            $scope.validateChip = function ($chip, type) {
                 if (!$chip) return;
                 // check if the current string length is greater than or equal to a character limit.
                 var reg = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
@@ -686,24 +763,25 @@
                     }
                 }
             }
-            $scope.submit = function() {
+            $scope.submit = function () {
+                
                 $scope.showProgress = true;
-                $scope.disabledSubmitButton=true;
-                var receiptData={
-                    companyInfo:$scope.settings.companyInfo,
-                    transaction:$scope.settings.transaction,
-                    contact:$scope.settings.InvoiceContacts,
-                    receiptType:$scope.settings.receipt_type
+                $scope.disabledSubmitButton = true;
+                var receiptData = {
+                    companyInfo: $scope.settings.companyInfo,
+                    transaction: $scope.settings.transaction,
+                    contact: $scope.settings.InvoiceContacts,
+                    receiptType: $scope.settings.receipt_type
                 }
                 vm.promise = TransactionModel.sendReceipt(receiptData);
-                vm.promise.then(function(response) {
-                if (response.statuscode == 0) {
+                vm.promise.then(function (response) {
+                    if (response.statuscode == 0) {
 
-                    Clique.showToast(response.statusmessage, 'bottom right', 'success');
-                } else {
+                        Clique.showToast(response.statusmessage, 'bottom right', 'success');
+                    } else {
 
-                    Clique.showToast(response.statusmessage, 'bottom right', 'error');
-                }
+                        Clique.showToast(response.statusmessage, 'bottom right', 'error');
+                    }
                     $scope.showProgress = false;
                     $mdDialog.hide();
 

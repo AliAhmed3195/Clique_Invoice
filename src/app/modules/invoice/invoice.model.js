@@ -29,12 +29,12 @@
             service.createInvoice = createInvoice;
             service.createRecurringInvoice=createRecurringInvoice;
             service.GetInvoiceLegalDocument = GetInvoiceLegalDocument;
-            service.GetClasses = GetClasses
-
+            service.GetClasses = GetClasses;
+            service.GeterpStatus = GeterpStatus;
             service.SendStatement = SendStatement;
             service.GetOpenBalance = GetOpenBalance;
             service.GetStatementPreview = GetStatementPreview;
-
+            service.GetInvoicetemplateById = GetInvoicetemplateById;
 
             //payment
             service.CCSale = CCSale;
@@ -44,6 +44,7 @@
 
             service.ProfileGet = ProfileGet;
             service.CardConnectAuthorizeToken=CardConnectAuthorizeToken;
+            service.GetContactEmail=GetContactEmail;
              //bolt///
             service.BoltReadCard = BoltReadCard;
 
@@ -53,6 +54,9 @@
         function GetAllInvoice(query) {
             var qs = $httpParamSerializer(query);
             return Clique.callService('get','/erp/quickbooks/invoice/?'+ qs,'').then(handleSuccess, handleError);
+        }
+        function GetContactEmail(id) {
+            return Clique.callService('get','/erp/quickbooks/contactemail/'+ id,'').then(handleSuccess, handleError);
         }
         function GetInvoiceById(id) {
             return Clique.callService('get','/erp/quickbooks/invoice/'+ id,'').then(handleSuccess, handleError);
@@ -66,6 +70,17 @@
         function GetLastSalesReceipt() {
             return Clique.callService('get','/salesreceipt/last/','').then(handleSuccess, handleError);
         }
+
+        // ,token, appId, channelid
+        function GetInvoicetemplateById(id,token, appId, channelid) {
+            //?invoice_id=1&temp_id=1&temp_color=red
+            // var template_id=sessionStorage.getItem("invoice_template_id");
+            // var template_color=sessionStorage.getItem("template_color");
+            //return Clique.callService('get','/erp/quickbooks/invoice/preview/'+id,'').then(handleSuccess, handleError);
+            return Clique.callService('get','/erp/quickbooks/invoice/preview/?invoice_id='+id+'&token='+token+'&app_id='+appId+'&channelid='+channelid,'').then(handleSuccess, handleError);
+        }
+
+
 
 
 
@@ -86,6 +101,11 @@
         function GetQuickBooksConnectionStatus() {
             return Clique.callService('get','/erp/quickbooks/status/','').then(handleSuccess, handleError);
         }
+        /// get status type for standalone
+        function GeterpStatus() {
+            return Clique.callService('get','/erp/status','').then(handleSuccess, handleError);
+        }
+        
 
         function GetCustomers() {
             return Clique.callService('get','/erp/quickbooks/contact','').then(handleSuccess, handleError);

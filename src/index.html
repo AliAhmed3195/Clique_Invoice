@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <base href="/">
-    <title>Clique Invoice App</title>
+    <title>Invoice App</title>
+    <link id="favIcon" rel="icon" type="image/ico" href="">
     <!-- for live -->
     <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
     <!-- for local or stagging -->
@@ -59,23 +60,42 @@
     <!-- angular templates will be automatically converted in js and inserted here -->
     <!-- endinject -->
     <!-- endbuild -->
+    <!-- https://apps.clique.center/apps/common -->
 
-    <script src="https://apps.clique.center/apps/common/assets/js/clique.js"></script>
+<!-- ///https://apps.clique.center/apps/common/assets/js/clique.js -->
+
+    <script src="assets/clique.js"></script>
     <script src="assets/lib/md5.js"></script>
     <script src="assets/lib/hmac-md5.js"></script>
-    <script src="bower_components/ng-csv/build/ng-csv.js"></script>
+    <script src="bower_components/ng-csv/build/ng-csv.min.js"></script>
 
     <script src="bower_components/pdf.js-viewer/pdf.js"></script>
     <link rel="stylesheet" href="bower_components/pdf.js-viewer/viewer.css">
 
-    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js"></script>
+    <script src="https://npmcdn.com/angular-avatar/dist/angular-avatar.min.js"></script>
 
     <script>
-        //  localStorage.setItem("app_id","2");
+         localStorage.setItem("app_id","2");
         // localStorage.setItem("env","localhost");
         //    document.cookie = "LOCALAUTH=973af70cb2c43b587da457954f68957a45e8af67";
         //  document.cookie = "USERINFO=%7B%22name%22%3A%20%22Mark%20Smith%20%22%2C%20%22is_pwdchange%22%3A%20true%2C%20%22is_admin%22%3A%20true%2C%20%22id%22%3A%202%7D";
+         localStorage.setItem("ip","https://staging.clique.center/");  // for Prdouction 
+            // https://staging.clique.center/
+            // https://apps.clique.center/apps/account/login
+      localStorage.setItem("token","a1f31c8116b92631c5662fb4f89a6319735871c5"); // Production token
+
+//   https://apps.paynomix.com/     7dcc72bac9ede278672cbddb18a0365b9e22f5f1
+
+
+// https://4e6266d9bf5a.ngrok.io 66d9f781a153f9c50e6bf99b6bd8d5630c98cf00
+// https://staging.clique.center/
+// f00a9c8d9c491dc448c0c34abef07dd79f21d7a5
+    //   7c96ca80fabe419e1a1c23d6bf5cbf2d0f110f87
+// 553ac1257f7e9542375ddf470a705bd4833b6771
+// a1f31c8116b92631c5662fb4f89a6319735871c5
+
 
     </script>
 </body>

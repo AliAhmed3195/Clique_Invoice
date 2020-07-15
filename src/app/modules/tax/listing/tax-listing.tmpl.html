@@ -1,0 +1,170 @@
+<style>
+    .notification md-list-item p span {
+        background: transparent !important;
+        font-weight: bold;
+    }
+
+</style>
+
+<div ng-show="vm.isInvoiceLoaded" class="loader padding-100" layout="column" layout-fill=""
+    layout-align="center center" >
+    <md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isInvoiceLoaded">
+    </md-progress-linear>
+</div>
+<div ng-show="vm.isEditData" layout="row"  layout-sm="column" layout-fill=""
+layout-align="space-around" style="position: absolute;bottom:1%;height:2000px;width:100%; z-index: 999;">
+    <md-progress-linear class="md-hue-2"  md-mode="indeterminate" ng-show="vm.isEditData" style="position:fixed;bottom:50%; width: 50%;"  ></md-progress-linear>
+</div>
+
+<div ng-show="!vm.isInvoiceLoaded" id="itemData" style="opacity: 1;">
+
+
+    <md-sidenav class="md-sidenav-left md-whiteframe-z4" md-component-id="filter" style="min-width:280px !important;">
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">Search</h1>
+        </md-toolbar>
+        <form flex="" name="vm.filter.form">
+            <md-content class="md-padding">
+             
+
+                    <md-autocomplete md-selected-item="vm.selecteditem" md-search-text="vm.searchText"
+                    md-items="item in vm.querySearch(vm.searchText)" md-item-text="item.CustomName" md-min-length="1"
+                    placeholder="Search Tax name " md-autofocus>
+                    <md-item-template>
+                        <span md-highlight-text="vm.searchText" md-highlight-flags="^i">{{item.CustomName}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No Tax matching.
+                    </md-not-found>
+                </md-autocomplete>
+
+
+
+
+                <!-- <md-input-container>
+                    <label>Search Tax Here</label>
+                    <input ng-model="thissearch">
+                  </md-input-container> -->
+                
+                <md-button class="md-primary md-raised width-100" ng-click="vm.getInvoices(); vm.openSidebar('filter')">
+                    Search
+                    <md-icon md-font-icon="zmdi zmdi-search"></md-icon>
+
+                </md-button>
+                <!-- <md-button class="md-primary md-raised width-100" ng-click="resetForm()">
+                        Clear
+                        <md-icon md-font-icon="zmdi zmdi-delete"></md-icon>
+                    </md-button> -->
+
+            </md-content>
+        </form>
+    </md-sidenav>
+
+
+
+    <div layout="row" flex layout-align="start start" class="" style="padding:10px 0px 0px 10px !important;">
+        <div flex="90">
+            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.createItem()"
+                ng-if="buttonPermissions.invoice_addnew">
+                <md-icon md-font-icon="fa fa-plus" style="font-size:14px;"></md-icon>
+                <md-tooltip>Create Tax</md-tooltip>
+            </md-button>
+            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.openSidebar('filter')">
+                <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
+                <md-tooltip>Search Tax</md-tooltip>
+            </md-button>
+
+
+        </div>
+
+
+
+  
+    </div>
+    <div layout="row" layout-xs="column" layout-margin ng-hide="">
+
+        <tri-widget flex title="" content-layout="column" content-layout-align="center">
+            <md-table-container id="invoice_listing">
+                <table md-table class="md-data-table2" md-progress="vm.promise">
+                    <thead md-head md-order="vm.query.order" md-on-reorder="vm.ItemData">
+                        <tr md-row>
+                            <th md-column></th>
+
+                             <th md-column  md-order-by="Id"><span translate>{{vm.columns.ID}}</span></th> 
+                            
+                            <!-- <th md-column md-order-by="Type"><span translate>{{vm.columns.Type | uppercase}} </span></th> -->
+
+                            <th md-column md-order-by="CustomName" decend-first class="col5"> <span translate>{{vm.columns.CustomName | uppercase}}</span>
+                            </th>
+                            <th md-column md-order-by="Region" class="col5"> <span translate>{{vm.columns.Region | uppercase}}</span></th>
+                            <th md-column md-order-by="Rate" class="col5"> <span translate>{{vm.columns.Rate | uppercase  }}  </span></th>
+                            <th md-column md-order-by="Ratetype" class="col5"> <span translate>{{vm.columns.Ratetype | uppercase}}</span></th>
+                           
+                            <!-- <th md-column class="col5"> <span translate>{{vm.columns.Image | uppercase}}</span></th> -->
+                            <th md-column  class="col5"> <span translate>{{vm.columns.Description | uppercase}}</span></th>
+                            <th md-column md-order-by="Active" class="col5"> <span translate>{{vm.columns.Active | uppercase}}</span></th>
+                            <th md-column  class="col5"> <span translate>ACTION</span></th>
+                            </tr>
+                    </thead>
+                    <tbody md-body>
+                        <!-- ng-disabled="item.IsPaid==1" -->
+                         <tr md-row md-on-select="vm.toolBarProcess()" md-select="item.Id" md-select-id="item.Id"
+                            md-auto-select
+                            ng-repeat="item in vm.ItemData | filter : vm.searchText | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                            <td md-cell></td>
+                            <td md-cell>{{::item.Id}}</td>
+
+                            <td md-cell> 
+                            
+                                 <span  ng-if = "item.Type== 1 " > VAT</span>
+                                <span  ng-if = "item.Type== 2 " > GST</span>
+                                {{::item.CustomName}}
+
+                            </td>
+                            <td md-cell>{{item.Region }}</td>
+                            <td md-cell>{{::item.Rate | number:2 }} %</td>
+                            <td md-cell><span  ng-if = "item.RateType== 1 " > Exclusive</span>
+                                <span  ng-if = "item.RateType== 2 " > Inclusive</span>
+                            </td>
+                         <td md-cell>{{item.Description }}</td> 
+
+                            <td md-cell class="col2">
+                                <span  ng-click="UpdateActive(item,item.Active)"  class="InActiveButton"   ng-if="item.Active==false">
+                                    <i class="zmdi zmdi-minus-circle-outline" style="color: red;"></i>
+                                </span>
+                                <span  ng-click="UpdateActive(item,item.Active)"     ng-if="item.Active==true"  class="ActiveButton"  >
+                                    <i class="zmdi zmdi-check-circle" style="color: green;"></i>
+                                </span>
+                            </td>
+                            <td md-cell ng-click="vm.editTax(item)"> 
+                                <md-icon md-font-icon="zmdi zmdi-edit" style="cursor: pointer;" ></md-icon> 
+                                <md-tooltip>Edit Tax</md-tooltip>
+                               </td>
+
+
+
+
+
+                        </tr>
+                        <tr md-row ng-show="vm.ItemData.length == 0">
+                            <td md-cell colspan="10" style="text-align:center !important;text-transform:none;">You have not added Tax yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+            <md-table-pagination md-limit="vm.query.limit" md-page="vm.query.page" md-total="{{vm.ItemData.length}}"
+                md-page-select md-on-paginate="logPagination"></md-table-pagination>
+        </tri-widget>
+    </div>
+    <div flex>
+        <md-fab-toolbar md-open="false" count="2" md-direction="right">
+            <md-fab-trigger class="align-with-text">
+                <!-- <md-button aria-label="menu" class="md-fab md-raised md-mini">
+                    <md-icon md-font-icon="fa fa-info-circle"></md-icon>
+                </md-button> -->
+            </md-fab-trigger>
+
+    
+        </md-fab-toolbar>
+    </div>
+</div>

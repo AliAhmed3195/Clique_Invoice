@@ -3,7 +3,7 @@
   "version": "2.5.0",
   "private": true,
   "devDependencies": {
-    "browser-sync": "~2.10.1",
+    "browser-sync": "^2.10.1",
     "chalk": "~1.1.1",
     "del": "~2.2.0",
     "eslint": "^1.10.3",
@@ -21,7 +21,7 @@
     "gulp-filter": "~3.0.1",
     "gulp-flatten": "~0.2.0",
     "gulp-if": "^2.0.0",
-    "gulp-inject": "~3.0.0",
+    "gulp-inject": "^3.0.0",
     "gulp-json-editor": "^2.2.1",
     "gulp-json-format": "^1.0.0",
     "gulp-karma": "~0.0.5",

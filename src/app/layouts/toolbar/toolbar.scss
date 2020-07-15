@@ -3,9 +3,9 @@
         transition: .5s;
     }
 
-    &.ng-enter {
-      @include slideInDown();
-    }
+    // &.ng-enter {
+    //   @include slideInDown();
+    // }
 
     &.ng-leave {
       display: none;

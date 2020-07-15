@@ -276,14 +276,21 @@
         }
 
         function selectedItemChange(item, key) {
-
+debugger;
             $scope.invoice.Line[key].SalesItemLineDetail.ItemRef.value = item.Id;
             $scope.invoice.Line[key].SalesItemLineDetail.ItemRef.name = item.FullyQualifiedName;
             $scope.invoice.Line[key].Description = item.Description;
-            $scope.invoice.Line[key].SalesItemLineDetail.ClassRef.value = item.SalesItemLineDetail.ClassRef.value;
             $scope.invoice.Line[key].SalesItemLineDetail.UnitPrice = parseFloat(item.UnitPrice);
             $scope.invoice.Line[key].Amount = parseFloat($scope.invoice.Line[key].SalesItemLineDetail.Qty * $scope.invoice.Line[key].SalesItemLineDetail.UnitPrice);
             $scope.calculateTotal();
+            if (item.Taxable == true) {
+                $scope.invoice.Line[key].SalesItemLineDetail.TaxCodeRef = {}
+                $scope.invoice.Line[key].SalesItemLineDetail.TaxCodeRef.value = 'TAX'
+                $scope.calculateTotal();
+            }else{
+                $scope.invoice.Line[key].SalesItemLineDetail.TaxCodeRef = {}
+                $scope.invoice.Line[key].SalesItemLineDetail.TaxCodeRef.value = 'NON'
+            }
         }
         $scope.addItem = function () {
             var items = $filter('filter')($scope.invoice.Line, {
@@ -362,7 +369,7 @@
             return vm.counter;
         }
         $scope.calculateTotal = function () {
-
+debugger;
             var total = 0;
             var tax = 0;
             var discount = 0;
@@ -746,6 +753,7 @@
         };
 
         $scope.createInvoice = function (ev) {
+            debugger;
             var error = false;
 
 

@@ -1,0 +1,725 @@
+<!-- <div ng-cloak layout-gt-sm="row" layout="column"> -->
+
+  <md-content style="height: 100%;">
+
+ 
+        <div flex layout="row" ng-scope layout-row flex style="height: 100%;">
+
+          
+      
+          <!-- <md-toolbar layout="row" class="md-hue-3" >
+            <div class="md-toolbar-tools">
+              <span >Messages</span>
+            </div>
+          </md-toolbar> -->
+          <!-- <input type="search" > -->
+          <md-content class="messages" flex="100" flex-gt-xs="35" flex-gt-lg="35"  style="overflow-y: scroll;" >
+            <input type="text" id="myInput"  placeholder="Filter by Invoice # / Customer Name / Message" ng-model="searchText" title="Type in a name">
+            <!-- <md-input-container ><input></md-input-container> -->
+            <md-list class="inbox-list" flex ng-repeat="group in vm.chatGroups">
+                <!-- <div > -->
+                    <md-divider></md-divider>
+     
+                <md-subheader class="md-primary" ng-show="group.chats.length > 0">{{::group.name}}</md-subheader>              
+                <md-list-item class="inbox-list__email inbox-list__email--animated md-3-line md-long-text"  id="messageClicked" ng-repeat="item in group.chats | filter:searchText " ng-class="{ 'inbox-list__email--active': vm.selectedMail === item.id, 'inbox-list__email--unread': item.unread }" 
+                style="border-bottom: 1px solid darkgray;"
+                ng-click="vm.showMessage(item);  ">
+                <!-- <img ng-src="{{item.face}}?{{$index}}" class="md-avatar"  /> -->
+                <ng-avatar class="md-avatar" initials="{{item.customer_name | limitTo : 2}}"  bg-color="{{item.color}}" text-color="white" round-shape="true"></ng-avatar>
+                <div class="md-list-item-text" layout="column">
+                    <h3><span class="md-caption" style="font-weight: 600;" pm-time-ago="item.timestamp "></span>
+                    <b>{{item.customer_name}}</b> <i class="fa fa-arrow-right" style="font-size: small;"></i>  <b style="color: rgb(0,188,212);;">  {{item.doc_number}} </b> 
+                    </h3>
+                <h4>
+                  <!-- {{item.subject}}   -->
+
+                    <span class="blink" id="blinker" ng-if="item.unread_count !== 0"  style="background-color: #00e676;"><b    style="color: white; display: flex; justify-content: center; margin-top:4px" >{{item.unread_count}}</b></span>
+                </h4>
+                  <p style="font-size: 14px;">{{ item.message | limitTo: 80 }}{{item.message.length > 80 ? '...' : ''}}</p>
+                  <!-- | cut:true:40:' ...'  -->
+                  
+                </div>
+              </md-list-item>
+            <!-- </div> -->
+             </md-list>
+          </md-content>
+
+          <div class="md-whiteframe-z1 animate-wrapper" layout="column" layout-align="start center" flex ng-if="vm.messageData" >
+            <md-card style="width:-webkit-fill-available; height: -webkit-fill-available; margin-top: 3px; margin-left: -1px; position: absolute;">
+                <md-card-header style="border-bottom: 1px solid darkgray; background-color: #f0f0f0;">
+                    <md-card-header-text  id="cardHeader" style="display:-webkit-inline-box">
+                      <ng-avatar bind="true" id="avatarLogo" class="md-avatar" initials="{{vm.customer_name | limitTo : 2 }}" bg-color="{{vm.colorsforheader}}" text-color="white" round-shape="true"> </ng-avatar> 
+                      &nbsp; &nbsp;  
+                      <h3 style="font-weight: 600;"> {{vm.customer_name}}</h3>
+                      
+                    </md-card-header-text>
+                  </md-card-header>
+                  <md-card-content style="overflow: auto; height: 100%; ">
+                      <div class="chat-app_content" style="height: 87% !important; background-image: url('assets/images/BACK.jpg');" id="contentScroll" >
+                          <div class="content1" id="chatMessageData" style="height:auto;" ng-repeat="item in vm.messageData ; " >
+                           <div class="messages" ng-if="item.is_customer == false" style="height:100%;" >
+                         
+                            <div class="message" id="{{$index+1}}" style="width: 63%; margin-left: 163px; ">
+                             <p class="text"  >
+                               {{item.message}}
+                               <br> 
+                               <small style="display: flex; justify-content: flex-end; font-size: smaller; "> {{item.timestamp  | date:'hh:mm'  }}</small> 
+                             </p>
+                             </div>
+                             <!-- <img src="assets/images/logo.png" style="display: block; overflow: hidden;border-radius: 45px; width: 45px; height: 45px;
+                             margin-bottom: 22px;
+                             margin-left: 10px; z-index: 99;"> -->
+                             <!-- <ng-avatar class="md-avatar" style="margin-bottom: 22px; margin-left: 10px; z-index: 99;" 
+                             initials="C" bg-color="red" text-color="white" round-shape="true"> </ng-avatar>   -->
+                             <ng-avatar class="md-avatar" style="margin-bottom: 22px; margin-left: 10px; z-index: 99;"  
+                             initials="{{vm.merchant_name | limitTo : 1}}" bg-color="red" 
+                             text-color="white" round-shape="true"> </ng-avatar>  
+                            </div>
+                           
+              <div class="messages" ng-if="item.is_customer == true" style=" height:100%;" >
+               <ng-avatar class="md-avatar" style="z-index: 99;margin-bottom: 22px;margin-right: 10px" initials="{{vm.customer_name | limitTo : 2}}" bg-color="{{item.color}}" text-color="white" round-shape="true"> </ng-avatar>  
+               <div class="message reply" id="{{$index+1}}"  style="width: 65%" >
+              <p class="text" >
+                  {{item.message}}
+                       <br>  
+                    <small style="display: flex; justify-content: flex-end; font-size: smaller;"> {{item.timestamp  | date:'hh:mm'  }}</small> 
+                               </p>
+                               </div> 
+                           </div> 
+                          </div> 
+                       </div>
+                      <!-- <div flex id="ui-admin-email" ng-repeat="d in vm.messageData" ui-view layout="column" layout-align="start center" class="overflow-auto full-width">
+                          <div >
+                            <p>{{d.message}}</p>
+                          </div>  
+                          <div flex class="inbox-email-selected" ng-repeat="d in vm.messageData" layout="column" layout-align="center" >
+                            </div>
+                        </div> -->
+                  </md-card-content>
+                  <md-card-footer style="width: inherit; padding: 0px; background-color: #f0f0f0;">
+                      <div class="chat-app_footer" id="footer" style="width: inherit; display: flex; background-color: #f0f0f0; height: 89px;">
+                          <input class="chat-input" style="border-radius: 25px;margin-top: 18px" type="text" ng-keyup="vm.reply($event)" ng-model="vm.replyMessage" placeholder="Type Something To Send..."  />
+                          <md-button class="md-primary md-fab md-mini" style="margin-left: 1%;
+                          margin-top: 18px;">
+                            <!-- <span style="margin-top: 6%; margin-left: -6%; z-index: 99;"> -->
+                              <div class="icon send" ng-click=" vm.reply($event)">
+                               
+                                <md-icon md-font-icon="zmdi zmdi-mail-send"  ></md-icon>
+                              </div>
+                          <!-- </span>  -->
+                          </md-button>
+                          
+                        </div>
+                    
+                  </md-card-footer>
+            </md-card> 
+            
+              
+          </div>
+          <div class="md-whiteframe-z1 animate-wrapper" layout="column" layout-align="start center" flex ng-show="!vm.messageData" style="background-image: url('assets/images/BACK.jpg');">
+              <div flex id="ui-admin-email" ui-view layout="column" layout-align="start center" class="overflow-auto full-width">
+                  <div flex class="inbox-no-email-selected" layout="column" layout-align="center">
+                      <h2 hide-xs translate >No message selected</h2>
+                  </div>
+              </div>
+          </div>
+        </div>
+<!--       
+        
+        <div flex="100" flex-gt-xs="50" flex-gt-lg="40s">
+      
+          <md-toolbar layout="row" class="md-hue-3" >
+            <div class="md-toolbar-tools">
+              <span></span>
+            </div>
+          </md-toolbar>
+      
+          <md-content class="message">
+      <div ng-repeat="d in MsgArr">
+           {{d.message}}
+        </div>
+          </md-content>
+        </div> -->
+
+        </md-content>
+      
+      <!-- </div> -->
+
+
+      <style>
+        #myInput {
+  background-image: url('assets/images/searchicon.png');
+  background-position: 2px 7px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+}
+::placeholder{
+  font-size: 13px;
+}
+
+      .blink{
+  float: right;
+	border-radius: 50% ;
+  height: 25px;
+  width: 25px;
+  background-color: red;
+	}
+      </style>
+      <style>
+          *,
+        *:after,
+        *:before {
+          box-sizing: border-box;
+        }
+        
+        body {
+          height: 100vh;
+          width: 100vw;
+          background: #141E30;
+          /* fallback for old browsers */
+          /* Chrome 10-25, Safari 5.1-6 */
+          background: linear-gradient(to right, #243B55, #141E30);
+          /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+        
+        .chat-app {
+          font-size: 16px;
+          line-height: 1.25;
+          font-family: "Roboto", sans-serif;
+          height: 600px;
+          width: 360px;
+          position: fixed;
+          bottom: 32px;
+          right: 32px;
+          color: #141E30;
+        }
+        .chat-app .title {
+          font-size: 1.25em;
+          font-family: "Raleway", sans-serif;
+          font-weight: 600;
+        }
+        .chat-app .subtitle {
+          font-size: 1em;
+          font-family: "Raleway", sans-serif;
+          font-weight: 500;
+        }
+        
+        .chat-app:not(.is-active) .chat-app_toggle:hover {
+          -webkit-animation: .5s blob linear;
+                  animation: .5s blob linear;
+        }
+        
+        .chat-app_toggle {
+          z-index: 5;
+          position: absolute;
+          bottom: 0.75em;
+          right: 0.75em;
+          height: 64px;
+          width: 64px;
+          -webkit-transform: scale(0.83);
+                  transform: scale(0.83);
+          background: linear-gradient(to right, #00c6ff, #0072ff);
+          border-radius: 100%;
+          transition: all 0.3s;
+          box-shadow: 0 10px 20px rgba(0, 198, 255, 0.4);
+        }
+        .chat-count {
+          z-index: 999;
+          position: absolute;
+          bottom: 0.75em;
+          right: 0.75em;
+          height: 68px;
+          width: 20px;
+          -webkit-transform: scale(0.83);
+                  transform: scale(0.83);
+          /* background: linear-gradient(to right, #00c6ff, #0072ff); */
+          border-radius: 100%;
+          /* transition: all 0.3s; */
+        }
+        @keyframes blink{
+        0%{opacity: 0;}
+        50%{opacity: .5;}
+        100%{opacity: 1;}
+        }
+        .chat-app_toggle:hover {
+          cursor: pointer;
+          -webkit-transform: none;
+                  transform: none;
+        }
+        .chat-app_toggle .icon {
+          z-index: 2;
+          color: white;
+          font-size: 1.5em;
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all cubic-bezier(0.72, 0.17, 0.36, 1.03) 0.4s;
+        }
+        .chat-app_toggle:before {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: -1;
+          border-radius: 100%;
+          border: 2px solid #00c6ff;
+          opacity: 0;
+        }
+        .chat-app_toggle:after {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          background: linear-gradient(to right, #00cdac, #00ae92);
+          border-radius: 100%;
+          transition: all .3s;
+          opacity: 0;
+        }
+        
+        .chat-app_box {
+          border-radius: 16px 16px 40px 16px;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          position: relative;
+          height: 600px;
+          display: flex;
+          flex-direction: column;
+          background: white;
+        }
+        
+        .chat-app_header {
+          background: linear-gradient(to right, #00c6ff, #0072ff);
+          color: white;
+          position: relative;
+        }
+        .chat-app_header .branding {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          padding: 1.5em 1.5em;
+        }
+        .chat-app_header .close {
+          height: 1.5em;
+          width: 1.5em;
+          background: #141e30;
+          position: absolute;
+          top: 1em;
+          right: 1em;
+          border-radius: 100%;
+          z-index: 2;
+          transition: all 0.3s;
+          opacity: 0.5;
+        }
+        .chat-app_header .close:after, .chat-app_header .close:before {
+          content: "";
+          height: 2px;
+          width: 1em;
+          position: absolute;
+          left: 0.25em;
+          top: calc(50% - 1px);
+          background: white;
+          -webkit-transform: rotate(45deg);
+                  transform: rotate(45deg);
+        }
+        .chat-app_header .close:before {
+          -webkit-transform: rotate(-45deg);
+                  transform: rotate(-45deg);
+        }
+        .chat-app_header .close:hover {
+          cursor: pointer;
+          -webkit-transform: scale(1.2);
+                  transform: scale(1.2);
+          opacity: 1;
+        }
+        .chat-app_header .avatar {
+          margin-right: 1em;
+          position: relative;
+          width: 48px;
+          height: 48px;
+        }
+        .chat-app_header .avatar img {
+          width: 48px;
+          height: 48px;
+          -o-object-fit: cover;
+             object-fit: cover;
+          border-radius: 100%;
+          box-shadow: 0 5px 10px rgba(20, 30, 48, 0.2);
+        }
+        .chat-app_header .avatar.is-online:after {
+          content: "";
+          display: block;
+          height: 0.75em;
+          width: 0.75em;
+          position: absolute;
+          bottom: 1.2em;
+          right: 2.5em;
+          background: #00cdac;
+          z-index: 2;
+          border-radius: 100%;
+          box-shadow: 0 0 0 2px white;
+        }
+        .chat-app_header .content {
+          width: calc(100% - 48px - 1em);
+        }
+        
+        .chat-app_content {
+          height: 100%;
+      
+          position: relative;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          overflow: auto;
+         
+        }
+        .content1 {
+          height: 100%;
+          /* width: calc(100% - 1em); */
+          position: relative;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          /* margin: 0 .5em; */
+        }
+        .chat-app_content::-webkit-scrollbar {
+          width: .5em;
+          background-color: transparent;
+        }
+        .chat-app_content::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          background-color: #ededed;
+        }
+        .chat-app_content .messages {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: flex-end;
+          /* overflow: auto; */
+          height: 100%;
+          padding: 0 1em;
+          position: relative;
+          padding-bottom: 1em;
+        }
+        .chat-app_content .message {
+          width: calc(100% - 2em);
+          padding: 0.75em;
+          background: white;
+          margin-top: 0.25em;
+          border-radius: 16px;
+          margin-left: 2em;
+          /* background: linear-gradient(to right, #00c6ff, #0072ff); */
+          background: white ;
+          color: black;
+          position: relative;
+          opacity: 0;
+          -webkit-transform: scale(0.8);
+                  transform: scale(0.8);
+          -webkit-transform-origin: 100% 100%;
+                  transform-origin: 100% 100%;
+          -webkit-animation: message-pop cubic-bezier(0.71, 0.15, 0.46, 1.4) 0.5s;
+                  animation: message-pop cubic-bezier(0.71, 0.15, 0.46, 1.4) 0.5s;
+          -webkit-animation-fill-mode: forwards;
+                  animation-fill-mode: forwards;
+          -webkit-animation-delay: 1.2s;
+                  animation-delay: 1.2s;
+        }
+        .chat-app_content .message:after {
+          content: "";
+          display: block;
+          height: 1em;
+          width: 1em;
+          position: absolute;
+          bottom: .75em;
+          right: -1em;
+          -webkit-clip-path: polygon(0 0, 0% 100%, 75% 100%);
+                  clip-path: polygon(0 0, 0% 100%, 75% 100%);
+          background: white;
+          -webkit-transform: skewY(15deg);
+                  transform: skewY(15deg);
+        }
+        .chat-app_content .message.reply {
+          margin-left: 0;
+          margin-right: 2em;
+          background:white;
+          color: #141E30;
+          -webkit-transform-origin: 0 100%;
+                  transform-origin: 0 100%;
+        }
+        .chat-app_content .message.reply:after {
+          right: unset;
+          left: -1em;
+          -webkit-clip-path: polygon(100% 0, 25% 100%, 100% 100%);
+                  clip-path: polygon(100% 0, 25% 100%, 100% 100%);
+          background: white;
+          -webkit-transform: skewY(-15deg);
+                  transform: skewY(-15deg);
+        }
+        
+        .chat-app_footer {
+          background: white;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          padding: 1.2em;
+          padding-top: 0.75em;
+          position: relative;
+        
+        }
+        
+        
+        .chat-app_footer .tools {
+          display: flex;
+          margin-bottom: 0.75em;
+        }
+        .chat-app_footer .tools .copyright {
+          margin-left: auto;
+          display: block;
+          color: #a0a0a0;
+          font-size: .75em;
+          letter-spacing: .1em;
+          text-transform: uppercase;
+          padding: .5em 1.5em;
+          text-align: right;
+          display: flex;
+          align-items: center;
+          justify-content: right;
+        }
+        .chat-app_footer .tools .button-icon {
+          margin-right: 0.25em;
+          background: white;
+          width: 2em;
+          height: 2em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 100%;
+          transition: all 0.3s;
+          color: #a0a0a0;
+          position: relative;
+        }
+        .chat-app_footer .tools .button-icon i {
+          position: relative;
+          z-index: 2;
+        }
+        .chat-app_footer .tools .button-icon:after {
+          display: block;
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to right, #00c6ff, #0072ff);
+          z-index: 1;
+          opacity: 0;
+          transition: all .3s;
+          border-radius: 100%;
+        }
+        .chat-app_footer .tools .button-icon:hover, .chat-app_footer .tools .button-icon:focus {
+          cursor: pointer;
+          box-shadow: 0 5px 10px rgba(0, 198, 255, 0.4);
+          color: white;
+          -webkit-transform: scale(1.1);
+                  transform: scale(1.1);
+        }
+        .chat-app_footer .tools .button-icon:hover:after, .chat-app_footer .tools .button-icon:focus:after {
+          opacity: 1;
+        }
+        
+        .chat-input {
+          height: 2.5em;
+          width: 100%;
+          border: none;
+          background: #ededed;
+          border: solid 1px #a0a0a0;
+          border-radius: 1000px;
+          padding: 1em 1em;
+          font-size: 1em;
+          transition: all 0.3s;
+        }
+        .chat-input:focus {
+          outline: none;
+          box-shadow: 0 10px 20px rgba(0, 205, 172, 0.4);
+          border-color: #00cdac;
+          background: white;
+        }
+        
+        .chat-app .chat-app_box {
+          transition: all cubic-bezier(0.71, 0, 0.23, 1.38) 0.5s;
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+          -webkit-transform-origin: 100% 100%;
+                  transform-origin: 100% 100%;
+          -webkit-transform: rotate(-3deg) scale(0.8);
+                  transform: rotate(-3deg) scale(0.8);
+        }
+        .chat-app .chat-app_header .avatar {
+          transition: all 0.4s;
+          opacity: 0;
+          -webkit-transform: scale(0.6);
+                  transform: scale(0.6);
+          transition-delay: 0.2s;
+        }
+        .chat-app .chat-app_header .content {
+          transition: all 0.4s;
+          opacity: 0;
+          -webkit-transform: scale(0.9);
+                  transform: scale(0.9);
+          transition-delay: 0.3s;
+        }
+        .chat-app .icon.send {
+          opacity: 0;
+          -webkit-transform: translateY(-100%) scale(0.5);
+                  transform: translateY(-100%) scale(0.5);
+        }
+        .chat-app .icon.open {
+          opacity: 1;
+          -webkit-transform: translateY(0);
+                  transform: translateY(0);
+        }
+        .chat-app .chat-input {
+          transition: all 0.4s;
+          opacity: 0;
+        }
+        
+        .chat-app.is-active .chat-app_box {
+          opacity: 1;
+          visibility: visible;
+          pointer-events: unset;
+          -webkit-transform: none;
+                  transform: none;
+        }
+        .chat-app.is-active .chat-app_header .avatar,
+        .chat-app.is-active .chat-app_header .content {
+          opacity: 1;
+          -webkit-transform: none;
+                  transform: none;
+        }
+        .chat-app.is-active .icon.send {
+          opacity: 1;
+          -webkit-transform: translateY(0);
+                  transform: translateY(0);
+        }
+        .chat-app.is-active .icon.open {
+          opacity: 0;
+          -webkit-transform: translateY(100%) scale(0.5);
+                  transform: translateY(100%) scale(0.5);
+        }
+        .chat-app.is-active .chat-app_toggle:before {
+          -webkit-animation: chat-bubble cubic-bezier(0.15, 0.4, 0.15, 1) 0.7s;
+                  animation: chat-bubble cubic-bezier(0.15, 0.4, 0.15, 1) 0.7s;
+        }
+        .chat-app.is-active .chat-app_toggle:after {
+          opacity: 1;
+        }
+        .chat-app.is-active .chat-input {
+          opacity: 1;
+        }
+        
+        @media screen and (max-width: 700px) {
+          .chat-app .chat-app_box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+          }
+          .chat-app .chat-app_toggle {
+            position: fixed;
+            bottom: 0.75em;
+            right: 0.75em;
+          }
+        }
+        @-webkit-keyframes chat-bubble {
+          0% {
+            opacity: 0;
+            -webkit-transform: scale(0.7);
+                    transform: scale(0.7);
+          }
+          25% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+            -webkit-transform: scale(1.6);
+                    transform: scale(1.6);
+          }
+        }
+        @keyframes chat-bubble {
+          0% {
+            opacity: 0;
+            -webkit-transform: scale(0.7);
+                    transform: scale(0.7);
+          }
+          25% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+            -webkit-transform: scale(1.6);
+                    transform: scale(1.6);
+          }
+        }
+        @-webkit-keyframes message-pop {
+          to {
+            opacity: 1;
+            -webkit-transform: none;
+                    transform: none;
+          }
+        }
+        @keyframes message-pop {
+          to {
+            opacity: 1;
+            -webkit-transform: none;
+                    transform: none;
+          }
+        }
+        @-webkit-keyframes blob {
+          0% {
+            border-radius: 100% 100% 100% 100%;
+          }
+          25% {
+            border-radius: 60% 95% 60% 95%;
+          }
+          50% {
+            border-radius: 90% 65% 90% 65%;
+          }
+          75% {
+            border-radius: 80% 98% 80% 98%;
+          }
+          100% {
+            border-radius: 100% 100% 100% 100%;
+          }
+        }
+        @keyframes blob {
+          0% {
+            border-radius: 100% 100% 100% 100%;
+          }
+          25% {
+            border-radius: 60% 95% 60% 95%;
+          }
+          50% {
+            border-radius: 90% 65% 90% 65%;
+          }
+          75% {
+            border-radius: 80% 98% 80% 98%;
+          }
+          100% {
+            border-radius: 100% 100% 100% 100%;
+          }
+        }
+        </style>
+        

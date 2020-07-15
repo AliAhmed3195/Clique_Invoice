@@ -92,7 +92,7 @@
             $scope.isInvoicePaid = false;
         }
         vm.subMenu = subMenu;
-        $scope.showProgress = false;
+        $scope.showProgress = true;
         if ($stateParams.id) {
             invoice_docnumber = $stateParams.id;
             invoice_id = sessionStorage.getItem('invoice_id')
@@ -148,7 +148,6 @@
         vm.openSidebar = openSidebar;
         vm.template_color = "";
         vm.showInvoiceStatsProgress = true;
-        getSettings();
 
 
         $scope.promise = SettingModel.GetPaymentInfo();
@@ -247,18 +246,35 @@
 
         }
 
+        getContactEmail(sessionStorage.getItem('customer_id'))
+
+        function getContactEmail(id) {
+            // sessionStorage.removeItem("customer_email");
+            $scope.promise = InvoiceModel.GetContactEmail(id);
+            $scope.promise.then(function (response) {
+                if (response.statuscode == 0) {
+                    // if (response.data.item.length > 1) {
+                    sessionStorage.setItem('customer_email', response.data.item)
+                    getSettings();
+
+                    // } else {
+                    // sessionStorage.setItem('customer_email', response.data.item)
+                    // }
+                }
+            });
+        }
+
         function getSettings() {
             $scope.promise = SettingModel.GetSettings();
             $scope.promise.then(function (response) {
                 if (response.statuscode == 0) {
                     $scope.settings = response.data;
-                    // // // console.log('TCL: $scope.settings', $scope.settings)
                     var customer_email = sessionStorage.getItem('customer_email');
                     $scope.settings.InvoiceContacts.to_email = [];
                     $scope.settings.InvoiceContacts.save_email_erp = false;
                     $scope.settings.title = "Send Invoice";
-                    if (customer_email != "") {
-                        $scope.settings.InvoiceContacts.to_email.push(customer_email);
+                    if (customer_email != "null") {
+                        $scope.settings.InvoiceContacts.to_email = customer_email.split(",");
                     } else {
                         vm.showCustomerEmailSaveOption = true;
                     }
@@ -491,7 +507,7 @@
         function printPdf(url) {
             var iframe = document.createElement('iframe');
             // iframe.id = 'pdfIframe'
-            iframe.className='pdfIframe'
+            iframe.className = 'pdfIframe'
             document.body.appendChild(iframe);
             iframe.style.display = 'none';
             iframe.onload = function () {
@@ -743,7 +759,11 @@
 
     function invoiceConfirmationController($timeout, $mdDialog, $filter, triSkins, $window, $rootScope, $scope, SettingModel, Clique) {
 
-        $scope.disabledSubmitButton = false;
+        if ($scope.settings.InvoiceContacts.to_email.length > 0) {
+            $scope.disabledSubmitButton = false;
+        } else {
+            $scope.disabledSubmitButton = true;
+        }
         $scope.showCCSIcon = 'zmdi zmdi-account-add';
         $scope.showCCS = false;
 
@@ -754,6 +774,7 @@
         $scope.cancel = function () {
             $mdDialog.hide();
         }
+
         $scope.validateChip = function ($chip, type) {
             if (!$chip) return;
             // check if the current string length is greater than or equal to a character limit.

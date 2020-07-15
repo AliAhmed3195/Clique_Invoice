@@ -25,7 +25,7 @@
                 </md-input-container>
                 <md-input-container flex="33">
                     <label>Sales price/rate</label>
-                    <input name="UnitPrice" type="number" ng-model="item.UnitPrice" ng-maxlength="10">
+                    <input name="UnitPrice" type="text" ng-blur="adddecimalplacesitem(item.UnitPrice);" ng-model="item.UnitPrice" ng-maxlength="10" required>
                     <div ng-messages="itemForm.UnitPrice.$error" md-auto-hide="false">
                         <p ng-message when="maxlength">Maximum 10 digits allowed</p>
                     </div>
@@ -48,7 +48,7 @@
                 <md-input-container flex="50">
                     <label>Category</label>
                     <md-select name="Category" ng-model="item.ParentRef.value" style="min-width:170px;">
-                        <md-option ng-value="">None</md-option>
+                        <md-option ng-value="category.Id">None</md-option>
                         <md-option ng-value="category.Id" ng-repeat="category in categories">{{category.Name}}</md-option>
                     </md-select>
 
@@ -69,14 +69,15 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container flex="33">
-                    <label>As of date</label>
-                    <md-datepicker name="InvStartDate" ng-model="item.InvStartDate" md-placeholder="" ng-required="enableMoreInventoryFields">
+               
+                    <label>As of date :</label>
+                    <!-- ng-required="enableMoreInventoryFields" -->
+                    <md-datepicker name="InvStartDate" ng-model="ItemDialogController.item.InvStartDate"   ng-change="setsDate(item.InvStartDate)" md-placeholder="" >
                     </md-datepicker>
                     <div ng-messages="itemForm.InvStartDate.$error" md-auto-hide="false">
-                        <p ng-message when="required">Required field</p>
+                        <!-- <p ng-message when="required">Required field</p> -->
                     </div>
-                </md-input-container>
+              
 
                 <md-input-container flex="33">
                     <label>Inventory asset account</label>
@@ -117,6 +118,27 @@
                         <p ng-message when="md-maxlength">Maximum 1000 characters allowed</p>
                     </div>
                 </md-input-container>
+                <div layout="row" ng-if = " statustype.erp.type == 'Standalone'">
+                    <!-- <br> -->
+                    <md-switch ng-model="item.Taxable" ng-change="Taxableornot(item.Taxable)" aria-label="Default Switch"  class="md-primary">
+                            Taxable
+                    </md-switch>
+                </div>
+               
+                <div layout="row" ng-if = " statustype.erp.type == 'Standalone'">
+                        <!-- <br> -->
+                        <md-switch ng-model="item.Active"  ng-change="Activeornot(item.Active)" aria-label="Default Switch" class="md-primary" >
+                                Status
+                        </md-switch>
+                    </div>
+    
+    
+
+
+
+
+
+
 
             </div>
             <div layout="row" layout-align="end center" ng-hide="hideDialogActions">

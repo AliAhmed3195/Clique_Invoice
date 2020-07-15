@@ -1,11 +1,14 @@
 <style>
-    .notification md-list-item p span{
-background:transparent !important;
-font-weight: bold;
-}
+    .notification md-list-item p span {
+        background: transparent !important;
+        font-weight: bold;
+    }
 </style>
-<div ng-show="vm.isInvoiceLoaded" class="loader padding-100" layout="column" layout-fill="" layout-align="center center">
-    <md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isInvoiceLoaded"></md-progress-linear>
+
+<div ng-show="vm.isInvoiceLoaded" class="loader padding-100" layout="column" layout-fill=""
+    layout-align="center center">
+    <md-progress-linear class="margin-bottom-20" md-mode="indeterminate" ng-show="vm.isInvoiceLoaded">
+    </md-progress-linear>
 </div>
 
 <div ng-show="!vm.isInvoiceLoaded">
@@ -70,8 +73,9 @@ font-weight: bold;
                     <input name="Invoice No." name="Docnumber" type="text" ng-model="vm.query.docnumber">
                 </md-input-container>
                 <md-input-container class="md-block"></md-input-container>
-                <md-autocomplete md-selected-item="vm.selectedItem" md-search-text="vm.searchText" md-items="item in vm.querySearch(vm.searchText)"
-                    md-item-text="item.display" md-min-length="1" placeholder="Search Customer" md-autofocus>
+                <md-autocomplete md-selected-item="vm.selectedItem" md-search-text="vm.searchText"
+                    md-items="item in vm.querySearch(vm.searchText)" md-item-text="item.display" md-min-length="1"
+                    placeholder="Search Customer" md-autofocus>
                     <md-item-template>
                         <span md-highlight-text="vm.searchText" md-highlight-flags="^i">{{item.display}}</span>
                     </md-item-template>
@@ -97,43 +101,48 @@ font-weight: bold;
 
 
     <div layout="row" flex layout-align="start start" class="" style="padding:10px 0px 0px 10px !important;">
-        <div flex="90">
-            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.createInvoice()" ng-if="buttonPermissions.invoice_addnew">
+        <div flex="90" >
+            <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.createInvoice()"
+                ng-if="buttonPermissions.invoice_addnew">
                 <md-icon md-font-icon="fa fa-plus" style="font-size:14px;"></md-icon>
                 <md-tooltip>Create Invoice</md-tooltip>
             </md-button>
             <md-button aria-label="search" class="md-primary md-raised md-small" ng-click="vm.openSidebar('filter')"
-                ng-if="buttonPermissions.invoice_search">
+                ng-if="buttonPermissions.invoice_search" >
                 <md-icon md-font-icon="fa fa-search" style="font-size:14px;"></md-icon>
                 <md-tooltip>Search Invoice</md-tooltip>
             </md-button>
             <!-- IsDefaultTemplate add to ng-show to hide print button -->
             <md-button aria-label="print" class="md-primary md-raised md-small" ng-click="vm.printBulkInvoice($event);"
-                ng-show="showInvoiceToolBar && !IsDefaultTemplate" ng-if="buttonPermissions.invoice_print" ng-disabled="printProcess">
-                <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}" style="font-size:14px;"></md-icon>
+                ng-show="showInvoiceToolBar && !IsDefaultTemplate" ng-if="buttonPermissions.invoice_print"
+                ng-disabled="printProcess" style="cursor: pointer;">
+                <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"
+                    style="font-size:14px;"></md-icon>
                 <md-tooltip>Print Invoice</md-tooltip>
             </md-button>
 
             <md-button aria-label="print" class="md-primary md-raised md-small" ng-click="vm.printPDFInvoice();"
-                ng-show="showInvoiceToolBar && IsDefaultTemplate" ng-if="buttonPermissions.invoice_print" ng-disabled="printProcess">
-                <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}" style="font-size:14px;"></md-icon>
+                ng-show="showInvoiceToolBar && IsDefaultTemplate" ng-if="buttonPermissions.invoice_print"
+                ng-disabled="printProcess" style="cursor: pointer;">
+                <md-icon md-font-icon="{{printProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-print'}}"
+                    style="font-size:14px;"></md-icon>
                 <md-tooltip>Print Invoice</md-tooltip>
             </md-button>
 
-            <md-button aria-label="send" class="md-primary md-raised md-small" ng-click="vm.sendBulkInvoice();" ng-show="showInvoiceEmailToolBar"
-                ng-if="buttonPermissions.invoice_send">
+            <md-button aria-label="send" class="md-primary md-raised md-small" ng-click="vm.sendBulkInvoice();"
+                ng-show="showInvoiceEmailToolBar" ng-if="buttonPermissions.invoice_send" >
                 <md-icon md-font-icon="{{sendProcess==true ? 'fa fa-refresh fa-spin fa-3x' : 'fa fa-paper-plane'}}"
                     style="font-size:14px;"></md-icon>
                 <md-tooltip>Send Invoice</md-tooltip>
             </md-button>
             <md-button aria-label="comment" class="md-primary md-raised md-small" ng-click="vm.paymentInvoice();"
-                ng-show="showInvoicePaymentButton" ng-if="buttonPermissions.invoice_payment">
+                ng-show="showInvoicePaymentButton" ng-if="buttonPermissions.invoice_payment" >
                 <md-icon md-font-icon="fa fa-credit-card" style="font-size:14px;"></md-icon>
                 <md-tooltip>Collect Payment</md-tooltip>
             </md-button>
 
             <md-button aria-label="send" class="md-primary md-raised md-small" ng-click="vm.copyCustomerPortalLink()"
-                ng-show="showInvoiceToolBar" ng-if="buttonPermissions.invoice_link">
+                ng-show="showInvoiceToolBar && showInvoiceLink" ng-if="buttonPermissions.invoice_link" style="cursor: pointer;">
                 <md-icon md-font-icon="fa fa-link" style="font-size:14px;"></md-icon>
                 <md-tooltip>Invoice Link</md-tooltip>
             </md-button>
@@ -156,7 +165,8 @@ font-weight: bold;
                 <md-button class="md-icon-button toolbar-button animated" ng-click="vm.openSidebar('gateway_sync')"
                     aria-label="side navigation">
                     <md-icon md-font-icon="fa fa-bell-o"></md-icon>
-                    <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn" style="background-color: red; color:white">{{vm.notifications.length}}</span>
+                    <span class="toolbar-button-badge ng-scope md-cyan-white-theme" theme-background="warn"
+                        style="background-color: red; color:white">{{vm.notifications.length}}</span>
                 </md-button>
             </div>
         </div>
@@ -165,25 +175,34 @@ font-weight: bold;
 
         <tri-widget flex title="" content-layout="column" content-layout-align="center">
             <md-table-container id="invoice_listing">
-                <table md-table class="md-data-table2" md-row-select multiple ng-model="invoiceSelection" md-progress="vm.promise">
+                <table md-table class="md-data-table2" md-row-select multiple ng-model="invoiceSelection"
+                    md-progress="vm.promise">
                     <thead md-head md-order="vm.query.order" md-on-reorder="vm.InvoiceData">
                         <tr md-row>
                             <th md-column md-order-by="DocNumber"><span translate>{{vm.columns.invoiceNo}}</span></th>
-                            <th md-column md-order-by="CustomerRef.name"><span translate>{{vm.columns.customerName}}</span></th>
-                            <th md-column md-order-by="TxnDate" decend-first class="col5"> <span translate>{{vm.columns.invoiceDate}}</span></th>
+                            <th md-column md-order-by="CustomerRef.name"><span
+                                    translate>{{vm.columns.customerName}}</span></th>
+                            <th md-column md-order-by="TxnDate" decend-first class="col5"> <span
+                                    translate>{{vm.columns.invoiceDate}}</span></th>
 
-                            <th md-column md-order-by="DueDate" class="col5"> <span translate>{{vm.columns.dueDate}}</span></th>
-                            <th md-column md-order-by="Balance" class="col4"><span translate>{{vm.columns.balance}}</span></th>
-                            <th md-column md-numberic md-order-by="TotalAmt" class="col3"><span translate>{{vm.columns.total}}</span></th>
-                            <th md-column md-order-by="IsPaid" class="col2"><span translate>{{vm.columns.status}}</span></th>
-                            <th md-column md-order-by="SendGridEvent" class="col1"><span translate>EMAIL STATUS</span></th>
+                            <th md-column md-order-by="DueDate" class="col5"> <span
+                                    translate>{{vm.columns.dueDate}}</span></th>
+                            <th md-column md-order-by="Balance" class="col4"><span
+                                    translate>{{vm.columns.balance}}</span></th>
+                            <th md-column md-numberic md-order-by="TotalAmt" class="col3"><span
+                                    translate>{{vm.columns.total}}</span></th>
+                            <th md-column md-order-by="IsPaid" class="col2"><span translate>{{vm.columns.status}}</span>
+                            </th>
+                            <th md-column md-order-by="SendGridEvent" class="col1"><span translate>EMAIL STATUS</span>
+                            </th>
                             <th md-column><span translate>{{vm.columns.action}}</span></th>
                         </tr>
                     </thead>
                     <tbody md-body>
                         <!-- ng-disabled="invoice.IsPaid==1" -->
                         <tr md-row md-on-select="vm.toolBarProcess()" md-select="invoice.Id" md-select-id="invoice.Id"
-                            md-auto-select ng-repeat="invoice in vm.InvoiceData | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
+                            md-auto-select
+                            ng-repeat="invoice in vm.InvoiceData | orderBy: vm.query.order | limitTo: vm.query.limit : (vm.query.page -1) * vm.query.limit">
                             <td md-cell>{{invoice.DocNumber}}</td>
                             <td md-cell>{{::invoice.CustomerRef.name}}</td>
 
@@ -197,7 +216,8 @@ font-weight: bold;
                             </td>
                             <td md-cell class="col1">
                                 <md-chips class="status">
-                                    <md-chip class="status {{invoice.SendGridEvent=='' ? 'notsent' : invoice.SendGridEvent}}">{{invoice.SendGridEvent==''
+                                    <md-chip
+                                        class="status {{invoice.SendGridEvent=='' ? 'notsent' : invoice.SendGridEvent}}">{{invoice.SendGridEvent==''
                                         ? 'not sent' : invoice.SendGridEvent}}</md-chip>
                                 </md-chips>
                             </td>
@@ -216,10 +236,32 @@ font-weight: bold;
                     </tbody>
                 </table>
             </md-table-container>
-            <md-table-pagination md-limit="vm.query.limit" md-page="vm.query.page" md-total="{{vm.InvoiceData.length}}"
-                md-page-select md-on-paginate="logPagination"></md-table-pagination>
+            <md-table-pagination md-limit-options="vm.limitOptions" md-limit="vm.query.limit" md-page="vm.query.page"
+                md-total="{{vm.InvoiceData.length}}" md-page-select md-on-paginate="logPagination">
+            </md-table-pagination>
         </tri-widget>
     </div>
+    <style>
+        .limit-select.ng-scope {
+            position: absolute;
+            top: -65px;
+            bottom: 0;
+            left: 0;
+            right: 36px;
+        }
+
+        .limit-select>.label {
+            position: inherit;
+            font-weight: 600;
+            left: 85%;
+        }
+
+        .limit-select >md-select {
+            width: 5% !important;
+            right: -4px;
+            position: absolute;
+        }
+    </style>
     <div flex>
         <md-fab-toolbar md-open="false" count="2" md-direction="right">
             <md-fab-trigger class="align-with-text">
