@@ -1,0 +1,16 @@
+{
+  "name": "ngInfiniteScroll",
+  "version": "0.2.0",
+  "main": "build/ng-infinite-scroll.js",
+  "dependencies": {},
+  "homepage": "https://github.com/ng-infinite-scroll/ng-infinite-scroll-bower",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.2.0",
+    "commit": "70f7930956d1ff284cb98ebdaed3dfd3979bbf6a"
+  },
+  "_source": "https://github.com/ng-infinite-scroll/ng-infinite-scroll-bower.git",
+  "_target": "0.2.0",
+  "_originalSource": "ngInfiniteScroll"
+}

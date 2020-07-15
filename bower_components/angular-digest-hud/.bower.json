@@ -1,0 +1,38 @@
+{
+  "name": "angular-digest-hud",
+  "main": "digest-hud.js",
+  "version": "0.1.18",
+  "homepage": "https://github.com/pkaminski/digest-hud",
+  "authors": [
+    "Piotr Kaminski <piotr@ideanest.com>"
+  ],
+  "description": "Digest performance analysis HUD for AngularJS.",
+  "keywords": [
+    "angularjs",
+    "angular",
+    "digest",
+    "performance",
+    "timing",
+    "profiling"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.3"
+  },
+  "_release": "0.1.18",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.18",
+    "commit": "500c1548b4d525a8f05a8e484e68d7342741841b"
+  },
+  "_source": "https://github.com/pkaminski/digest-hud.git",
+  "_target": "~0.1.13",
+  "_originalSource": "angular-digest-hud"
+}
