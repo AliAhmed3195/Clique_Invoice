@@ -212,7 +212,7 @@
                                 {{checkoutForm.$invalid}} -->
                                     <div flex="50">
                                         <md-button type="submit" class="md-raised md-primary" aria-label="PROCESS"
-                                            ng-click="submit('ach');" ng-disabled="checkoutForm.$invalid || isAmountInvalid || disabledChargeButton"
+                                            ng-click="submit('ach');" ng-disabled="checkoutForm.$invalid || isAmountInvalid || disabledChargeButton || Docnumlength > 21"
                                             style="background:#2FC65A;width:90%">CHARGE {{totalAmount | currency}}</md-button>
                                     </div>
                                     <div flex="50" align="right">
@@ -386,9 +386,9 @@
                                             {{isAmountInvalid}}
                                             {{checkoutForm.$invalid}} -->
                                         <div flex="50">
-
+                                
                                             <md-button type="submit" class="md-raised md-primary" aria-label="PROCESS"
-                                                ng-click="submit('creditcard');" ng-disabled="checkoutForm.$invalid || isAmountInvalid || disabledChargeButton"
+                                                ng-click="submit('creditcard');" ng-disabled="checkoutForm.$invalid || isAmountInvalid || disabledChargeButton || Docnumlength > 21"
                                                 style="background:#2FC65A;width:90%">CHARGE {{totalAmount | currency}}</md-button>
                                         </div>
                                         <div flex="50" align="right">

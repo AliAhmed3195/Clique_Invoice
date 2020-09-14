@@ -100,6 +100,7 @@
         vm.fabStatuses = [false, true];
         vm.fabStatus = vm.fabStatuses[0];
         vm.share = true;
+        vm.showmessagedoc_num = showmessagedoc_num;
       //  vm.processBBpos = processBBpos
         /*eof fab controller*/
 
@@ -214,7 +215,7 @@
         $scope.triPOSSaleInfo = "";
         $scope.convfee = false;
         $scope.disableinpt = false;
-
+        $rootScope.Docnumlength  = 0;
 
         if ($scope.paymentInfo.hasOwnProperty('configuration')) {
             if ($scope.paymentInfo.configuration.hasOwnProperty('hardware')) {
@@ -322,7 +323,7 @@
 
         $scope.ccPattern = /[0-9-()]*[1-9][0-9-()]*/;
 
-// debugger;
+
         $scope.checkConv = false
         switch ($scope.paymentInfo.type) {
             
@@ -401,11 +402,11 @@
                 $scope.activePaymentMethods.creditcard = true;
                 $scope.activePaymentMethods.cash = false;
                 if ($scope.paymentInfo.hasOwnProperty('configuration')) {
-                    debugger;
+                 
                     if ($scope.paymentInfo.configuration.hasOwnProperty('supported_methods')) {
-                        debugger;
+                       
                         if ($scope.paymentInfo.configuration.supported_methods.hasOwnProperty('ach')) {
-                            debugger;
+                           
                             $scope.activePaymentMethods.ach = $scope.paymentInfo.configuration.supported_methods.ach;
                         }
                     }
@@ -554,10 +555,10 @@
 
         //caculate total amount
         if ($scope.selectedInvoiceData != undefined) {
-          
+            
             if ($scope.selectedInvoiceData.length > 0) {
                 angular.forEach($scope.selectedInvoiceData, function (invoiceInfo, key) {
-                    debugger;
+                
                   console.log("invoiceInfo", invoiceInfo);
                   console.log("$scope.selectedInvoiceData", $scope.selectedInvoiceData);
                   $scope.sparseinvoice = invoiceInfo.sparse;
@@ -571,8 +572,18 @@
                     $scope.invoiceIds.push(invoice_id);
                     $rootScope.FinalTotal = $scope.totalAmount;
                     $scope.invoicecustomername =$scope.selectedInvoiceData[0].CustomerRef.name;
+                    debugger;
+                    $rootScope.Docnumlength = $rootScope.Docnumlength + invoiceInfo.DocNumber.length;
+                   
+                    console.log("Docnumlength",$rootScope.Docnumlength);
                     console.log("$scope.invoicecustomername",$scope.invoicecustomername);
                     // $scope.selectedInvoiceData[0].CustomerRef.name;
+console.log(" $scope.SyncTokeninvoice",  $scope.SyncTokeninvoice);
+console.log(" var invoice_id",  invoice_id);
+if($rootScope.Docnumlength > 21){
+                       vm.showmessagedoc_num(); 
+                    }
+
                 });
                 // console.log($rootScope.FinalTotal)
                
@@ -580,7 +591,7 @@
 
                     if ($scope.selectedInvoiceData[0].ConvenienceFee.length > 0) {
                         if ($scope.selectedInvoiceData[0].ConvenienceFee[0].is_active == true) {
-                            $scope.hconvFee = true;
+                            $scope.convFee = true;
                             $scope.convfee = true;
                             if ($scope.convfee == true) {
                                 $scope.disableinpt = true;
@@ -624,6 +635,16 @@
             }
 
         }
+
+
+function showmessagedoc_num() {
+
+
+    $timeout(function(){
+        Clique.showToast("You cannot enter more than 21 characters in the doc_num field. You tried entering {{Docnumlength}} characters", 'bottom right', 'error');
+            }, 6000);
+
+}
 
         //fetch customr profile
         fetchCustomerProfile(customer_id);
@@ -693,8 +714,10 @@
         $scope.calculateTotalAmount = function () {
             $scope.isAmountInvalid = false;
             $scope.totalAmount = 0;
+            debugger;
             if ($scope.selectedInvoiceData.length > 0) {
                 angular.forEach($scope.selectedInvoiceData, function (item, key) {
+                    debugger;
                    
                     if (item.ChargeAmount > item.Balance || !angular.isNumber(item.ChargeAmount)) {
                         $scope.isAmountInvalid = true;
@@ -840,7 +863,7 @@ console.log("$scope.selectedInvoiceData", $scope.selectedInvoiceData);
             var paymentObj = {};
             if (mode == 'creditcard') {
                 // console.log("vm.invoice",$scope.selectedInvoiceData[0])
-
+debugger;
 
                 if ($scope.usedCardProfile) {
                     paymentObj = {
@@ -854,14 +877,19 @@ console.log("$scope.selectedInvoiceData", $scope.selectedInvoiceData);
                         ProfileId: $scope.profile_id,
                         CustomerEmail: CustomerEmail,
                         DocNumber: DocNumber,
-                        Type: "invoice"
+                        Type: "invoice",
+                        Id: $scope.invoiceidpayment,
+                        Balance: $scope.Balanceinvoice,
+                        Sparse: $scope.sparseinvoice,
+                        SyncToken: $scope.SyncTokeninvoice
                     };
                 } else {
 
-
+debugger;
 if($scope.payform.cc2 == "" || $scope.payform.cc2 == undefined)
 
 {
+    debugger;
                     paymentObj = {
                         CustomerRef: {
                             value: CustomerId,
@@ -888,6 +916,7 @@ if($scope.payform.cc2 == "" || $scope.payform.cc2 == undefined)
                     }; 
                 }
 else{
+    debugger;
     paymentObj = {
         CustomerRef: {
             value: CustomerId,

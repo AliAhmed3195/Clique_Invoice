@@ -403,7 +403,8 @@ else{
         }
 
         function selectedCustomerChange(customer) {
-          //  debugger;
+            debugger;
+
             if (vm.selectedCustomer != null && $scope.showProfileGetProgress == false) {
                 document.getElementById('recurringOptions').style.margin = "6px 0 0 0";
             }  if (vm.selectedCustomer != null && $scope.isCCProfileCreated != false) {
@@ -519,7 +520,7 @@ else{
 
         function selectedItemChange(item, key) {
        console.log('items is',item);
-
+debugger;
 
        if($rootScope.accounttype == 'Standalone'){
            $scope.invoice.Line[key].SalesItemLineDetail.ItemRef.Taxable = item.Taxable;
@@ -715,7 +716,7 @@ else{
         function indexTaxArray(value, ind) {
 
             // console.log(value);
-         //   debugger; 
+          debugger; 
             if(ind != undefined) {
              //   debugger;
                 // console.log('invoice line', $scope.invoice.Line)
@@ -746,14 +747,16 @@ else{
         $scope.calculateTotal = function (value,index) 
     { 
         console.log("ali",value);
-        
+        debugger;
         var total = 0;
         var tax = 0;
         var discount = 0;
         var amount = 0;
         var subTotalIndex;
         // $scope.Taxtype = value;
+        
         angular.forEach($scope.invoice.Line, function (item, key) {
+            debugger;
             switch (item.DetailType) {
                 case 'SalesItemLineDetail':
                 // amount = item.SalesItemLineDetail.Qty * item.SalesItemLineDetail.UnitPrice; 
@@ -810,6 +813,7 @@ else{
         
         });
         ///update subtotal
+        debugger;
         $scope.invoice.Line[subTotalIndex]['Amount'] = parseFloat(total);
         $scope.calculateTax();
         $scope.calculateDiscount();
@@ -847,12 +851,15 @@ else{
             return i;
         }
         $scope.calculateTax = function () {
+          
             var subTotal = 0;
             angular.forEach($scope.invoice.Line, function (item, key) {
+                debugger;
                 switch (item.DetailType) {
                     case 'SalesItemLineDetail':
                         if (item.SalesItemLineDetail.TaxCodeRef != null && item.SalesItemLineDetail.TaxCodeRef.value == 'TAX') {
-                            var amount = (item.SalesItemLineDetail.Qty * item.SalesItemLineDetail.UnitPrice)+ ((item.SalesItemLineDetail.Qty * item.SalesItemLineDetail.UnitPrice)*($scope.Taxtype/100));
+                            // var amount = (item.SalesItemLineDetail.Qty * item.SalesItemLineDetail.UnitPrice)+ ((item.SalesItemLineDetail.Qty * item.SalesItemLineDetail.UnitPrice)*($scope.Taxtype/100));
+                             var amount = item.SalesItemLineDetail.Qty * item.SalesItemLineDetail.UnitPrice;
                             subTotal += parseFloat(amount);
                         }
                         break;
@@ -962,7 +969,7 @@ $scope.Taxtype = value.Rate;
   
 
         $scope.calculateDiscount = function () {
-          
+          debugger;
             var discountIndex = parseInt(getLineTypeIndex('DiscountLineDetail'));
             var discountInfo = $scope.invoice.Line[discountIndex].DiscountLineDetail;
             var isPercentBased = discountInfo.PercentBased;
