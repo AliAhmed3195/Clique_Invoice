@@ -52,6 +52,7 @@
 
 
         function GetAllInvoice(query) {
+          
             var qs = $httpParamSerializer(query);
             return Clique.callService('get','/erp/quickbooks/invoice/?'+ qs,'').then(handleSuccess, handleError);
         }
@@ -114,6 +115,7 @@
             return Clique.callService('post','/erp/quickbooks/contact',params).then(handleSuccess, handleError);
         }
         function GetInvoiceStatistics(query) {
+         
             var qs = $httpParamSerializer(query);
             return Clique.callService('get','/quickbooks/invoice/statistics/?'+ qs,'').then(handleSuccess, handleError);
             //return Clique.callService('get','/quickbooks/invoice/invoicedetails/?'+ qs,'').then(handleSuccess, handleError);
